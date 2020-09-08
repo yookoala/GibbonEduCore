@@ -123,7 +123,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
                 unset($_GET['return']);
 
                 $enablePublicRegistration = getSettingByScope($connection2, 'User Admin', 'enablePublicRegistration');
-                
+
                 $form = Form::create('loginForm', $this->session->get('absoluteURL').'/login.php?'.http_build_query($_GET) );
 
                 $form->setFactory(DatabaseFormFactory::create($pdo));
@@ -381,7 +381,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
 
                 echo "<p style='padding-top: 0px; text-align: right'>";
                 echo "<a href='".$this->session->get('absoluteURL')."/index.php?q=/modules/Planner/planner_deadlines.php'>";
-                
+
                 echo __('View {homeworkName}', ['homeworkName' => __($homeworkNamePlural)]);
                 echo '</a>';
                 echo '</p>';
@@ -479,17 +479,17 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
                     echo '</td>';
                     if (isActionAccessible($guid, $connection2, '/modules/Planner/planner.php')) {
                         echo "<td style='text-align: center'>";
-                        echo "<a href='".$this->session->get('absoluteURL').'/index.php?q=/modules/Planner/planner.php&gibbonCourseClassID='.$row['gibbonCourseClassID']."&viewBy=class'><img style='margin-top: 3px' title='".__('View Planner')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/planner.png'/></a> ";
+                        echo "<a href='".$this->session->get('absoluteURL').'/index.php?q=/modules/Planner/planner.php&gibbonCourseClassID='.$row['gibbonCourseClassID']."&viewBy=class' title='".__('View Planner')."'><img style='margin-top: 3px' alt='".__('View Planner')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/planner.png'/></a> ";
                         echo '</td>';
                     }
                     if (getHighestGroupedAction($guid, '/modules/Markbook/markbook_view.php', $connection2) == 'View Markbook_allClassesAllData') {
                         echo "<td style='text-align: center'>";
-                        echo "<a href='".$this->session->get('absoluteURL').'/index.php?q=/modules/Markbook/markbook_view.php&gibbonCourseClassID='.$row['gibbonCourseClassID']."'><img style='margin-top: 3px' title='".__('View Markbook')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/markbook.png'/></a> ";
+                        echo "<a href='".$this->session->get('absoluteURL').'/index.php?q=/modules/Markbook/markbook_view.php&gibbonCourseClassID='.$row['gibbonCourseClassID']."' title='".__('View Markbook')."'><img style='margin-top: 3px' alt='".__('View Markbook')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/markbook.png'/></a> ";
                         echo '</td>';
                     }
                     echo "<td style='text-align: center'>";
                     if (isActionAccessible($guid, $connection2, '/modules/Attendance/attendance_take_byCourseClass.php') && $row['attendance'] == 'Y') {
-                        echo "<a href='index.php?q=/modules/Attendance/attendance_take_byCourseClass.php&gibbonCourseClassID=".$row['gibbonCourseClassID']."'><img title='".__('Take Attendance')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/attendance.png'/></a>";
+                        echo "<a href='index.php?q=/modules/Attendance/attendance_take_byCourseClass.php&gibbonCourseClassID=".$row['gibbonCourseClassID']."'title='".__('Take Attendance')."' ><img alt='".__('Take Attendance')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/attendance.png'/></a>";
                     } else {
                         echo "<a href='index.php?q=/modules/Departments/department_course_class.php&gibbonCourseClassID=".$row['gibbonCourseClassID']."#participants'><img title='".__('Participants')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/attendance.png'/></a>";
                     }
@@ -498,7 +498,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
                         $homeworkNamePlural = getSettingByScope($connection2, 'Planner', 'homeworkNamePlural');
 
                         echo "<td style='text-align: center'>";
-                        echo "<a href='".$this->session->get('absoluteURL').'/index.php?q=/modules/Planner/planner_deadlines.php&gibbonCourseClassIDFilter='.$row['gibbonCourseClassID']."'><img style='margin-top: 3px' title='".__('View {homeworkName}', ['homeworkName' => __($homeworkNamePlural)])."' src='./themes/".$this->session->get('gibbonThemeName')."/img/homework.png'/></a> ";
+                        echo "<a href='".$this->session->get('absoluteURL').'/index.php?q=/modules/Planner/planner_deadlines.php&gibbonCourseClassIDFilter='.$row['gibbonCourseClassID']."'title='".__('View {homeworkName}', ['homeworkName' => __($homeworkNamePlural)])."'><img style='margin-top: 3px' alt='".__('View {homeworkName}', ['homeworkName' => __($homeworkNamePlural)])."' src='./themes/".$this->session->get('gibbonThemeName')."/img/homework.png'/></a> ";
                         echo '</td>';
                     }
                     echo '</tr>';
@@ -550,7 +550,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
         //Show year switcher if user is staff and has access to multiple years
         if ($this->session->exists('username') && $this->category == 'Staff' && $this->session->get('address') == '') {
             //Check for multiple-year login
-            
+
                 $data = array('gibbonRoleID' => $this->session->get('gibbonRoleIDCurrent'));
                 $sql = "SELECT futureYearsLogin, pastYearsLogin FROM gibbonRole WHERE gibbonRoleID=:gibbonRoleID";
                 $result = $connection2->prepare($sql);

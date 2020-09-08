@@ -47,7 +47,7 @@ class Header
         $tray = [];
         $guid = $this->session->get('guid');
         $connection2 = $this->db->getConnection();
-        
+
         // Message Wall
         if (isActionAccessible($guid, $connection2, '/modules/Messenger/messageWall_view.php')) {
             $tray['messageWall'] = [
@@ -80,7 +80,7 @@ class Header
 
         // Links for logged in users
         if ($this->session->has('username')) {
-            
+
             $links['logout'] = [
                 'name' => __('Logout'),
                 'url'  => $this->session->get('absoluteURL').'/logout.php',

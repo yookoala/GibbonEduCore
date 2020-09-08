@@ -23,6 +23,7 @@ v22.0.00
 
     Significant Changes
         System: improved support for custom themes
+        System: accessibility - full review
 
     Changes With Important Notices
 
