@@ -2,7 +2,13 @@ name: test
 
 on:
   pull_request:
+    branches:
+      - master
+      - 'v**'
   push:
+    branches:
+      - '!master'
+      - '!v**'
 
 jobs:
   test:
