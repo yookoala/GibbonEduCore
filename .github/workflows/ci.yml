@@ -6,9 +6,9 @@ on:
       - master
       - 'v**'
   push:
-    branches:
-      - '!master'
-      - '!v**'
+    branches-ignore:
+      - 'master'
+      - 'v**'
 
 jobs:
   test:
