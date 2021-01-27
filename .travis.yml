@@ -2,7 +2,7 @@
 language: php
 
 # The platforms you wants to test on
-dist: xenial
+dist: focal
 os:
   - linux
 
