@@ -3,6 +3,7 @@ $I = new AcceptanceTester($scenario);
 $I->wantTo('add, edit and delete a family');
 $I->loginAsAdmin();
 $I->amOnModulePage('User Admin', 'family_manage.php');
+$I->dontSee('You do not have access to this action.');
 
 // Add ------------------------------------------------
 $I->clickNavigation('Add');

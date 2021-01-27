@@ -3,6 +3,7 @@ $I = new AcceptanceTester($scenario);
 $I->wantTo('add, edit and delete an activity as an admin and test the enrollment and view of a student');
 $I->loginAsAdmin();
 $I->amOnModulePage('Activities', 'activities_manage.php');
+$I->dontSee('You do not have access to this action.');
 
 // Add ------------------------------------------------
 $I->clickNavigation('Add');

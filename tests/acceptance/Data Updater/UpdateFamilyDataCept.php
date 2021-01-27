@@ -1,8 +1,9 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('submit and approve a family data update');
 $I->loginAsParent();
 $I->amOnModulePage('Data Updater', 'data_family.php');
+$I->dontSee('You do not have access to this action.');
 
 // Select ------------------------------------------------
 $I->seeBreadcrumb('Update Family Data');

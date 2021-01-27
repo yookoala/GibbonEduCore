@@ -2,9 +2,10 @@
 $I = new AcceptanceTester($scenario);
 $I->wantTo('add, edit and delete a user');
 $I->loginAsAdmin();
+$I->amOnModulePage('User Admin', 'userSettings.php');
+$I->dontSee('You do not have access to this action.');
 
 // Change User Settings ---------------------------------
-$I->amOnModulePage('User Admin', 'userSettings.php');
 $originalUserSettings = $I->grabAllFormValues();
 
 $newUserSettings = array_replace($originalUserSettings, array(
