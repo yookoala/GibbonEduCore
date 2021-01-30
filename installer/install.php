@@ -179,36 +179,47 @@ if ($canInstall == false) {
     $form->addHiddenValue('nonce', $nonce);
     $form->addRow()->addHeading(__('System Requirements'));
 
-    $row = $form->addRow();
-        $row->addLabel('phpVersionLabel', sprintf($versionTitle, 'PHP'))->description(sprintf($versionMessage, __('Gibbon').' v'.$version, 'PHP', $phpRequirement));
-        $row->addTextField('phpVersion')->setValue($phpVersion)->readonly();
-        $row->addContent((version_compare($phpVersion, $phpRequirement, '>='))? $trueIcon : $falseIcon);
+    $checks = [];
 
-    $row = $form->addRow();
-        $row->addLabel('pdoSupportLabel', __('MySQL PDO Support'));
-        $row->addTextField('pdoSupport')->setValue((@extension_loaded('pdo_mysql'))? __('Installed') : __('Not Installed'))->readonly();
-        $row->addContent((@extension_loaded('pdo') && extension_loaded('pdo_mysql'))? $trueIcon : $falseIcon);
+    $checks['phpVersion'] = (object) [
+        'label' => sprintf($versionTitle, 'PHP'),
+        'description' => sprintf($versionMessage, __('Gibbon').' v'.$version, 'PHP', $phpRequirement),
+        'value' => $phpVersion,
+        'result' => version_compare($phpVersion, $phpRequirement, '>='),
+    ];
+    $checks['pdoSupport'] = (object) [
+        'label' => __('MySQL PDO Support'),
+        'value' => extension_loaded('pdo_mysql') ? __('Installed') : __('Not Installed'),
+        'result' => extension_loaded('pdo_mysql'),
+    ];
 
     if ($apacheVersion !== false) {
-        $apacheModules = @apache_get_modules();
+        $apacheModules = function_exists('apache_get_modules') ? apache_get_modules() : [];
 
         foreach ($apacheRequirement as $moduleName) {
-            $active = @in_array($moduleName, $apacheModules);
-            $row = $form->addRow();
-                $row->addLabel('moduleLabel', 'Apache '.__('Module').' '.$moduleName);
-                $row->addTextField('module')->setValue(($active)? __('Enabled') : __('N/A'))->readonly();
-                $row->addContent(($active)? $trueIcon : $falseIcon);
+            $checks['apache-module-' . $moduleName] = (object) [
+                'label' => 'Apache ' . __('Module') . ' ' . $moduleName,
+                'value' => in_array($moduleName, $apacheModules) ? __('Installed') : __('Not Installed'),
+                'result' => in_array($moduleName, $apacheModules),
+            ];
         }
     }
 
     if (!empty($extensions) && is_array($extensions)) {
         foreach ($extensions as $extension) {
-            $installed = @extension_loaded($extension);
-            $row = $form->addRow();
-                $row->addLabel('extensionLabel', 'PHP ' .__('Extension').' '. $extension);
-                $row->addTextField('extension')->setValue(($installed)? __('Installed') : __('Not Installed'))->readonly();
-                $row->addContent(($installed)? $trueIcon : $falseIcon);
+            $checks['php-module-' . $extension] = (object) [
+                'label' => 'PHP ' .__('Extension').' '. $extension,
+                'value' => extension_loaded($extension) ? __('Installed') : __('Not Installed'),
+                'result' => extension_loaded($extension),
+            ];
         }
+    }
+
+    foreach ($checks as $id => $check) {
+        $row = $form->addRow();
+        $row->addLabel($id . 'Label', $check->label)->description($check->description ?? '');
+        $row->addTextField($id)->setValue($check->value)->readonly();
+        $row->addContent($check->result ? $trueIcon : $falseIcon);
     }
 
     $form->addRow()->addHeading(__('Language Settings'));
