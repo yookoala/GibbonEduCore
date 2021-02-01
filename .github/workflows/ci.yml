@@ -27,6 +27,13 @@ jobs:
 
     steps:
 
+      - name: Get Chrome Version
+        id: google-chrome-info
+        run: echo "::set-output name=VERSION::$(google-chrome --version | cut -d' ' -f 3)"
+
+      - name: Debug
+        run: echo "The version is ${{ steps.google-chrome-info.outputs.VERSION }}"
+
       - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
