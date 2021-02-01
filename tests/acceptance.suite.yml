@@ -14,6 +14,14 @@ modules:
             url: "%ABSOLUTE_URL%"
             curl: 
                 CURLOPT_TIMEOUT: 180
+        - WebDriver:
+            url: '%ABSOLUTE_URL%'
+            port: 9515
+            browser: chrome
+            capabilities:
+              "goog:chromeOptions":
+                args:
+                  - "--headless"
         - \Helper\Acceptance
         - Db
         - DbHelper
