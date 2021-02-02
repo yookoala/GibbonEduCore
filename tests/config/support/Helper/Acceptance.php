@@ -14,7 +14,7 @@ class Acceptance extends \Codeception\Module
      * @return   [type]
      */
     public function grabAllFormValues($selector = '#content form') {
-        $elements = $this->getModule('PhpBrowser')->_findElements("$selector input, $selector textarea, $selector select");
+        $elements = $this->getModule('WebDriver')->_findElements("$selector input, $selector textarea, $selector select");
 
         $typeCounts = array();
         $formValues = array();
@@ -66,7 +66,7 @@ class Acceptance extends \Codeception\Module
 
     public function seeFieldIsNotEmpty($selector)
     {
-        $value = $this->getModule('PhpBrowser')->grabValueFrom($selector);
+        $value = $this->getModule('WebDriver')->grabValueFrom($selector);
         $this->assertFalse(empty($value));
     }
 }
