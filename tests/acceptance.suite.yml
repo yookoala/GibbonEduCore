@@ -11,7 +11,7 @@ params:
 modules:
     enabled:
         - WebDriver:
-            url: '%ABSOLUTE_URL%'
+            url: 'http://localhost:8888/'
             port: 9515
             browser: chrome
             capabilities:

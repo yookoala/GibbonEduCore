@@ -3,6 +3,12 @@ params:
     - env
 modules:
     enabled:
-        - PhpBrowser:
-            url: "%ABSOLUTE_URL%"
+        - WebDriver:
+            url: 'http://localhost:8888/'
+            port: 9515
+            browser: chrome
+            capabilities:
+              "goog:chromeOptions":
+                args:
+                  - "--headless"
         - \Helper\Install
