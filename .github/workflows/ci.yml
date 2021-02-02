@@ -17,8 +17,10 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
           MYSQL_DATABASE: gibbon_test
+          MYSQL_USER: gibbon_test
+          MYSQL_PASSWORD: gibbon_password
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -85,8 +87,8 @@ jobs:
           ABSOLUTE_URL: http://127.0.0.1:8888
           DB_HOST: 127.0.0.1
           DB_NAME: gibbon_test
-          DB_USERNAME: root
-          DB_PASSWORD: ""
+          DB_USERNAME: gibbon_test
+          DB_PASSWORD: gibbon_password
 
       - name: Run composer test:phpstan (experimental)
         run: composer test:phpstan
@@ -146,7 +148,7 @@ jobs:
         if: ${{ failure() }}
         run: |
           mkdir -p ./tests/_dump
-          mysqldump -u root --protocol=tcp --column-statistics=0 gibbon_test > ./tests/_dump/mysqldump.sql
+          mysqldump -u gibbon_test -pgibbon_password --protocol=tcp --column-statistics=0 gibbon_test > ./tests/_dump/mysqldump.sql
 
       - name: Save Test Artifacts
         uses: actions/upload-artifact@v3
