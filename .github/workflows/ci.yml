@@ -62,6 +62,12 @@ jobs:
             --define error_reporting=E_ALL \
             >/dev/null 2>./tests/log/server_log &
 
+      - name: Install WebDriver for Chrome
+        uses: nanasess/setup-chromedriver@master
+
+      - name: Run WebDriver in Background
+        run: chromedriver --port=9515 --log-path=./tests/log/chromedriver.log &
+
       - name: Cache Composer dependencies
         uses: actions/cache@v2
         with:
@@ -83,15 +89,6 @@ jobs:
           DB_NAME: gibbon_test
           DB_USERNAME: root
           DB_PASSWORD: ""
-
-      - name: Install WebDriver for Chrome
-        uses: nanasess/setup-chromedriver@master
-
-      - name: Debug
-        run: which chromedriver
-
-      - name: Run WebDriver in Background
-        run: chromedriver --port=9515 --log-path=./tests/log/chromedriver.log &
 
       - name: Save Test Artifacts
         uses: actions/upload-artifact@v2
