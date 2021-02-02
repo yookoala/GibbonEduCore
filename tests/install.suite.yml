@@ -1,6 +1,7 @@
 class_name: InstallTester
 params:
     - env
+    - config/environment.install.php
 modules:
     enabled:
         - PhpBrowser:
