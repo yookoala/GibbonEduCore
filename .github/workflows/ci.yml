@@ -74,6 +74,9 @@ jobs:
       - name: Install WebDriver for Chrome
         uses: nanasess/setup-chromedriver@master
 
+      - name: Run WebDriver in Background
+        run: chromedriver --url-base=/wd/hub --port=9515 --log-path=./tests/_logs/chromedriver.log &
+
       - name: Run composer test
         run: composer test
         continue-on-error: ${{ matrix.experimental }}
