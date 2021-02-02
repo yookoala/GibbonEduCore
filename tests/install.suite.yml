@@ -3,6 +3,7 @@ params:
     - env
 modules:
     enabled:
+        - \Helper\Install
         - WebDriver:
             url: 'http://localhost:8888/'
             port: 9515
@@ -11,4 +12,3 @@ modules:
               "goog:chromeOptions":
                 args:
                   - "--headless"
-        - \Helper\Install

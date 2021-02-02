@@ -10,6 +10,7 @@ params:
     - config/environment.php
 modules:
     enabled:
+        - \Helper\Acceptance
         - WebDriver:
             url: 'http://localhost:8888/'
             port: 9515
@@ -18,7 +19,6 @@ modules:
               "goog:chromeOptions":
                 args:
                   - "--headless"
-        - \Helper\Acceptance
         - Db
         - DbHelper
         - Filesystem
