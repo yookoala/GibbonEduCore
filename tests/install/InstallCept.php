@@ -17,7 +17,7 @@ try {
 
     // STEP 2 --------------------------------------
     $I->see('Installation - Step 2', 'h2');
-    
+
 
     $I->fillField('databaseServer', getenv('DB_HOST'));
     $I->fillField('databaseName', getenv('DB_NAME'));
@@ -42,8 +42,6 @@ try {
         'passwordConfirm'       => '7SSbB9FZN24Q',
         'systemName'            => 'Gibbon',
         'installType'           => 'Testing',
-        'cuttingEdgeCode'       => 'Y',
-        'cuttingEdgeCodeHidden' => 'Y',
         'statsCollection'       => 'N',
         'organisationName'      => 'Gibbon Testing',
         'organisationNameShort' => 'GiT',
