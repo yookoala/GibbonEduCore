@@ -47,8 +47,6 @@ try {
         'passwordConfirm'       => '7SSbB9FZN24Q',
         'systemName'            => 'Gibbon',
         'installType'           => 'Testing',
-        'cuttingEdgeCode'       => 'Y',
-        'cuttingEdgeCodeHidden' => 'Y',
         'statsCollection'       => 'N',
         'organisationName'      => 'Gibbon Testing',
         'organisationNameShort' => 'GiT',
