@@ -1,6 +1,7 @@
 actor: InstallTester
 modules:
     enabled:
+        - Asserts:
         - WebDriver:
             url: "%ABSOLUTE_URL%"
             port: 9515

@@ -41,6 +41,12 @@ try {
 
     $I->dontSee('A database connection could not be established.');
 
+    // Make sure the cutting edge detection works.
+    $I->assertEquals(
+        'Y',
+        $I->executeJS('return document.getElementById("installer").querySelector("input[name=cuttingEdgeCodeHidden]").value;')
+    );
+
     $formValues = array(
         'title'                 => 'Mr.',
         'surname'               => 'Admin',
@@ -51,8 +57,6 @@ try {
         'passwordConfirm'       => '7SSbB9FZN24Q',
         'systemName'            => 'Gibbon',
         'installType'           => 'Testing',
-        'cuttingEdgeCode'       => 'Y',
-        'cuttingEdgeCodeHidden' => 'Y',
         'statsCollection'       => 'N',
         'organisationName'      => 'Gibbon Testing',
         'organisationNameShort' => 'GiT',
