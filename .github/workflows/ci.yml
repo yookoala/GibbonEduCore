@@ -66,7 +66,11 @@ jobs:
         uses: nanasess/setup-chromedriver@master
 
       - name: Run WebDriver in Background
-        run: chromedriver --port=9515 --log-path=./tests/log/chromedriver.log &
+        run: |
+          chromedriver \
+            --port=9515 \
+            --url-base=/wd/hub/ \
+            --log-path=./tests/log/chromedriver.log &
 
       - name: Cache Composer dependencies
         uses: actions/cache@v2
