@@ -33,7 +33,7 @@ $container->add('autoloader', $autoloader);
 
 $container->inflector(\League\Container\ContainerAwareInterface::class)
           ->invokeMethod('setContainer', [$container]);
-          
+
 $container->inflector(\Gibbon\Services\BackgroundProcess::class)
           ->invokeMethod('setProcessor', [\Gibbon\Services\BackgroundProcessor::class]);
 
@@ -67,7 +67,7 @@ if (!empty($gibbon->session->get('module'))) {
 
 // Initialize using the database connection
 if ($gibbon->isInstalled() == true) {
-    
+
     $mysqlConnector = new Gibbon\Database\MySqlConnector();
     if ($pdo = $mysqlConnector->connect($gibbon->getConfig())) {
         $container->add('db', $pdo);
@@ -76,7 +76,7 @@ if ($gibbon->isInstalled() == true) {
 
         $gibbon->initializeCore($container);
     } else {
-        // We need to handle failed database connections after install. Display an error if no connection 
+        // We need to handle failed database connections after install. Display an error if no connection
         // can be established. Needs a specific error page once header/footer is split out of index.
         if (!$gibbon->isInstalling()) {
             $page = $container->get(Page::class)->setDefaults(__DIR__);
@@ -84,9 +84,12 @@ if ($gibbon->isInstalled() == true) {
                 'error' => sprintf(__('A database connection could not be established. Please %1$stry again%2$s.'), '', ''),
                 'message' => ' ',
             ]);
-            
+
             echo $page->render('index.twig.html');
             exit;
         }
     }
+
+    // Global logger
+    $logger = $container->get('gibbon_logger');
 }

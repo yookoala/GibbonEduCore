@@ -20,17 +20,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 namespace Gibbon\Services;
 
 use Gibbon\Core;
-use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Locale;
 use Gibbon\Session;
 use Gibbon\View\View;
 use Gibbon\View\Page;
 use Gibbon\Comms\Mailer;
 use Gibbon\Comms\SMS;
+use Gibbon\Contracts\Database\Connection;;
 use Gibbon\Domain\System\Theme;
 use Gibbon\Domain\System\Module;
 use Gibbon\Contracts\Comms\Mailer as MailerInterface;
 use Gibbon\Contracts\Comms\SMS as SMSInterface;
+use Gibbon\Domain\System\LogHandler;
+use Gibbon\Domain\System\SettingGateway;
+use Gibbon\Services\LoggerFactory;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Container\ServiceProvider\BootableServiceProviderInterface;
 
@@ -108,19 +111,10 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         $absolutePath = $this->absolutePath;
         $session = $container->get('session');
 
-        // Logging removed until properly setup & tested
-        
-        // $container->share('gibbon_logger', function () use ($container) {
-        //     $factory = new LoggerFactory($container->get(SettingGateway::class));
-        //     return $factory->getLogger('gibbon');
-        // });
-
-        // $container->share('mysql_logger', function () use ($container) {
-        //     $factory = new LoggerFactory($container->get(SettingGateway::class));
-        //     return $factory->getLogger('mysql');
-        // });
-
-        // $pdo->setLogger($container->get('mysql_logger'));
+        // Declare a shared logger
+        $container->share('gibbon_logger', function () use ($container) {
+            return $container->get(LoggerFactory::class)->getLogger('gibbon');
+        });
 
         $container->share('twig', function () use ($absolutePath, $session) {
             $loader = new \Twig\Loader\FilesystemLoader($absolutePath.'/resources/templates');
@@ -179,12 +173,12 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
                 'moduleName'   => $session->get('module'),
                 'gibbonRoleID' => $session->get('gibbonRoleIDCurrent'),
             ];
-            $sql = "SELECT gibbonAction.* 
+            $sql = "SELECT gibbonAction.*
                     FROM gibbonAction
                     JOIN gibbonModule ON (gibbonModule.gibbonModuleID=gibbonAction.gibbonModuleID)
                     LEFT JOIN gibbonPermission ON (gibbonPermission.gibbonActionID=gibbonAction.gibbonActionID AND gibbonPermission.gibbonRoleID=:gibbonRoleID)
                     LEFT JOIN gibbonRole ON (gibbonRole.gibbonRoleID=gibbonPermission.gibbonRoleID)
-                    WHERE gibbonAction.URLList LIKE :actionName 
+                    WHERE gibbonAction.URLList LIKE :actionName
                     AND gibbonModule.name=:moduleName";
 
             $actionData = $this->getContainer()->get('db')->selectOne($sql, $data);
