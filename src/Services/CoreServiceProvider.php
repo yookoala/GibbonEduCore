@@ -26,7 +26,6 @@ use Gibbon\View\Page;
 use Gibbon\View\View;
 use Gibbon\Comms\Mailer;
 use Gibbon\Data\Validator;
-use Gibbon\Session\Session;
 use Gibbon\Domain\System\Theme;
 use Gibbon\Domain\System\Module;
 use Gibbon\Session\SessionFactory;
@@ -35,7 +34,7 @@ use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Contracts\Comms\SMS as SMSInterface;
 use Gibbon\Contracts\Comms\Mailer as MailerInterface;
 use Gibbon\Contracts\Services\Payment as PaymentInterface;
-use Gibbon\Contracts\Services\Session as SessionInterface;
+use Gibbon\Services\LoggerFactory;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Container\ServiceProvider\BootableServiceProviderInterface;
 
@@ -90,7 +89,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
      * this one, otherwise they will be ignored.
      */
     public function boot()
-    { 
+    {
         $container = $this->getLeagueContainer();
 
         $container->share('config', new Core($this->absolutePath));
@@ -121,6 +120,10 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         // });
 
         // $pdo->setLogger($container->get('mysql_logger'));
+        // Declare a shared logger
+        $container->share('gibbon_logger', function () use ($container) {
+            return $container->get(LoggerFactory::class)->getLogger('gibbon');
+        });
 
         $container->share('session', function () {
             return SessionFactory::create($this->getContainer());
@@ -230,7 +233,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
 
         $container->share('page', function () use ($container) {
             $session = $this->getLeagueContainer()->get('session');
-            
+
             $pageTitle = $session->get('organisationNameShort').' - '.$session->get('systemName');
             if ($session->has('module')) {
                 $pageTitle .= ' - '.__($session->get('module'));

@@ -97,6 +97,9 @@ if ($gibbon->isInstalled()) {
             exit;
         }
     }
+
+    // Global logger
+    $logger = $container->get('gibbon_logger');
 }
 
 if (!defined('SESSION_TABLE_AVAILABLE')) {
