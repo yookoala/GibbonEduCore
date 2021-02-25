@@ -39,3 +39,12 @@ extensions:
     enabled:
         - Codeception\Extension\RunFailed
 modules:
+    config:
+        Db:
+            dsn: "mysql:host=127.0.0.1;dbname=gibbon_test"
+            user: "root"
+            password: ""
+            dump: 'config/data/dump.sql'
+            populate: true
+            cleanup: false
+            reconnect: true
