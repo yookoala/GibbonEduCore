@@ -5,4 +5,6 @@ modules:
     enabled:
         - PhpBrowser:
             url: "%ABSOLUTE_URL%"
+            curl: 
+                CURLOPT_TIMEOUT: 180
         - \Helper\Install
