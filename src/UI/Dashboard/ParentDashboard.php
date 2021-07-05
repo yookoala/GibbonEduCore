@@ -377,7 +377,16 @@ class ParentDashboard implements OutputableInterface, ContainerAwareInterface
                     }
                     $gradesOutput .= "<div $styleAttainment>".$rowEntry['attainmentValue'];
                     if ($rowEntry['gibbonRubricIDAttainment'] != '' AND $enableRubrics =='Y') {
-                        $gradesOutput .= "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/Markbook/markbook_view_rubric.php&gibbonRubricID='.$rowEntry['gibbonRubricIDAttainment'].'&gibbonCourseClassID='.$rowEntry['gibbonCourseClassID'].'&gibbonMarkbookColumnID='.$rowEntry['gibbonMarkbookColumnID'].'&gibbonPersonID='.$gibbonPersonID."&mark=FALSE&type=attainment&width=1100&height=550'><img style='margin-bottom: -3px; margin-left: 3px' title='View Rubric' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/rubric.png'/></a>";
+                        $gradesOutput .= "<a class='thickbox' href='".Url::fromHandlerModuleRoute('fullscreen.php', 'Markbook', 'markbook_view_rubric')->withQueryParams([
+                            'gibbonRubricID' => $rowEntry['gibbonRubricIDAttainment'],
+                            'gibbonCourseClassID' => $rowEntry['gibbonCourseClassID'],
+                            'gibbonMarkbookColumnID' => $rowEntry['gibbonMarkbookColumnID'],
+                            'gibbonPersonID' => $gibbonPersonID,
+                            'mark' => 'FALSE',
+                            'type' => 'attainment',
+                            'width' => 1100,
+                            'height' => 550,
+                        ])."'><img style='margin-bottom: -3px; margin-left: 3px' title='View Rubric' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/rubric.png'/></a>";
                     }
                     $gradesOutput .= '</div>';
                     if ($rowEntry['attainmentValue'] != '') {
@@ -408,7 +417,16 @@ class ParentDashboard implements OutputableInterface, ContainerAwareInterface
                         }
                         $gradesOutput .= "<div $styleEffort>".$rowEntry['effortValue'];
                         if ($rowEntry['gibbonRubricIDEffort'] != '' AND $enableRubrics =='Y') {
-                            $gradesOutput .= "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/Markbook/markbook_view_rubric.php&gibbonRubricID='.$rowEntry['gibbonRubricIDEffort'].'&gibbonCourseClassID='.$rowEntry['gibbonCourseClassID'].'&gibbonMarkbookColumnID='.$rowEntry['gibbonMarkbookColumnID'].'&gibbonPersonID='.$gibbonPersonID."&mark=FALSE&type=effort&width=1100&height=550'><img style='margin-bottom: -3px; margin-left: 3px' title='View Rubric' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/rubric.png'/></a>";
+                            $gradesOutput .= "<a class='thickbox' href='".Url::fromHandlerModuleRoute('fullscreen.php', 'Markbook', 'markbook_view_rubric')->withQueryParams([
+                                'gibbonRubricID' => $rowEntry['gibbonRubricIDEffort'],
+                                'gibbonCourseClassID' => $rowEntry['gibbonCourseClassID'],
+                                'gibbonMarkbookColumnID' => $rowEntry['gibbonMarkbookColumnID'],
+                                'gibbonPersonID' => $gibbonPersonID,
+                                'mark' => 'FALSE',
+                                'type' => 'effort',
+                                'width' => 1100,
+                                'height' => 550,
+                            ])."'><img style='margin-bottom: -3px; margin-left: 3px' title='View Rubric' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/rubric.png'/></a>";
                         }
                         $gradesOutput .= '</div>';
                         if ($rowEntry['effortValue'] != '') {
