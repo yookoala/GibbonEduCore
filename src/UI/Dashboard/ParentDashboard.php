@@ -24,6 +24,7 @@ use Gibbon\Forms\OutputableInterface;
 use Gibbon\Contracts\Services\Session;
 use Gibbon\Contracts\Database\Connection;
 use Gibbon\Domain\Planner\PlannerEntryGateway;
+use Gibbon\Url;
 use League\Container\ContainerAwareTrait;
 use League\Container\ContainerAwareInterface;
 
@@ -114,10 +115,10 @@ class ParentDashboard implements OutputableInterface, ContainerAwareInterface
                     getUserPhoto($guid, $student['image_240'], 75).
                     "<div style='height: 5px'></div>".
                     "<span style='font-size: 70%'>".
-                    "<a href='".$this->session->get('absoluteURL').'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$student['gibbonPersonID']."'>".__('Student Profile').'</a><br/>';
+                    "<a href='".Url::fromModuleRoute('Students', 'student_view_details')->withQueryParam('gibbonPersonID', $student['gibbonPersonID'])."'>".__('Student Profile').'</a><br/>';
 
                 if (isActionAccessible($guid, $connection2, '/modules/Form Groups/formGroups_details.php')) {
-                    $output .= "<a href='".$this->session->get('absoluteURL').'/index.php?q=/modules/Form Groups/formGroups_details.php&gibbonFormGroupID='.$student['gibbonFormGroupID']."'>".__('Form Group').' ('.$student['formGroup'].')</a><br/>';
+                    $output .= "<a href='".Url::fromModuleRoute('Form Group', 'formGroups_details')->withQueryParam('gibbonFormGroupID', $student['gibbonFormGroupID'])."'>".__('Form Group').' ('.$student['formGroup'].')</a><br/>';
                 }
                 if ($student['formGroupWebsite'] != '') {
                     $output .= "<a target='_blank' href='".$student['formGroupWebsite']."'>".$student['formGroup'].' '.__('Website').'</a>';
@@ -154,7 +155,7 @@ class ParentDashboard implements OutputableInterface, ContainerAwareInterface
         $entryCount = 0;
 
         //PREPARE PLANNER SUMMARY
-        $plannerOutput = "<span style='font-size: 85%; font-weight: bold'>".__('Today\'s Classes')."</span> . <span style='font-size: 70%'><a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Planner/planner.php&search='.$gibbonPersonID."'>".__('View Planner').'</a></span>';
+        $plannerOutput = "<span style='font-size: 85%; font-weight: bold'>".__('Today\'s Classes')."</span> . <span style='font-size: 70%'><a href='".Url::fromModuleRoute('Planner', 'planner')->withQueryParam('search', $gibbonPersonID)."'>".__('View Planner').'</a></span>';
 
         $classes = false;
         $date = date('Y-m-d');
@@ -238,7 +239,17 @@ class ParentDashboard implements OutputableInterface, ContainerAwareInterface
                     }
                     $plannerOutput .= '</td>';
                     $plannerOutput .= '<td>';
-                    $plannerOutput .= "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Planner/planner_view_full.php&search='.$gibbonPersonID.'&viewBy=date&gibbonPlannerEntryID='.$row['gibbonPlannerEntryID']."&date=$date&width=1000&height=550'><img title='".__('View')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/plus.png'/></a> ";
+                    $plannerOutput .= "<a href='".
+                        Url::fromModuleRoute('Planner', 'planner_view_full')
+                            ->withQueryParams([
+                                'search' => $gibbonPersonID,
+                                'viewBy' => 'date',
+                                'gibbonPlannerEntryID' => $row['gibbonPlannerEntryID'],
+                                'date' => $date,
+                                'width' => 1000,
+                                'height' => 550,
+                            ]).
+                        "'><img title='".__('View')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/plus.png'/></a> ";
                     $plannerOutput .= '</td>';
                     $plannerOutput .= '</tr>';
                 }
@@ -252,7 +263,9 @@ class ParentDashboard implements OutputableInterface, ContainerAwareInterface
         }
 
         //PREPARE RECENT GRADES
-        $gradesOutput = "<div style='margin-top: 20px'><span style='font-size: 85%; font-weight: bold'>".__('Recent Feedback')."</span> . <span style='font-size: 70%'><a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Markbook/markbook_view.php&search='.$gibbonPersonID."'>".__('View Markbook').'</a></span></div>';
+        $gradesOutput = "<div style='margin-top: 20px'><span style='font-size: 85%; font-weight: bold'>".__('Recent Feedback')."</span> . <span style='font-size: 70%'><a href='".
+            Url::fromModuleRoute('Markbook', 'markbook_view')->withQueryParam('search', $gibbonPersonID).
+            "'>".__('View Markbook').'</a></span></div>';
         $grades = false;
 
         //Get settings
@@ -529,7 +542,9 @@ class ParentDashboard implements OutputableInterface, ContainerAwareInterface
         //PREPARE UPCOMING DEADLINES
         $homeworkNamePlural = getSettingByScope($connection2, 'Planner', 'homeworkNamePlural');
 
-        $deadlinesOutput = "<div style='margin-top: 20px'><span style='font-size: 85%; font-weight: bold'>".__('Upcoming Due Dates')."</span> . <span style='font-size: 70%'><a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Planner/planner_deadlines.php&search='.$gibbonPersonID."'>".__('View {homeworkName}', ['homeworkName' => __($homeworkNamePlural)]).'</a></span></div>';
+        $deadlinesOutput = "<div style='margin-top: 20px'><span style='font-size: 85%; font-weight: bold'>".__('Upcoming Due Dates')."</span> . <span style='font-size: 70%'><a href='".
+            Url::fromModuleRoute('Planner', 'planner_deadlines')->withQueryParam('search', $gibbonPersonID).
+            "'>".__('View {homeworkName}', ['homeworkName' => __($homeworkNamePlural)]).'</a></span></div>';
         $deadlines = false;
 
         $plannerGateway = $this->getContainer()->get(PlannerEntryGateway::class);
@@ -570,7 +585,8 @@ class ParentDashboard implements OutputableInterface, ContainerAwareInterface
             $activities = true;
 
             $activitiesOutput .= "<div class='linkTop'>";
-            $activitiesOutput .= "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Activities/activities_view.php&gibbonPersonID=".$gibbonPersonID."'>".__('View Available Activities').'</a>';
+            $activitiesOutput .= "<a href='".Url::fromModuleRoute('Activities', 'activities_view')->withQueryParam('gibbonPersonID', $gibbonPersonID).
+                "'>".__('View Available Activities').'</a>';
             $activitiesOutput .= '</div>';
 
             $dateType = getSettingByScope($connection2, 'Activities', 'dateType');
