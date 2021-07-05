@@ -102,7 +102,7 @@ else {
 
                 $event->addRecipient($gibbon->session->get('organisationAdministrator'));
                 $event->setNotificationText(sprintf(__('Someone failed to login to account "%1$s" 3 times in a row.'), $username));
-                $event->setActionLink('/index.php?q=/modules/User Admin/user_manage.php&search='.$username);
+                $event->setActionLink(Url::fromModuleRoute('User Admin', 'user_manage')->withQueryParam('search', $username));
 
                 $event->sendNotifications($pdo, $gibbon->session);
             }
