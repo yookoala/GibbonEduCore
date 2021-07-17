@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
  */
 class TranslateNTest extends TestCase
 {
+    /*
     private $mockPDO;
     private $mockSession;
 
@@ -145,4 +146,5 @@ class TranslateNTest extends TestCase
             'Translated plural string with string placeholder, with n=3'
         );
     }
+     */
 }
