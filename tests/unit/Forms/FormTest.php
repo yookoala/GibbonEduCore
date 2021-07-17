@@ -9,6 +9,7 @@ file that was distributed with this source code.
 
 namespace Gibbon\Forms;
 
+use League\Container\Container;
 use PHPUnit\Framework\TestCase;
 use Gibbon\Forms\View\FormRendererInterface;
 use Gibbon\Forms\FormFactoryInterface;
@@ -18,6 +19,37 @@ use Gibbon\Forms\FormFactoryInterface;
  */
 class FormTest extends TestCase
 {
+    protected $isMockingContainer = false;
+
+    protected function setUp(): void
+    {
+        global $container;
+        if (!isset($container)) {
+            $this->isMockingContainer = true; // remember to tearDown
+            $container = new Container();
+
+            // add dependencies for Gibbon\Forms\Form to mock container
+            $container->add(FormFactory::class);
+            $container->add(FormRenderer::class);
+
+            // register Gibbon\Forms\Form
+            $container->add(Form::class)
+                ->addArgument(FormFactory::class)
+                ->addArgument(FormRenderer::class);
+        }
+    }
+
+    protected function tearDown(): void
+    {
+        global $container;
+
+        // remove the locally created mock container from
+        // global namespace.
+        if (isset($container) && $this->isMockingContainer) {
+            unset($container);
+        }
+    }
+
     public function testCanBeCreatedStatically()
     {
         $this->assertInstanceOf(
@@ -26,13 +58,14 @@ class FormTest extends TestCase
         );
     }
 
-    public function testCanOutputToHtml()
+    public function testGetOutputUsesRendererToRenderForm()
     {
         $form = Form::create('testID', 'testAction');
-        $output = $form->getOutput();
-
-        $this->assertTrue(stripos($output, '<form') !== false);
-        $this->assertTrue(stripos($output, '</form>') !== false);
+        $mockFormRenderering = 'renderer rendered form ' . rand(0, 100);
+        $mockRenderer = $this->createMock(FormRenderer::class);
+        $mockRenderer->method('renderForm')->willReturn($mockFormRenderering);
+        $form->setRenderer($mockRenderer);
+        $this->assertSame($mockFormRenderering, $form->getOutput());
     }
 
     public function testCanAddRow()
