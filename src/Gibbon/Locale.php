@@ -80,6 +80,7 @@ class Locale implements LocaleInterface
         $this->absolutePath = $absolutePath;
         $this->session = $session;
         $this->supportsGetText = function_exists('gettext') && function_exists('dgettext');
+        $this->stringReplacements = [];
     }
 
     /**
@@ -236,7 +237,7 @@ class Locale implements LocaleInterface
      */
     protected function doStringReplacement(string $text)
     {
-        if (isset($this->stringReplacements) && is_array($this->stringReplacements)) {
+        if (is_array($this->stringReplacements)) {
             foreach ($this->stringReplacements as $replacement) {
                 if ($replacement['mode'] == 'Partial') { //Partial match
                     if ($replacement['caseSensitive'] == 'Y') {
