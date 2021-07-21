@@ -102,7 +102,7 @@ if ($step >= 1) {
 
 //Set language pre-install
 if (function_exists('gettext')) {
-    $gibbon->locale->setLocale($config->getLocale());
+    $gibbon->locale->setLocale($_POST['code'] ?? 'en_GB');
     bindtextdomain('gibbon', '../i18n');
     textdomain('gibbon');
 }
