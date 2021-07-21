@@ -22,7 +22,7 @@ namespace Gibbon\Contracts\Services;
 /**
  * Locale Interface
  *
- * @version	v17
+ * @version	v23
  * @since	v17
  */
 interface Locale
@@ -58,10 +58,13 @@ interface Locale
     /**
      * Binds the system default text domain.
      *
-     * @param string $domain
-     * @param string $absolutePath
+     * @version v23
+     *
+     * @param string $absolutePath  Optional. The absolute path to translations.
+     *                              If empty, will use the absolute path of the
+     *                              Locale instance.
      */
-    public function setSystemTextDomain($absolutePath);
+    public function setSystemTextDomain(string $absolutePath = '');
 
     /**
      * Binds a text domain for a given module by name.

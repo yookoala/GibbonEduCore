@@ -118,14 +118,12 @@ class Locale implements LocaleInterface
     }
 
     /**
-     * Binds the system default text domain.
-     *
-     * @param string $domain
-     * @param string $absolutePath
+     * {@inheritDoc}
      */
-    public function setSystemTextDomain($absolutePath)
+    public function setSystemTextDomain(string $absolutePath = '')
     {
         if (!$this->supportsGetText) return;
+        $absolutePath = $absolutePath ?: $this->absolutePath;
 
         bindtextdomain('gibbon', $absolutePath.'/i18n');
         bind_textdomain_codeset('gibbon', 'UTF-8');
