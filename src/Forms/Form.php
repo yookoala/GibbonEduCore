@@ -22,29 +22,92 @@ namespace Gibbon\Forms;
 use Gibbon\Tables\Action;
 use Gibbon\Forms\View\FormTableView;
 use Gibbon\Forms\FormFactoryInterface;
+use Gibbon\Forms\Layout\Row;
+use Gibbon\Forms\Layout\Trigger;
 use Gibbon\Forms\View\FormRendererInterface;
 use Gibbon\Forms\Traits\BasicAttributesTrait;
 
 /**
  * Form
  *
- * @version v14
+ * @version v23
  * @since   v14
  */
 class Form implements OutputableInterface
 {
     use BasicAttributesTrait;
 
-    protected $title;
-    protected $description;
+    /**
+     * Form title.
+     *
+     * @var string
+     */
+    protected $title = '';
+
+    /**
+     * Form description.
+     *
+     * @var string
+     */
+    protected $description = '';
+
+    /**
+     * Form factory associated to the form.
+     *
+     * @var \Gibbon\Forms\FormFactoryInterface
+     */
     protected $factory;
+
+    /**
+     * Form renderer.
+     *
+     * @var \Gibbon\Forms\View\FormRendererInterface
+     */
     protected $renderer;
 
+    /**
+     * Form rows to render.
+     *
+     * @var \Gibbon\Forms\Layout\Row[]
+     */
     protected $rows = [];
+
+    /**
+     * Javascript triggers to render.
+     *
+     * @var \Gibbon\Forms\Layout\Trigger[]
+     */
     protected $triggers = [];
+
+    /**
+     * Internal storage of the hidden values.
+     *
+     * @var array An array of key-value pairs of hidden values.
+     *            Each array item (an assoc array itself) has these keys
+     *             - name:  String name of hidden value.
+     *             - value: String value of the name.
+     */
     protected $values = [];
+
+    /**
+     * An array of header actions, generally displayed in the header right-hand side.
+     *
+     * @var \Gibbon\Tables\Action[]
+     */
     protected $header = [];
+
+    /**
+     * An array of multiple steps information.
+     *
+     * @var array
+     */
     protected $steps = [];
+
+    /**
+     * Current step in a multi-part form. Null if not a mult-part form.
+     *
+     * @var int|null
+     */
     protected $step = null;
 
     /**
@@ -70,9 +133,10 @@ class Form implements OutputableInterface
      * @param    string  $action
      * @param    string  $method
      * @param    string  $class
-     * @return   object  Form object
+     *
+     * @return   \Gibbon\Forms  Form object
      */
-    public static function create($id, $action, $method = 'post', $class = 'smallIntBorder fullWidth standardForm')
+    public static function create($id, $action, $method = 'post', $class = 'smallIntBorder fullWidth standardForm'): Form
     {
         global $container;
 
@@ -85,7 +149,17 @@ class Form implements OutputableInterface
         return $form;
     }
 
-    public static function createTable($id, $action, $method = 'post', $class = 'smallIntBorder fullWidth')
+    /**
+     * Create table of the given HTML id, action
+     *
+     * @param string $id      HTML id.
+     * @param string $action  String representation of action.
+     * @param string $method  HTTP method for form submission (e.g. POST, GET).
+     * @param string $class   Space separated string of all the class name for the form.
+     *
+     * @return \Gibbon\Forms\Form
+     */
+    public static function createTable($id, $action, $method = 'post', $class = 'smallIntBorder fullWidth'): Form
     {
         global $container;
 
@@ -97,18 +171,22 @@ class Form implements OutputableInterface
 
     /**
      * Get the form title.
-     * @return  string 
+     *
+     * @return  string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
     /**
      * Set the form title.
+     *
      * @param  string  $title
+     *
+     * @return self
      */
-    public function setTitle($title)
+    public function setTitle(string $title): Form
     {
         $this->title = $title;
 
@@ -117,18 +195,22 @@ class Form implements OutputableInterface
 
     /**
      * Get the form description.
-     * @return  string 
+     *
+     * @return  string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
     /**
      * Set the form description.
+     *
      * @param  string  $description
+     *
+     * @return self
      */
-    public function setDescription($description)
+    public function setDescription($description): Form
     {
         $this->description = $description;
 
@@ -137,18 +219,22 @@ class Form implements OutputableInterface
 
     /**
      * Get the current factory.
-     * @return  object FormFactoryInterface
+     *
+     * @return  \Gibbon\Forms\FormFactoryInterface The factory that creates this form.
      */
-    public function getFactory()
+    public function getFactory(): FormFactoryInterface
     {
         return $this->factory;
     }
 
     /**
      * Set the factory.
-     * @param  FormFactoryInterface  $factory
+     *
+     * @param  \Gibbon\Forms\FormFactoryInterface  $factory
+     *
+     * @return self
      */
-    public function setFactory(FormFactoryInterface $factory)
+    public function setFactory(FormFactoryInterface $factory): Form
     {
         $this->factory = $factory;
 
@@ -157,18 +243,22 @@ class Form implements OutputableInterface
 
     /**
      * Get the current renderer.
-     * @return  object FormRendererInterface
+     *
+     * @return  \Gibbon\Forms\View\FormRendererInterface The current form renderer.
      */
-    public function getRenderer()
+    public function getRenderer(): FormRendererInterface
     {
         return $this->renderer;
     }
 
     /**
      * Set the renderer.
-     * @param  FormRendererInterface  $renderer
+     *
+     * @param  \Gibbon\Forms\View\FormRendererInterface  $renderer
+     *
+     * @return self
      */
-    public function setRenderer(FormRendererInterface $renderer)
+    public function setRenderer(FormRendererInterface $renderer): Form
     {
         $this->renderer = $renderer;
 
@@ -179,12 +269,19 @@ class Form implements OutputableInterface
      * Get the current HTTP method for this form (default: post)
      * @return  string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->getAttribute('method');
     }
 
-    public function setMethod(string $method)
+    /**
+     * Set the HTTP method for this form.
+     *
+     * @param string $method
+     *
+     * @return self
+     */
+    public function setMethod(string $method): Form
     {
         $this->setAttribute('method', $method);
 
@@ -193,14 +290,22 @@ class Form implements OutputableInterface
 
     /**
      * Get the current action URL for the form.
+     *
      * @return  string
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->getAttribute('action');
     }
 
-    public function setAction(string $action)
+    /**
+     * Set the form action URL.
+     *
+     * @param string $action
+     *
+     * @return self
+     */
+    public function setAction(string $action): Form
     {
         $this->setAttribute('action', $action);
 
@@ -209,40 +314,47 @@ class Form implements OutputableInterface
 
     /**
      * Adds a Row object to the form and returns it.
+     *
      * @param  string  $id
-     * @return object Row
+     *
+     * @return  \Gibbon\Forms\Layout\Row
      */
-    public function addRow($id = '')
+    public function addRow($id = ''): Row
     {
         $section = !empty($this->rows) ? end($this->rows)->getHeading() : '';
         $row = $this->factory->createRow($id)->setHeading($section);
-        
         $this->rows[] = $row;
-
         return $row;
     }
 
     /**
-     * Cet the last added Row object, null if none exist.
-     * @return  object|null
+     * Get the last added Row object, null if none exist.
+     *
+     * @return  \Gibbon\Forms\Layout\Row|null
      */
-    public function getRow()
+    public function getRow(): ?Row
     {
         return (!empty($this->rows))? end($this->rows) : null;
     }
 
     /**
      * Get an array of all Row objects in the form.
-     * @return  array
+     *
+     * @return  \Gibbon\Forms\Layout\Row[]
      */
-    public function getRows()
+    public function getRows(): array
     {
         return array_filter($this->rows, function ($item) {
             return !empty($item->getElements());
         });
     }
 
-    public function getRowsByHeading()
+    /**
+     * Get rows grouped by the rows' heading.
+     *
+     * @return array
+     */
+    public function getRowsByHeading(): array
     {
         return array_reduce($this->rows, function ($group, $row) {
             $group[$row->getHeading()][] = $row;
@@ -250,7 +362,14 @@ class Form implements OutputableInterface
         }, []);
     }
 
-    public function hasHeading($heading)
+    /**
+     * Get the count of rows which has the given heading.
+     *
+     * @param string $heading
+     *
+     * @return int
+     */
+    public function hasHeading(string $heading): int
     {
         return count(array_filter($this->rows, function ($row) use ($heading) {
             return $row->getHeading() == $heading;
@@ -259,10 +378,13 @@ class Form implements OutputableInterface
 
     /**
      * Adds an input type=hidden value to the form.
+     *
      * @param  string  $name
      * @param  string  $value
+     *
+     * @return self
      */
-    public function addHiddenValue($name, $value)
+    public function addHiddenValue(string $name, string $value): Form
     {
         $this->values[] = array('name' => $name, 'value' => $value);
 
@@ -271,9 +393,12 @@ class Form implements OutputableInterface
 
     /**
      * Adds a key => value array of input type=hidden values.
+     *
      * @param  array  $array
+     *
+     * @return self
      */
-    public function addHiddenValues(array $array)
+    public function addHiddenValues(array $array): Form
     {
         foreach ($array as $name => $value) {
             $this->addHiddenValue($name, $value);
@@ -284,33 +409,37 @@ class Form implements OutputableInterface
 
     /**
      * Get an array of all hidden values.
+     *
      * @return  array
      */
-    public function getHiddenValues()
+    public function getHiddenValues(): array
     {
         return $this->values;
     }
 
     /**
      * Get the value of the autocomplete HTML form attribute.
+     *
      * @return  string
      */
-    public function getAutocomplete()
+    public function getAutocomplete(): string
     {
         return $this->getAttribute('autocomplete');
     }
 
     /**
      * Turn autocomplete for the form On or Off.
+     *
      * @param  string  $value
+     *
      * @return self
      */
-    public function setAutocomplete($value)
+    public function setAutocomplete($value): Form
     {
         if (is_bool($value)) {
             $value = $value? 'on' : 'off';
         }
-        
+
         $this->setAttribute('autocomplete', $value);
 
         return $this;
@@ -318,22 +447,27 @@ class Form implements OutputableInterface
 
     /**
      * Add a confirmation message to display before form submission.
+     *
      * @param string $message
+     *
      * @return self
      */
-    public function addConfirmation($message)
+    public function addConfirmation($message): Form
     {
         $this->setAttribute('onsubmit', "return confirm(\"".__($message)."\")");
-        
+
         return $this;
     }
 
     /**
      * Adds a Trigger object that injects javascript to respond to form events.
-     * @param  string  $selector
-     * @param  object  $trigger
+     *
+     * @param  string                        $selector
+     * @param  \Gibbon\Forms\Layout\Trigger  $trigger
+     *
+     * @return \Gibbon\Forms\Layout\Trigger
      */
-    public function addTrigger($selector, $trigger)
+    public function addTrigger(string $selector, Trigger $trigger): Trigger
     {
         $this->triggers[$selector] = $trigger;
 
@@ -342,19 +476,22 @@ class Form implements OutputableInterface
 
     /**
      * Get an array of all Trigger objects.
-     * @return  array
+     *
+     * @return  \Gibbon\Forms\Layout\Trigger[]
      */
-    public function getTriggers()
+    public function getTriggers(): array
     {
         return $this->triggers;
     }
 
     /**
      * Adds a visibility trigger to the form by class name.
+     *
      * @param   string  $class Element name
-     * @return  object Trigger
+     *
+     * @return  \Gibbon\Forms\Layout\Trigger
      */
-    public function toggleVisibilityByClass($class)
+    public function toggleVisibilityByClass($class): Trigger
     {
         $selector = '.'.$class;
 
@@ -363,8 +500,10 @@ class Form implements OutputableInterface
 
     /**
      * Adds a visibility trigger to the form by element ID.
+     *
      * @param   string  $id CSS Element ID
-     * @return  object Trigger
+     *
+     * @return  \Gibbon\Forms\Layout\Trigger Trigger
      */
     public function toggleVisibilityByID($id)
     {
@@ -378,9 +517,10 @@ class Form implements OutputableInterface
      *
      * @param array $steps
      * @param int $currentStep
+     *
      * @return self
      */
-    public function setMultiPartForm(array $steps, int $currentStep = 1)
+    public function setMultiPartForm(array $steps, int $currentStep = 1): Form
     {
         $this->steps = $steps;
         $this->step = $currentStep;
@@ -388,12 +528,23 @@ class Form implements OutputableInterface
         return $this;
     }
 
-    public function getMultiPartSteps()
+    /**
+     * Get steps in a multipart form.
+     *
+     * @return array
+     */
+    public function getMultiPartSteps(): array
     {
         return $this->steps;
     }
 
-    public function getCurrentStep()
+    /**
+     * Get current step number in a multipart form.
+     * If this is not a multi-part form, returns null.
+     *
+     * @return int|null Step
+     */
+    public function getCurrentStep(): int
     {
         return $this->step;
     }
@@ -403,7 +554,7 @@ class Form implements OutputableInterface
      * @param   array  &$data
      * @return  self
      */
-    public function loadAllValuesFrom(&$data)
+    public function loadAllValuesFrom(&$data): Form
     {
         foreach ($this->getRows() as $row) {
             $row->loadFrom($data);
@@ -414,11 +565,13 @@ class Form implements OutputableInterface
 
     /**
      * Loads the state for several form elements by calling $method with values from $data.
+     *
      * @param string $method
      * @param array $data
-     * @return void
+     *
+     * @return self
      */
-    public function loadStateFrom($method, $data)
+    public function loadStateFrom($method, $data): Form
     {
         foreach ($this->getRows() as $row) {
             $row->loadState($method, $data);
@@ -432,7 +585,8 @@ class Form implements OutputableInterface
      *
      * @param string $name
      * @param string $label
-     * @return Action
+     *
+     * @return \Gibbon\Tables\Action
      */
     public function addHeaderAction($name, $label = '')
     {
@@ -446,16 +600,17 @@ class Form implements OutputableInterface
      *
      * @return array
      */
-    public function getHeader()
+    public function getHeader(): array
     {
         return $this->header;
     }
 
     /**
      * Renders the form to HTML.
+     *
      * @return  string
      */
-    public function getOutput()
+    public function getOutput(): string
     {
         return $this->renderer->renderForm($this);
     }
