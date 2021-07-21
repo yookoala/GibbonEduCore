@@ -31,14 +31,40 @@ use Gibbon\Contracts\Services\Session as SessionInterface;
  */
 class Locale implements LocaleInterface
 {
+    /**
+     * String code for current environment default locale.
+     *
+     * @var string
+     */
     protected $i18ncode;
 
+    /**
+     * Path to gettext locale files.
+     *
+     * @var string
+     */
     protected $absolutePath;
 
+    /**
+     * Gibbon session.
+     *
+     * @var \Gibbon\Contracts\Services\Session
+     */
     protected $session;
 
+    /**
+     * An array of string replacement to apply before returning the translations.
+     * Please reference doStringReplacement for schema of this array.
+     *
+     * @var string[]
+     */
     protected $stringReplacements;
 
+    /**
+     * Flag indeciate if gettext support is present.
+     *
+     * @var boolean
+     */
     protected $supportsGetText = true;
 
 
@@ -131,16 +157,24 @@ class Locale implements LocaleInterface
     }
 
     /**
-     * Binds a text domain for a given module by name.
-     *
-     * @param string $module
-     * @param string $absolutePath
+     * {@inheritDoc}
      */
-    public function setModuleTextDomain($module, $absolutePath)
+    public function setModuleTextDomain(string $module, string $absolutePath = '')
     {
         if (!$this->supportsGetText) return;
+        $absolutePath = $absolutePath ?: $this->absolutePath;
 
         bindtextdomain($module, $absolutePath.'/modules/'.$module.'/i18n');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setModulesTextDomain(array $modules, string $absolutePath = '') {
+        $absolutePath = $absolutePath ?: $this->absolutePath;
+        foreach ($modules as $module) {
+            $this->setModuleTextDomain($module, $this->absolutePath);
+        }
     }
 
     /**

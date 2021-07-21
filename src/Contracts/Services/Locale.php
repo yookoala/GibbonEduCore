@@ -69,10 +69,27 @@ interface Locale
     /**
      * Binds a text domain for a given module by name.
      *
-     * @param string $module
-     * @param string $absolutePath
+     * @version v23
+     *
+     * @param string $module        The names of module.
+     * @param string $absolutePath  Optional. The absolute path to translations.
+     *                              If empty, will use the absolute path of the
+     *                              Locale instance.
      */
-    public function setModuleTextDomain($module, $absolutePath);
+    public function setModuleTextDomain(string $module, string $absolutePath = '');
+
+    /**
+     * Binds a text domain for a given module by name.
+     *
+     * @version v23
+     * @since   v23
+     *
+     * @param string[] $modules       The names of modules.
+     * @param string   $absolutePath  Optional. The absolute path to translations.
+     *                                If empty, will use the absolute path of the
+     *                                Locale instance.
+     */
+    public function setModulesTextDomain(array $modules, string $absolutePath);
 
     /**
      * Translate a string using the current locale and string replacements.
