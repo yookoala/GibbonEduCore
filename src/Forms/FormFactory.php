@@ -19,20 +19,23 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Gibbon\Forms;
 
-use Gibbon\Forms\Layout\Row;
-use Gibbon\Tables\DataTable;
+use Gibbon\Contracts\Services\Session;
+use Gibbon\Domain\QueryCriteria;
+use Gibbon\Forms\FormFactoryInterface;
+use Gibbon\Forms\Input\Select;
 use Gibbon\Forms\Layout\Column;
 use Gibbon\Forms\Layout\Element;
+use Gibbon\Forms\Layout\Row;
+use Gibbon\Forms\Layout\Table;
 use Gibbon\Forms\Layout\Trigger;
-use Gibbon\Forms\FormFactoryInterface;
-use Gibbon\Contracts\Services\Session;
+use Gibbon\Tables\DataTable;
 
 /**
  * FormFactory
  *
  * Handles Form object creation, including pre-defined elements. Replaceable component. Default factory can be extended to add types.
  *
- * @version v14
+ * @version v23
  * @since   v14
  */
 class FormFactory implements FormFactoryInterface
@@ -51,25 +54,31 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createRow($id = ''): Row
+    public function createRow(string $id = ''): Row
     {
-        return new Layout\Row($this, $id);
+        return new Row($this, $id);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function createColumn($id = ''): Column
+    public function createColumn(string $id = ''): Column
     {
-        return new Layout\Column($this, $id);
+        return new Column($this, $id);
     }
 
-    public function createTable($id = '')
+    /**
+     * {@inheritDoc}
+     */
+    public function createTable(string $id = ''): Table
     {
-        return new Layout\Table($this, $id);
+        return new Table($this, $id);
     }
 
-    public function createDataTable($id, $criteria = null)
+    /**
+     * {@inheritDoc}
+     */
+    public function createDataTable(string $id, ?QueryCriteria $criteria = null): DataTable
     {
         return !empty($criteria)
             ? DataTable::createPaginated($id, $criteria)
@@ -94,7 +103,7 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createTrigger($selector = ''): Trigger
+    public function createTrigger(string $selector = ''): Trigger
     {
         return new Layout\Trigger($selector);
     }
@@ -117,7 +126,7 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createContent($content = ''): Element
+    public function createContent(string $content = ''): Element
     {
         return new Layout\Element($content);
     }
@@ -233,9 +242,9 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createSelect($name)
+    public function createSelect(string $name): Select
     {
-        return new Input\Select($name);
+        return new Select($name);
     }
 
     public function createMultiSelect($name)
@@ -272,12 +281,12 @@ class FormFactory implements FormFactoryInterface
     {
         return new Input\Person($name);
     }
-    
+
     public function createScanner($name)
     {
         return new Input\Scanner($name);
     }
-    
+
     /* PRE-DEFINED LAYOUT --------------------------- */
 
     public function createAlert($content, $level = 'warning')
