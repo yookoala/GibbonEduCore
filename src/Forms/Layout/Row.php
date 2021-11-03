@@ -120,6 +120,57 @@ class Row
     }
 
     /**
+     * Add an element from the given form factory.
+     *
+     * Provides a way to add element from factory with the specified way.
+     *
+     * <code>
+     * $row
+     *   ->addFactoryElement(function (FormFactoryInterface $factory) {
+     *     return $factory->createLabel('country', 'Country');
+     *   })
+     *   ->addFactoryElement(function (FormFactoryInterface $factory) use ($data) {
+     *     return $factory->createSelect('country')
+     *              ->placeholder('Select a country')
+     *              ->selected('uk');
+     *   })
+     *   ->addFactoryElement(function (FormFactoryInterface $factory) {
+     *     return $factory->createLabel('quantity', 'Quantity');
+     *   })
+     *   ->addFactoryElement(function (FormFactoryInterface $factory) use ($data) {
+     *     return $factory->createNumber('quantity')
+     *              ->setValue($data['quantity'] ?? 0);
+     *   });
+     * </code>
+     *
+     * For PHP 7.4+, code can be even cleaner with arrow function:
+     * <code>
+     * $row
+     *   ->addFactoryElement(fn (FormFactoryInterface $factory) => $factory->createLabel('country', 'Country'))
+     *   ->addFactoryElement(fn (FormFactoryInterface $factory) => $factory->createSelect('country')->placeholder('Select a country')->selected('uk'))
+     *   ->addFactoryElement(fn (FormFactoryInterface $factory) => $factory->createLabel('quantity', 'Quantity'))
+     *   ->addFactoryElement(fn (FormFactoryInterface $factory) => $factory->createNumber('quantity')->setValue($data['quantity'] ?? 0));
+     * </code>
+     *
+     * @param callable Specification of the element.
+     *
+     * @return self
+     */
+    public function addFactoryElement(callable $spec)
+    {
+        $return = $spec($this->factory);
+        if (! $return instanceof OutputableInterface) {
+            error_log(sprintf(
+                'The spec callback function provided to addFactoryElement did not return OutputableInterface. Returned %s instead.',
+                var_export($return, true)
+            ));
+            throw new \Exception('Error rendering layout row element.');
+        }
+        $this->addElement($return);
+        return $this;
+    }
+
+    /**
      * Adds an outputtable element to the row's internal collection.
      * @param  OutputableInterface  $element
      */
