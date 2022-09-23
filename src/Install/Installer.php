@@ -107,7 +107,7 @@ class Installer
      * @version v23
      * @since   v23
      *
-     * @param \Gibbon\Contracts\Database\Connection $connection
+     * @param Connection $connection
      *
      * @return self
      */
@@ -123,9 +123,9 @@ class Installer
      * @version v23
      * @since   v23
      *
-     * @param \Gibbon\Contracts\Database\Connection $connection
+     * @param Connection $connection
      *
-     * @return self
+     * @return Connection
      */
     public function getConnection(): Connection
     {
@@ -140,7 +140,7 @@ class Installer
      *
      * @param \PDO $connection
      *
-     * @return self
+     * @return \PDO
      *
      * @throws \Exception If internal connection is not set.
      */
@@ -187,6 +187,29 @@ class Installer
         );
         return $statement->execute($user);
     }
+
+    /**
+     * Check if the installer has run through user setup.
+     * (If the system has already created admin user)
+     *
+     * @version v25
+     * @since   v25
+     *
+     * @return bool  True if installer has run past user creation.
+     *
+     * @throws \PDOException On error if PDO::ERRMODE_EXCEPTION option is set to true
+     *                       in the instance's \PDO connection.
+     */
+    public function hasFinishedUserSetup(): bool
+    {
+        $statement = $this->getPDO()
+            ->prepare('SELECT COUNT(*) as count FROM gibbonPerson');
+        $statement->execute();
+        $count = $statement->fetchColumn();
+        return ($count > 0);
+    }
+
+
 
     /**
      * Set a user of given gibbonPersonID as staff.
@@ -450,7 +473,7 @@ class Installer
     {
         // Get internal connection.
         $pdo = $this->getPDO();
-        
+
         // Try to install the demo data, report error but don't stop if any issues
         try {
             $sql = $this->getDemoSql($context);
@@ -465,7 +488,7 @@ class Installer
         } catch (\PDOException $e) {
             return false;
         }
-        
+
         return true;
     }
 
