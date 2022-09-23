@@ -22,6 +22,8 @@ namespace Gibbon\Forms;
 use Gibbon\Tables\Action;
 use Gibbon\Forms\View\FormTableView;
 use Gibbon\Forms\FormFactoryInterface;
+use Gibbon\Forms\Layout\Row;
+use Gibbon\Forms\Layout\Trigger;
 use Gibbon\Forms\View\FormRendererInterface;
 use Gibbon\Forms\Traits\BasicAttributesTrait;
 
@@ -35,16 +37,74 @@ class Form implements OutputableInterface
 {
     use BasicAttributesTrait;
 
-    protected $title;
-    protected $description;
+    /**
+     * The title of the form
+     *
+     * @var string
+     */
+    protected $title = '';
+
+    /**
+     * The description of the form
+     *
+     * @var string
+     */
+    protected $description = '';
+
+    /**
+     * The form element factory.
+     *
+     * @var FormFactoryInterface
+     */
     protected $factory;
+
+    /**
+     * The form renderer instance.
+     *
+     * @var FormRendererInterface
+     */
     protected $renderer;
 
+    /**
+     * Array or rows.
+     *
+     * @var Row[]
+     */
     protected $rows = [];
+
+    /**
+     * Array of triggers
+     *
+     * @var Trigger[]
+     */
     protected $triggers = [];
+
+    /**
+     * Array of values.
+     *
+     * @var array[]
+     */
     protected $values = [];
+
+    /**
+     * Array of header
+     *
+     * @var OutputableInterface[]
+     */
     protected $header = [];
+
+    /**
+     * Steps of a multi-step form.
+     *
+     * @var array[]
+     */
     protected $steps = [];
+
+    /**
+     * The current step key.
+     *
+     * @var int
+     */
     protected $step = null;
 
     /**
@@ -97,7 +157,7 @@ class Form implements OutputableInterface
 
     /**
      * Get the form title.
-     * @return  string 
+     * @return  string
      */
     public function getTitle()
     {
@@ -117,7 +177,7 @@ class Form implements OutputableInterface
 
     /**
      * Get the form description.
-     * @return  string 
+     * @return  string
      */
     public function getDescription()
     {
@@ -200,6 +260,12 @@ class Form implements OutputableInterface
         return $this->getAttribute('action');
     }
 
+    /**
+     * Set the action attribute of the form.
+     *
+     * @param  string  $action
+     * @return static
+     */
     public function setAction(string $action)
     {
         $this->setAttribute('action', $action);
@@ -210,13 +276,14 @@ class Form implements OutputableInterface
     /**
      * Adds a Row object to the form and returns it.
      * @param  string  $id
-     * @return object Row
+     *
+     * @return Row  The row object just created.
      */
-    public function addRow($id = '')
+    public function addRow($id = ''): Row
     {
         $section = !empty($this->rows) ? end($this->rows)->getHeading() : '';
         $row = $this->factory->createRow($id)->setHeading($section);
-        
+
         $this->rows[] = $row;
 
         return $row;
@@ -224,29 +291,36 @@ class Form implements OutputableInterface
 
     /**
      * Cet the last added Row object, null if none exist.
-     * @return  object|null
+     *
+     * @return  Row|null
      */
-    public function getRow()
+    public function getRow(): ?Row
     {
         return (!empty($this->rows))? end($this->rows) : null;
     }
 
     /**
      * Get an array of all Row objects in the form.
-     * @return  array
+     *
+     * @return  Row[]  Array of rows.
      */
-    public function getRows()
+    public function getRows(): array
     {
         return array_filter($this->rows, function ($item) {
             return !empty($item->getElements());
         });
     }
 
+    /**
+     * Get arrays of rows by their headings.
+     *
+     * @return Row[][]
+     */
     public function getRowsByHeading()
     {
         $rowCount = count($this->rows);
         return array_reduce($this->rows, function ($group, $row) use (&$rowCount) {
-            
+
             if ($row->getHeading() == 'submit' && $rowCount > 10) {
                 $row->addClass('submitRow sticky -bottom-px bg-gray-100 border-t -mt-px mb-px z-50');
             }
@@ -255,11 +329,18 @@ class Form implements OutputableInterface
         }, []);
     }
 
-    public function hasHeading($heading)
+    /**
+     * Check if a heading exists in the form rows.
+     *
+     * @param  string   $heading
+     *
+     * @return boolean
+     */
+    public function hasHeading($heading): bool
     {
         return count(array_filter($this->rows, function ($row) use ($heading) {
             return $row->getHeading() == $heading;
-        }));
+        })) > 0;
     }
 
     /**
@@ -277,6 +358,7 @@ class Form implements OutputableInterface
     /**
      * Adds a key => value array of input type=hidden values.
      * @param  array  $array
+     * @return static
      */
     public function addHiddenValues(array $array)
     {
@@ -308,14 +390,14 @@ class Form implements OutputableInterface
     /**
      * Turn autocomplete for the form On or Off.
      * @param  string  $value
-     * @return self
+     * @return static
      */
     public function setAutocomplete($value)
     {
         if (is_bool($value)) {
             $value = $value? 'on' : 'off';
         }
-        
+
         $this->setAttribute('autocomplete', $value);
 
         return $this;
@@ -324,21 +406,23 @@ class Form implements OutputableInterface
     /**
      * Add a confirmation message to display before form submission.
      * @param string $message
-     * @return self
+     * @return static
      */
     public function addConfirmation($message)
     {
         $this->setAttribute('onsubmit', "return confirm(\"".__($message)."\")");
-        
+
         return $this;
     }
 
     /**
      * Adds a Trigger object that injects javascript to respond to form events.
      * @param  string  $selector
-     * @param  object  $trigger
+     * @param  Trigger  $trigger
+     *
+     * @return Trigger
      */
-    public function addTrigger($selector, $trigger)
+    public function addTrigger(string $selector, Trigger $trigger): Trigger
     {
         $this->triggers[$selector] = $trigger;
 
@@ -347,7 +431,7 @@ class Form implements OutputableInterface
 
     /**
      * Get an array of all Trigger objects.
-     * @return  array
+     * @return  Trigger[]
      */
     public function getTriggers()
     {
@@ -356,7 +440,7 @@ class Form implements OutputableInterface
 
     /**
      * Clear all Trigger objects.
-     * @return  array
+     * @return  void
      */
     public function clearTriggers()
     {
@@ -366,9 +450,9 @@ class Form implements OutputableInterface
     /**
      * Adds a visibility trigger to the form by class name.
      * @param   string  $class Element name
-     * @return  object Trigger
+     * @return  Trigger Trigger
      */
-    public function toggleVisibilityByClass($class)
+    public function toggleVisibilityByClass($class): Trigger
     {
         $selector = '.'.$class;
 
@@ -378,9 +462,9 @@ class Form implements OutputableInterface
     /**
      * Adds a visibility trigger to the form by element ID.
      * @param   string  $id CSS Element ID
-     * @return  object Trigger
+     * @return  Trigger Trigger
      */
-    public function toggleVisibilityByID($id)
+    public function toggleVisibilityByID($id): Trigger
     {
         $selector = '#'.$id;
 
@@ -392,7 +476,7 @@ class Form implements OutputableInterface
      *
      * @param array $steps
      * @param int $currentStep
-     * @return self
+     * @return static
      */
     public function setMultiPartForm(array $steps, int $currentStep = 1)
     {
@@ -402,11 +486,21 @@ class Form implements OutputableInterface
         return $this;
     }
 
-    public function getMultiPartSteps()
+    /**
+     * Return multip-part steps.
+     *
+     * @return array
+     */
+    public function getMultiPartSteps(): array
     {
         return $this->steps;
     }
 
+    /**
+     * Get the current step of the multipart form.
+     *
+     * @return mixed
+     */
     public function getCurrentStep()
     {
         return $this->step;
@@ -415,7 +509,7 @@ class Form implements OutputableInterface
     /**
      * Loads an array of $key => $value pairs into any form elements with a matching name.
      * @param   array  &$data
-     * @return  self
+     * @return  static
      */
     public function loadAllValuesFrom(&$data)
     {
@@ -430,7 +524,7 @@ class Form implements OutputableInterface
      * Loads the state for several form elements by calling $method with values from $data.
      * @param string $method
      * @param array $data
-     * @return void
+     * @return static
      */
     public function loadStateFrom($method, $data)
     {
@@ -448,7 +542,7 @@ class Form implements OutputableInterface
      * @param string $label
      * @return Action
      */
-    public function addHeaderAction($name, $label = '')
+    public function addHeaderAction($name, $label = ''): Action
     {
         $this->header[$name] = new Action($name, $label);
 
@@ -460,7 +554,7 @@ class Form implements OutputableInterface
      *
      * @return array
      */
-    public function getHeader()
+    public function getHeader(): array
     {
         return $this->header;
     }

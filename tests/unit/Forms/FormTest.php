@@ -12,6 +12,7 @@ namespace Gibbon\Forms;
 use PHPUnit\Framework\TestCase;
 use Gibbon\Forms\View\FormRendererInterface;
 use Gibbon\Forms\FormFactoryInterface;
+use Gibbon\Forms\Layout\Trigger;
 
 /**
  * @covers Form
@@ -62,7 +63,7 @@ class FormTest extends TestCase
         $form = Form::create('testID', 'testAction');
 
         $this->assertTrue(count($form->getTriggers()) == 0);
-        $form->addTrigger('selector', 'trigger');
+        $form->addTrigger('selector', new Trigger('trigger'));
 
         $this->assertTrue(count($form->getTriggers()) > 0);
     }

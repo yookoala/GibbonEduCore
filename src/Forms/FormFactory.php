@@ -25,6 +25,7 @@ use Gibbon\Forms\Layout\Element;
 use Gibbon\Forms\Layout\Trigger;
 use Gibbon\Forms\FormFactoryInterface;
 use Gibbon\Contracts\Services\Session;
+use Gibbon\Domain\QueryCriteria;
 use Gibbon\Http\Url;
 use Gibbon\Tables\DataTable;
 
@@ -52,7 +53,7 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createRow($id = ''): Row
+    public function createRow(string $id = ''): Row
     {
         return new Layout\Row($this, $id);
     }
@@ -60,34 +61,49 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createColumn($id = ''): Column
+    public function createColumn(string $id = ''): Column
     {
         return new Layout\Column($this, $id);
     }
 
-    public function createTable($id = '')
+    /**
+     * {@inheritDoc}
+     */
+    public function createTable(string $id = ''): Layout\Table
     {
         return new Layout\Table($this, $id);
     }
 
-    public function createDataTable($id, $criteria = null)
+    /**
+     * {@inheritDoc}
+     */
+    public function createDataTable(string $id, ?QueryCriteria $criteria = null): DataTable
     {
         return !empty($criteria)
             ? DataTable::createPaginated($id, $criteria)
             : DataTable::create($id);
     }
 
-    public function createTableCell($content = '')
+    /**
+     * {@inheritDoc}
+     */
+    public function createTableCell(string $content = ''): Layout\TableCell
     {
         return new Layout\TableCell($content);
     }
 
-    public function createGrid($id = '', $columns = 1)
+    /**
+     * {@inheritDoc}
+     */
+    public function createGrid(string $id = '', int $columns = 1): Layout\Grid
     {
         return new Layout\Grid($this, $id, $columns);
     }
 
-    public function createDetails($id = '')
+    /**
+     * {@inheritDoc}
+     */
+    public function createDetails(string $id = ''): Layout\Details
     {
         return new Layout\Details($this, $id);
     }
@@ -95,23 +111,32 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createTrigger($selector = ''): Trigger
+    public function createTrigger(string $selector = ''): Trigger
     {
         return new Layout\Trigger($selector);
     }
 
-    public function createLabel($for, $label)
+    /**
+     * {@inheritDoc}
+     */
+    public function createLabel(string $for, string $label): Layout\Label
     {
         return new Layout\Label($for, $label);
     }
 
-    public function createHeading($id = '', $content = null, $tag = null)
+    /**
+     * {@inheritDoc}
+     */
+    public function createHeading(string $id = '', ?string $content = null, ?string $tag = null): Layout\Heading
     {
         $content = is_null($content) || $content == 'h3' || $content == 'h4' ? $id : $content;
         return new Layout\Heading($id, $content, $tag);
     }
 
-    public function createSubheading($id = '', $content = null, $tag = 'h4')
+    /**
+     * {@inheritDoc}
+     */
+    public function createSubheading(string $id = '', ?string $content = null, ?string $tag = 'h4'): Layout\Heading
     {
         $content = is_null($content) || $content == 'h3' || $content == 'h4' ? $id : $content;
         return new Layout\Heading($id, $content, $tag = 'h4');
@@ -120,12 +145,15 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createContent($content = ''): Element
+    public function createContent(string $content = ''): Element
     {
         return new Layout\Element($content);
     }
 
-    public function createWebLink($content = '')
+    /**
+     * {@inheritDoc}
+     */
+    public function createWebLink(string $content = ''): Layout\WebLink
     {
     	return new Layout\WebLink($content);
     }
@@ -142,7 +170,10 @@ class FormFactory implements FormFactoryInterface
         return new Input\TextArea($name);
     }
 
-    public function createTextField($name)
+    /**
+     * {@inheritDoc}
+     */
+    public function createTextField($name): Input\TextField
     {
         return new Input\TextField($name);
     }
@@ -162,9 +193,12 @@ class FormFactory implements FormFactoryInterface
         return new Input\Finder($name);
     }
 
-    public function createEditor($name, $guid)
+    /**
+     * {@inheritDoc}
+     */
+    public function createEditor(string $name): Input\Editor
     {
-        return new Input\Editor($name, $guid);
+        return new Input\Editor($name);
     }
 
     public function createCodeEditor($name)
@@ -182,8 +216,10 @@ class FormFactory implements FormFactoryInterface
         return (new Input\TextField($name))->addValidation('Validate.Email')->maxLength(75);
     }
 
-    //A URL web link
-    public function createURL($name)
+    /**
+     * {@inheritDoc}
+     */
+    public function createURL(string $name): Input\TextField
     {
         return (new Input\TextField($name) )
             ->placeholder('http://')
@@ -193,22 +229,34 @@ class FormFactory implements FormFactoryInterface
             );
     }
 
-    public function createNumber($name)
+    /**
+     * {@inheritDoc}
+     */
+    public function createNumber($name): Input\Number
     {
         return new Input\Number($name);
     }
 
-    public function createCurrency($name)
+    /**
+     * {@inheritDoc}
+     */
+    public function createCurrency($name): Input\Currency
     {
         return new Input\Currency($name);
     }
 
-    public function createPassword($name)
+    /**
+     * {@inheritDoc}
+     */
+    public function createPassword(string $name): Input\Password
     {
         return new Input\Password($name);
     }
 
-    public function createFileUpload($name)
+    /**
+     * {@inheritDoc}
+     */
+    public function createFileUpload($name): Input\FileUpload
     {
         return new Input\FileUpload($name);
     }
@@ -223,7 +271,10 @@ class FormFactory implements FormFactoryInterface
         return new Input\Time($name);
     }
 
-    public function createCheckbox($name)
+    /**
+     * {@inheritDoc}
+     */
+    public function createCheckbox($name): Input\Checkbox
     {
         return (new Input\Checkbox($name));
     }
@@ -236,7 +287,7 @@ class FormFactory implements FormFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createSelect($name)
+    public function createSelect(string $name): Input\Select
     {
         return new Input\Select($name);
     }
@@ -246,7 +297,10 @@ class FormFactory implements FormFactoryInterface
         return new Input\MultiSelect($this, $name);
     }
 
-    public function createButton($label = 'Button', $onClick = '', $id = null)
+    /**
+     * {@inheritDoc}
+     */
+    public function createButton(string $label = 'Button', string $onClick = '', ?string $id = null): Input\Button
     {
         $button = new Input\Button($label, $onClick);
         if(!empty($id)) {

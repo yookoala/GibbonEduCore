@@ -19,23 +19,80 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Gibbon\Forms\Layout;
 
+use Gibbon\Domain\QueryCriteria;
 use Gibbon\Forms\OutputableInterface;
 use Gibbon\Forms\FormFactoryInterface;
 use Gibbon\Forms\RowDependancyInterface;
+use Gibbon\Forms\Input\Button;
+use Gibbon\Forms\Input\Checkbox;
+use Gibbon\Forms\Input\Currency;
+use Gibbon\Forms\Input\Editor;
+use Gibbon\Forms\Input\FileUpload;
+use Gibbon\Forms\Input\Number;
+use Gibbon\Forms\Input\TextField;
+use Gibbon\Forms\Input\Password;
+use Gibbon\Forms\Input\Select;
+use Gibbon\Forms\Layout\Column;
+use Gibbon\Forms\Layout\Heading;
+use Gibbon\Forms\Layout\Element;
+use Gibbon\Forms\Layout\Table;
+use Gibbon\Forms\Layout\TableCell;
+use Gibbon\Forms\Layout\Grid;
+use Gibbon\Forms\Layout\Details;
+use Gibbon\Forms\Layout\WebLink;
 use Gibbon\Forms\Traits\BasicAttributesTrait;
+use Gibbon\Tables\DataTable;
 
 /**
  * Holds a collection of form elements to be output horizontally.
  *
  * @version v14
  * @since   v14
+ *
+ * @method Label       addLabel(string $for, string $label) @see \Gibbon\Forms\FormFactoryInterface::createLabel()
+ * @method Column      addColumn(string $id) @see \Gibbon\Forms\FormFactoryInterface::createColumn()
+ * @method Heading     addHeading(string $id = '', ?string $content = null, ?string $tag = null) @see \Gibbon\Forms\FormFactoryInterface::createHeading()
+ * @method Heading     addSubHeading(string $id = '', ?string $content = null, ?string $tag = 'h4') @see \Gibbon\Forms\FormFactoryInterface::createSubHeading()
+ * @method Element     addContent(string $content) @see \Gibbon\Forms\FormFactoryInterface::createContent()
+ * @method Table       addTable(string $id = '') @see \Gibbon\Forms\FormFactoryInterface::createTable()
+ * @method DataTable   addDataTable(string $id, QueryCriteria|null $criteria = null) @see \Gibbon\Forms\FormFactoryInterface::createDataTable()
+ * @method TableCell   addTableCell(string $content = '') @see \Gibbon\Forms\FormFactoryInterface::createTableCell()
+ * @method Grid        addGrid(string $id = '', int $columns = 1) @see \Gibbon\Forms\FormFactoryInterface::createGrid()
+ * @method Details     addDetails(string $id = '') @see \Gibbon\Forms\FormFactoryInterface::createDetails()
+ * @method WebLink     addWebLink(string $content = '') @see \Gibbon\Forms\FormFactoryInterface::createWebLink()
+ * @method TextField   addTextfield(string $name) @see \Gibbon\Forms\FormFactoryInterface::createTextField()
+ * @method Checkbox    addCheckbox(string $name) @see \Gibbon\Forms\FormFactoryInterface::createCheckbox()
+ * @method Currency    addCurrency(string $name) @see \Gibbon\Forms\FormFactoryInterface::createCurrency()
+ * @method Number      addNumber(string $name) @see \Gibbon\Forms\FormFactoryInterface::createNumber()
+ * @method Password    addPassword(string $name) @see \Gibbon\Forms\FormFactoryInterface::createPassword()
+ * @method Select      addSelect(string $name) @see \Gibbon\Forms\FormFactoryInterface::createSelect()
+ * @method Button      addButton(string $name, string $onClick) @see \Gibbon\Forms\FormFactoryInterface::createButton()
+ * @method Editor      addEditor(string $name) @see \Gibbon\Forms\FormFactoryInterface::createEditor()
+ * @method FileUpload  addFileUpload(string $name) @see \Gibbon\Forms\FormFactoryInterface::createFileUpload()
  */
 class Row
 {
     use BasicAttributesTrait;
 
+    /**
+     * The form element factory.
+     *
+     * @var FormFactoryInterface
+     */
     protected $factory;
+
+    /**
+     * The heading of the row.
+     *
+     * @var string
+     */
     protected $heading = '';
+
+    /**
+     * The elements in the row.
+     *
+     * @var OutputableInterface[]
+     */
     protected $formElements = [];
 
     /**
@@ -134,9 +191,9 @@ class Row
     /**
      * Get a row element by ID
      * @param   string  $id
-     * @return  object Element
+     * @return  OutputableInterface|null Element
      */
-    public function getElement($id = '')
+    public function getElement($id = ''): ?OutputableInterface
     {
         if (empty($this->formElements) || count($this->formElements) == 0) {
             return null;
@@ -146,7 +203,7 @@ class Row
 
     /**
      * Get an array of all row elements.
-     * @return  array
+     * @return  OutputableInterface[]
      */
     public function getElements()
     {
@@ -175,12 +232,15 @@ class Row
     /**
      * Pass an array of $key => $value pairs into each element in the collection.
      * @param   array  &$data
-     * @return  self
+     * @return  static
      */
     public function loadFrom(&$data)
     {
         foreach ($this->getElements() as $element) {
             if (method_exists($element, 'loadFrom')) {
+                /**
+                 * @var object $element
+                 */
                 $element->loadFrom($data);
             }
         }
