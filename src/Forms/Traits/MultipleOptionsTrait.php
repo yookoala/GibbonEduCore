@@ -37,7 +37,7 @@ trait MultipleOptionsTrait
     /**
      * Build an internal options array from a provided CSV string.
      * @param   string  $value
-     * @return  self
+     * @return  static
      */
     public function fromString($value)
     {
@@ -64,7 +64,7 @@ trait MultipleOptionsTrait
     /**
      * Build an internal options array from a provided array of $key => $value pairs.
      * @param   array  $values
-     * @return  self
+     * @return  static
      */
     public function fromArray($values)
     {
@@ -96,7 +96,7 @@ trait MultipleOptionsTrait
      * @param   Connection  $db
      * @param   string      $sql
      * @param   array      $data
-     * @return  self
+     * @return  static
      */
     public function fromQuery(Connection $db, $sql, $data = [], $groupBy = false)
     {
@@ -113,7 +113,7 @@ trait MultipleOptionsTrait
      * @param string $nameCol
      * @param string $groupBy
      *
-     * @return self
+     * @return static
      */
     public function fromDataSet(Dataset $dataset, $valCol, $nameCol, $groupBy = false)
     {
@@ -145,7 +145,7 @@ trait MultipleOptionsTrait
      * Build an internal options array from the result set of a PDO query.
      * @param   object  $results
      *
-     * @return  self
+     * @return  static
      */
     public function fromResults($results, $groupBy = false)
     {
