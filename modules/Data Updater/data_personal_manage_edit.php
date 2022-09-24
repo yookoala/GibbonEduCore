@@ -76,7 +76,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Data Updater/data_personal
                     ->setURL('/modules/Students/student_view_details.php')
                     ->addParam('gibbonPersonID', $oldValues['gibbonPersonID'])
                     ->setIcon('plus')
-                    ->displayLabel();    
+                    ->displayLabel();
              }
 
             //Get categories
@@ -208,7 +208,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Data Updater/data_personal
 
             // PERSONAL DOCUMENTS
             $params = compact('student', 'staff', 'parent', 'other') + ['dataUpdater' => 1];
-            $changeCount += $container->get(PersonalDocumentHandler::class)->addPersonalDocumentsToDataUpdate($form, $oldValues['gibbonPersonID'], $gibbonPersonUpdateID, $params);
+            $changeCount += $container->get(PersonalDocumentHandler::class)
+                ->addPersonalDocumentsToDataUpdate($form, $oldValues['gibbonPersonID'] ?? '', $gibbonPersonUpdateID, $params);
 
             $row = $form->addRow();
                 $row->addSubmit();

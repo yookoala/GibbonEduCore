@@ -62,8 +62,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Data Updater/data_finance_
             // Provide a link back to edit the associated record
             if (isActionAccessible($guid, $connection2, '/modules/Finance/invoicees_manage_edit.php') == true && !empty($oldValues['gibbonFinanceInvoiceeID'])) {
                 $params = [
-                    'gibbonFinanceInvoiceeID' => $oldValues['gibbonFinanceInvoiceeID'], 
-                    'search' => '', 
+                    'gibbonFinanceInvoiceeID' => $oldValues['gibbonFinanceInvoiceeID'],
+                    'search' => '',
                     'allUsers' => ''
                 ];
                 $page->navigator->addHeaderAction('edit', __('Edit Invoicee'))
@@ -104,8 +104,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Data Updater/data_finance_
 
                 $row = $form->addRow();
                 $row->addLabel('new'.$fieldName.'On', $label);
-                $row->addContent($oldValues[$fieldName]);
-                $row->addContent($newValues[$fieldName])->addClass($isMatching ? 'matchHighlightText' : '');
+                $row->addContent($oldValues[$fieldName] ?? '');
+                $row->addContent($newValues[$fieldName] ?? '')->addClass($isMatching ? 'matchHighlightText' : '');
 
                 if ($isMatching) {
                     $row->addCheckbox('new'.$fieldName.'On')->checked(true)->setClass('textCenter');

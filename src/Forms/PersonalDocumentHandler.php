@@ -176,8 +176,8 @@ class PersonalDocumentHandler
 
                 $row = $form->addRow();
                 $row->addLabel('document'.$field.'On', __($this->fields[$field]));
-                $row->addContent($oldValueLabel);
-                $row->addContent($newValueLabel)->addClass($isNotMatching ? 'matchHighlightText' : '');
+                $row->addContent($oldValueLabel ?? '');
+                $row->addContent($newValueLabel ?? '')->addClass($isNotMatching ? 'matchHighlightText' : '');
 
                 if ($isNotMatching) {
                     $row->addCheckbox("document[$gibbonPersonalDocumentTypeID][{$field}On]")->checked(true)->setClass('textCenter');
