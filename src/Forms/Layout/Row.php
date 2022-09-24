@@ -79,7 +79,7 @@ class Row
                 '{function}' => $function,
                 '{message}' => $e->getMessage(),
             ]));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $element = $this->factory->createContent(strtr('Cannot {function}. Error creating form element: {message}', [
                 '{function}' => $function,
                 '{message}' => $e->getMessage(),
