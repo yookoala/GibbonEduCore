@@ -32,7 +32,7 @@ trait BasicAttributesTrait
     /**
      * Set the id attribute.
      * @param  string  $id
-     * @return self
+     * @return static
      */
     public function setID($id = '')
     {
@@ -52,7 +52,7 @@ trait BasicAttributesTrait
     /**
      * Set the title attribute.
      * @param  string  $title
-     * @return self
+     * @return static
      */
     public function setTitle($title = '')
     {
@@ -72,7 +72,7 @@ trait BasicAttributesTrait
     /**
      * Set the class attribute. Replaces any existing classes.
      * @param  string  $class
-     * @return self
+     * @return static
      */
     public function setClass($class = '')
     {
@@ -115,7 +115,7 @@ trait BasicAttributesTrait
      * Set a data-* attribute for passing values to scripts.
      * @param  string $name
      * @param  mixed  $data
-     * @return self
+     * @return static
      */
     public function addData($name, $data = true, $encode = false)
     {
