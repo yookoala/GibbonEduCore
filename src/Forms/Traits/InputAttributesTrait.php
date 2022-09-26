@@ -34,7 +34,7 @@ trait InputAttributesTrait
      * @param  string  $name
      * @return static
      */
-    public function setName($name = '')
+    public function setName(string $name = '')
     {
         $this->setAttribute('name', $name);
         return $this;
