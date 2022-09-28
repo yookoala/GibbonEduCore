@@ -12,6 +12,9 @@ namespace Gibbon\Forms;
 use PHPUnit\Framework\TestCase;
 use Gibbon\Forms\View\FormRendererInterface;
 use Gibbon\Forms\FormFactoryInterface;
+use Gibbon\Forms\Layout\Row;
+use Gibbon\Forms\Layout\Trigger;
+use Psr\Container\ContainerInterface;
 
 /**
  * @covers Form
@@ -20,36 +23,91 @@ class FormTest extends TestCase
 {
     public function testCanBeCreatedStatically()
     {
+        global $container;
+
+        // Mock a form object for the container to initialize
+        // with all the method call expectations.
+        $mockForm = $this->createMock(Form::class);
+        $mockForm->expects($this->once())
+            ->method('setID')
+            ->with($this->equalTo('testID'))
+            ->willReturn($mockForm);
+        $mockForm->expects($this->once())
+            ->method('setClass')
+            ->with($this->equalTo('non-standard-class'))
+            ->willReturn($mockForm);
+        $mockForm->expects($this->once())
+            ->method('setAction')
+            ->with($this->equalTo('testAction'))
+            ->willReturn($mockForm);
+        $mockForm->expects($this->once())
+            ->method('setMethod')
+            ->with($this->equalTo('my-method'))
+            ->willReturn($mockForm);
+
+        // Create a stub of container.
+        $container = $this->createStub(ContainerInterface::class);
+        $container->method('get')
+            ->willReturn($mockForm);
+
+        // Create a form for test
+        $form = Form::create('testID', 'testAction', 'my-method', 'non-standard-class');
+
         $this->assertInstanceOf(
             Form::class,
-            Form::create('testID', 'testAction')
+            $form
         );
     }
 
     public function testCanOutputToHtml()
     {
-        $form = Form::create('testID', 'testAction');
-        $output = $form->getOutput();
+        $factory = $this->createMock(FormFactoryInterface::class);
+        $renderer = $this->createMock(FormRendererInterface::class);
+        $form = new Form($factory, $renderer, 'testID', 'testAction');
 
-        $this->assertTrue(stripos($output, '<form') !== false);
-        $this->assertTrue(stripos($output, '</form>') !== false);
+        $renderer->expects($this->once())
+            ->method('renderForm')
+            ->with($this->equalTo($form))
+            ->willReturn('my-output');
+
+        // Check if getOutput calls renderForm with the form itself.
+        // Check if getOutput returns the result of renderForm.
+        $this->assertEquals(
+            'my-output',
+            $form->getOutput()
+        );
     }
 
     public function testCanAddRow()
     {
-        $form = Form::create('testID', 'testAction');
+        $factory = $this->createMock(FormFactoryInterface::class);
+        $renderer = $this->createMock(FormRendererInterface::class);
+        $form = new Form($factory, $renderer, 'testID', 'testAction');
+        $rowToReturn = new Row($factory, 'rowID');
+
+        $factory->expects($this->once())
+            ->method('createRow')
+            ->with($this->equalTo('rowID'))
+            ->willReturn($rowToReturn);
 
         $this->assertTrue(count($form->getRows()) == 0);
-        $row = $form->addRow();
-        $row->addContent('Test');
 
-        $this->assertTrue(count($form->getRows()) > 0);
+        // Note: only rows with content will be returned by getRows
+        $row = $form->addRow('rowID');
+        $row->addContent('Test');
+        $this->assertSame(
+            $rowToReturn,
+            $row
+        );
+        $this->assertEquals(1, count($form->getRows()));
         $this->assertSame($row, $form->getRow());
     }
 
     public function testCanAddHiddenValue()
     {
-        $form = Form::create('testID', 'testAction');
+        $factory = $this->createMock(FormFactoryInterface::class);
+        $renderer = $this->createMock(FormRendererInterface::class);
+        $form = new Form($factory, $renderer, 'testID', 'testAction');
 
         $this->assertTrue(count($form->getHiddenValues()) == 0);
         $form->addHiddenValue('name', 'value');
@@ -59,19 +117,28 @@ class FormTest extends TestCase
 
     public function testCanAddTrigger()
     {
-        $form = Form::create('testID', 'testAction');
+        $factory = $this->createMock(FormFactoryInterface::class);
+        $renderer = $this->createMock(FormRendererInterface::class);
+        $form = new Form($factory, $renderer, 'testID', 'testAction');
+        $trigger = new Trigger('some-selector');
 
         $this->assertTrue(count($form->getTriggers()) == 0);
-        $form->addTrigger('selector', 'trigger');
+        $result = $form->addTrigger('other-selector', $trigger);
+        $this->assertSame(
+            $trigger,
+            $result
+        );
 
         $this->assertTrue(count($form->getTriggers()) > 0);
     }
 
     public function testCanSetFactory()
     {
-        $form = Form::create('testID', 'testAction');
+        $factory = $this->createMock(FormFactoryInterface::class);
+        $renderer = $this->createMock(FormRendererInterface::class);
+        $form = new Form($factory, $renderer, 'testID', 'testAction');
 
-        $newFactory = FormFactory::create();
+        $newFactory = $this->createMock(FormFactoryInterface::class);
         $form->setFactory($newFactory);
 
         $this->assertSame($newFactory, $form->getFactory());
@@ -79,9 +146,11 @@ class FormTest extends TestCase
 
     public function testCanSetRenderer()
     {
-        $form = Form::create('testID', 'testAction');
+        $factory = $this->createMock(FormFactoryInterface::class);
+        $renderer = $this->createMock(FormRendererInterface::class);
+        $form = new Form($factory, $renderer, 'testID', 'testAction');
 
-        $newRenderer = FormRenderer::create();
+        $newRenderer = $this->createMock(FormRendererInterface::class);
         $form->setRenderer($newRenderer);
 
         $this->assertSame($newRenderer, $form->getRenderer());
@@ -89,10 +158,10 @@ class FormTest extends TestCase
 
     public function testEachNewFormHasBasicAttributes()
     {
-        $form = Form::create('testID', 'testAction');
-
-        $this->assertSame('testID', $form->getID());
-        $this->assertSame('testAction', $form->getAction());
+        $factory = $this->createMock(FormFactoryInterface::class);
+        $renderer = $this->createMock(FormRendererInterface::class);
+        $form = new Form($factory, $renderer);
+        $this->assertSame('', $form->getAction());
         $this->assertSame('post', $form->getMethod());
     }
 }
