@@ -66,12 +66,17 @@ class TranslationTest extends TestCase
 
         // mock locale object
         $locale = new Locale(realpath(__DIR__.'/../../../..'), $mockSession);
-        $locale->setLocale('es_ES');
+        try {
+            $locale->setLocale('es_ES');
+        } catch (\Exception $e) {
+            $this->markTestSkipped('Unable to proceed with the test: ' . $e->getMessage());
+            return;
+        }
         $locale->setSystemTextDomain(realpath(__DIR__.'/../../../..'));
 
         // remember how to restore locale
         $this->restoreLocale = function () use ($locale) {
-            $locale->setLocale('en_GB');
+            $locale->setLocale(Locale::DEFAULT_I18N_CODE);
         };
 
         // mock gibbon object
