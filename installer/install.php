@@ -34,16 +34,21 @@ require_once '../modules/System Admin/moduleFunctions.php';
 $validator = $container->get(Validator::class);
 $_POST = $validator->sanitize($_POST);
 
-// Fix missing locale causing failed page load
-if (empty($gibbon->locale->getLocale())) {
-    $gibbon->locale->setLocale('en_GB');
-}
-
 // Page object for rendering
 $page = new Page($container, [
     'title'   => __('Gibbon Installer'),
     'address' => '/installer/install.php',
 ]);
+
+// Set language pre-install.
+$defaultLocale = $gibbon->locale->getLocale() ?: 'en_GB';
+try {
+    $gibbon->locale->setSystemTextDomain(dirname(__DIR__));
+    $gibbon->locale->setLocale($_POST['code'] ?? $defaultLocale);
+} catch (\Exception $e) {
+    // Warn the user.
+    $page->addWarning($e->getMessage());
+}
 
 // Get or variables from environment.
 $step = InstallController::stepFromEnvironment($_GET);
@@ -82,13 +87,6 @@ ob_start();
 
 // Attempt to download & install the required language files
 $locale_code = $_POST['code'] ?? 'en_GB';
-
-//Set language pre-install
-if (function_exists('gettext')) {
-    $gibbon->locale->setLocale($locale_code);
-    bindtextdomain('gibbon', '../i18n');
-    textdomain('gibbon');
-}
 
 try {
     // Prevent memory or time limit issues.
