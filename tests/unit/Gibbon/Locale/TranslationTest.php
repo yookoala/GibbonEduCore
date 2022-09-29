@@ -93,37 +93,11 @@ class TranslationTest extends TestCase
     }
 
     /**
-     * @covers __(string $guid, string $text)
-     */
-    public function testTranslateUsingGuid()
-    {
-        $this->assertEquals('Bienvenido a Gibbon', __($this->guid, 'Welcome To Gibbon'));
-    }
-
-    /**
-     * @covers __(string $guid, string $text, string $domain)
-     */
-    public function testTranslateUsingGuidWithDomainString()
-    {
-        $this->assertEquals('Bienvenido a Gibbon', __($this->guid, 'Welcome To Gibbon', 'gibbon'));
-        $this->assertEquals('Welcome', __($this->guid, 'Welcome', 'bogus_domain'));
-    }
-
-    /**
      * @covers __(string $text)
      */
     public function testTranslateNoGuid()
     {
         $this->assertEquals('Bienvenido a Gibbon', __('Welcome To Gibbon'));
-    }
-
-    /**
-     * @covers __(string $text, string $domain)
-     */
-    public function testTranslateNoGuidWithDomainString()
-    {
-        $this->assertEquals('Bienvenido a Gibbon', __('Welcome To Gibbon', 'gibbon'));
-        $this->assertEquals('Welcome', __('Welcome', 'bogus_domain'));
     }
 
     /**
