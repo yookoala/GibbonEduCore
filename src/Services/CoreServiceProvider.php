@@ -90,7 +90,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
      * this one, otherwise they will be ignored.
      */
     public function boot()
-    { 
+    {
         $container = $this->getLeagueContainer();
 
         $container->share('config', new Core($this->absolutePath));
@@ -161,7 +161,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
 
 
             $twig->addFunction(new \Twig\TwigFunction('__', function ($string, $domain = null) {
-                return __($string, $domain);
+                return __((string) $string, [], $domain);
             }));
 
             $twig->addFunction(new \Twig\TwigFunction('__m', function ($string, $params = []) {
@@ -230,7 +230,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
 
         $container->share('page', function () use ($container) {
             $session = $this->getLeagueContainer()->get('session');
-            
+
             $pageTitle = $session->get('organisationNameShort').' - '.$session->get('systemName');
             if ($session->has('module')) {
                 $pageTitle .= ' - '.__($session->get('module'));
