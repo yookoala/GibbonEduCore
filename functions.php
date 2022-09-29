@@ -60,7 +60,7 @@ function emailBodyConvert($body)
 /**
  * Custom translation function to allow custom string replacement
  *
- * @param string        $text    Text to Translate. See documentation for
+ * @param string|null   $text    Text to Translate. See documentation for
  *                               Gibbon\Locale::translate for more info.
  * @param array         $params  Assoc array of key value pairs for named
  *                               string replacement. See documentation for
@@ -71,7 +71,7 @@ function emailBodyConvert($body)
  *
  * @return string The resulted translation string.
  */
-function __(string $text, $params=[], $options=[])
+function __(?string $text, $params=[], $options=[])
 {
     global $gibbon;
 
