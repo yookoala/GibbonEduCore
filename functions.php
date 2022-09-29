@@ -92,7 +92,7 @@ function __(string $text, $params=[], $options=[])
         if (is_array($args[0])) {
             $params = array_shift($args);
         } else {
-            throw new \Exception('unexpected signature calls $params = ' . var_export($args[0]));
+            throw new \Exception('unexpected signature calls $text = ' . var_export($text, true) .', $params = ' . var_export($args[0], true));
         }
     }
 
