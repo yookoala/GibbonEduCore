@@ -71,20 +71,13 @@ function emailBodyConvert($body)
  *
  * @return string The resulted translation string.
  */
-function __($text, $params=[], $options=[])
+function __(string $text, array $params=[], $options=[])
 {
-    global $gibbon, $guid; // For backwards compatibilty
+    global $gibbon;
 
     $args = func_get_args();
 
-    // Note: should remove the compatibility code in next
-    // version, then properly state function signature.
-
-    // Compatibility with __($guid, $text) and __($guid, $text, $domain) calls.
     // Deprecated.
-    if ($args[0] === $guid) {
-        array_shift($args); // discard $guid
-    }
     if (empty($args)) {
         return ''; // if there is nothing after $guid, return nothing
     }
