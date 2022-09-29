@@ -71,7 +71,7 @@ function emailBodyConvert($body)
  *
  * @return string The resulted translation string.
  */
-function __(string $text, array $params=[], $options=[])
+function __(string $text, $params=[], $options=[])
 {
     global $gibbon;
 
@@ -88,8 +88,12 @@ function __(string $text, array $params=[], $options=[])
     $options = [];
 
     // Handle replacement parameters, if exists.
-    if (!empty($args) && is_array($args[0])) {
-        $params = array_shift($args);
+    if (!empty($args)) {
+        if (is_array($args[0])) {
+            $params = array_shift($args);
+        } else {
+            throw new \Exception('unexpected signature calls $params = ' . var_export($args[0]));
+        }
     }
 
     // Handle options, if exists.
