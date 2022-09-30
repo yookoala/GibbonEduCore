@@ -60,7 +60,7 @@ function emailBodyConvert($body)
 /**
  * Custom translation function to allow custom string replacement
  *
- * @param string        $text    Text to Translate. See documentation for
+ * @param string|null   $text    Text to Translate. See documentation for
  *                               Gibbon\Locale::translate for more info.
  * @param array         $params  Assoc array of key value pairs for named
  *                               string replacement. See documentation for
@@ -71,7 +71,7 @@ function emailBodyConvert($body)
  *
  * @return string The resulted translation string.
  */
-function __($text, $params=[], $options=[])
+function __(?string $text, $params=[], $options=[])
 {
     global $gibbon, $guid; // For backwards compatibilty
 
@@ -83,7 +83,7 @@ function __($text, $params=[], $options=[])
     // Compatibility with __($guid, $text) and __($guid, $text, $domain) calls.
     // Deprecated.
     if ($args[0] === $guid) {
-        array_shift($args); // discard $guid
+        throw new \InvalidArgumentException('Using $guid as first parameter is obsoleted.');
     }
     if (empty($args)) {
         return ''; // if there is nothing after $guid, return nothing
