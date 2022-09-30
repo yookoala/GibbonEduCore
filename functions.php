@@ -83,7 +83,7 @@ function __(?string $text, $params=[], $options=[])
     // Compatibility with __($guid, $text) and __($guid, $text, $domain) calls.
     // Deprecated.
     if ($args[0] === $guid) {
-        throw new \InvalidArgumentException('Using $guid as first parameter is obsoleted.');
+        throw new \InvalidArgumentException('Calling __() with $guid as first parameter is deprecated');
     }
     if (empty($args)) {
         return ''; // if there is nothing after $guid, return nothing

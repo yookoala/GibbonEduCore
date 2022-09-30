@@ -97,7 +97,9 @@ class TranslationTest extends TestCase
      */
     public function testTranslateUsingGuid()
     {
-        $this->assertEquals('Bienvenido a Gibbon', __($this->guid, 'Welcome To Gibbon'));
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Calling __() with $guid as first parameter is deprecated');
+        __($this->guid, 'Welcome To Gibbon');
     }
 
     /**
@@ -105,8 +107,9 @@ class TranslationTest extends TestCase
      */
     public function testTranslateUsingGuidWithDomainString()
     {
-        $this->assertEquals('Bienvenido a Gibbon', __($this->guid, 'Welcome To Gibbon', 'gibbon'));
-        $this->assertEquals('Welcome', __($this->guid, 'Welcome', 'bogus_domain'));
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Calling __() with $guid as first parameter is deprecated');
+        __($this->guid, 'Welcome To Gibbon', 'gibbon');
     }
 
     /**

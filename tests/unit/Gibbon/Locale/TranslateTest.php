@@ -202,7 +202,7 @@ class TranslateTest extends TestCase
     public function testShortcutUsingGuid()
     {
         $localeObserver = $this->createMock(Locale::class);
-        $localeObserver->expects($this->once())
+        $localeObserver->expects($this->never())
                 ->method('translate')
                 ->with(
                      $this->equalTo('Some text to translate'),
@@ -215,11 +215,9 @@ class TranslateTest extends TestCase
             'locale' => $localeObserver,
         ]);
 
-        $this->assertEquals(
-            'Some translation result',
-            __($guid, 'Some text to translate'),
-            '__() with $guid calls $gibbon->locale->translate() in backward compatible way'
-        );
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Calling __() with $guid as first parameter is deprecated');
+        __($guid, 'Some text to translate');
 
         $restoreGibbon();
         $restoreGuid();
@@ -231,7 +229,7 @@ class TranslateTest extends TestCase
     public function testShortcutUsingGuidWithDomainString()
     {
         $localeObserver = $this->createMock(Locale::class);
-        $localeObserver->expects($this->once())
+        $localeObserver->expects($this->never())
                 ->method('translate')
                 ->with(
                      $this->equalTo('Some text to translate'),
@@ -244,11 +242,9 @@ class TranslateTest extends TestCase
             'locale' => $localeObserver,
         ]);
 
-        $this->assertEquals(
-            'Some translation result',
-            __($guid, 'Some text to translate', 'bogus_domain'),
-            '__() with $guid calls $gibbon->locale->translate() in backward compatible way and returns the result'
-        );
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Calling __() with $guid as first parameter is deprecated');
+        __($guid, 'Some text to translate', 'bogus_domain');
 
         $restoreGibbon();
         $restoreGuid();
