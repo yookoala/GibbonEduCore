@@ -16,6 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+use Gibbon\Services\Module\Action;
 use Gibbon\Data\Validator;
 
 require_once '../../gibbon.php';
@@ -25,7 +26,7 @@ $_POST = $container->get(Validator::class)->sanitize($_POST);
 $gibbonPersonID = $_GET['gibbonPersonID'] ?? '';
 $URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/user_manage_password.php&gibbonPersonID=$gibbonPersonID&search=".$_GET['search'];
 
-if (isActionAccessible($guid, $connection2, '/modules/User Admin/user_manage_password.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('User Admin', 'user_manage_password')) == false) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
 } else {

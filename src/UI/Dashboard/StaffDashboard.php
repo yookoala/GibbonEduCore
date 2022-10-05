@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Gibbon\UI\Dashboard;
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Contracts\Database\Connection;
 use Gibbon\Contracts\Services\Session;
 use Gibbon\Domain\System\SettingGateway;
@@ -121,7 +122,7 @@ class StaffDashboard implements OutputableInterface
             LEFT JOIN gibbonPlannerEntryStudentHomework ON (gibbonPlannerEntryStudentHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID AND gibbonPlannerEntryStudentHomework.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID)
 
             LEFT JOIN (
-                SELECT gibbonTTDayRowClass.gibbonCourseClassID, gibbonTTDayRowClass.gibbonTTDayRowClassID, gibbonTTColumnRow.timeStart, gibbonTTColumnRow.timeEnd FROM gibbonTTDayDate JOIN gibbonTTDayRowClass ON (gibbonTTDayDate.gibbonTTDayID=gibbonTTDayRowClass.gibbonTTDayID) JOIN gibbonTTColumnRow ON (gibbonTTColumnRow.gibbonTTColumnRowID=gibbonTTDayRowClass.gibbonTTColumnRowID) WHERE gibbonTTDayDate.date=:date) 
+                SELECT gibbonTTDayRowClass.gibbonCourseClassID, gibbonTTDayRowClass.gibbonTTDayRowClassID, gibbonTTColumnRow.timeStart, gibbonTTColumnRow.timeEnd FROM gibbonTTDayDate JOIN gibbonTTDayRowClass ON (gibbonTTDayDate.gibbonTTDayID=gibbonTTDayRowClass.gibbonTTDayID) JOIN gibbonTTColumnRow ON (gibbonTTColumnRow.gibbonTTColumnRowID=gibbonTTDayRowClass.gibbonTTColumnRowID) WHERE gibbonTTDayDate.date=:date)
                 AS gibbonTTDayRowClassSubset ON (gibbonTTDayRowClassSubset.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID AND gibbonTTDayRowClassSubset.timeStart=gibbonPlannerEntry.timeStart AND gibbonTTDayRowClassSubset.timeEnd=gibbonPlannerEntry.timeEnd)
             LEFT JOIN gibbonTTDayRowClassException ON (gibbonTTDayRowClassException.gibbonTTDayRowClassID=gibbonTTDayRowClassSubset.gibbonTTDayRowClassID AND gibbonTTDayRowClassException.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID)
 
@@ -247,7 +248,7 @@ class StaffDashboard implements OutputableInterface
 
         //GET TIMETABLE
         $timetable = false;
-        if (isActionAccessible($guid, $connection2, '/modules/Timetable/tt.php') and $this->session->get('username') != '' and getRoleCategory($this->session->get('gibbonRoleIDCurrent'), $connection2) == 'Staff') {
+        if (isActionAccessible($guid, $connection2, new Action('Timetable', 'tt')) and $this->session->get('username') != '' and getRoleCategory($this->session->get('gibbonRoleIDCurrent'), $connection2) == 'Staff') {
             $apiEndpoint = (string)Url::fromHandlerRoute('index_tt_ajax.php');
             $_POST = (new Validator(''))->sanitize($_POST);
             $jsonQuery = [
@@ -280,7 +281,7 @@ class StaffDashboard implements OutputableInterface
         $sqlFormGroups = 'SELECT * FROM gibbonFormGroup WHERE (gibbonPersonIDTutor=:gibbonPersonIDTutor OR gibbonPersonIDTutor2=:gibbonPersonIDTutor2 OR gibbonPersonIDTutor3=:gibbonPersonIDTutor3) AND gibbonSchoolYearID=:gibbonSchoolYearID';
         $resultFormGroups = $this->db->select($sqlFormGroups, $dataFormGroups);
 
-        $attendanceAccess = isActionAccessible($guid, $connection2, '/modules/Attendance/attendance_take_byFormGroup.php');
+        $attendanceAccess = isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_take_byFormGroup'));
 
         while ($rowFormGroups = $resultFormGroups->fetch()) {
             $formGroups[$count][0] = $rowFormGroups['gibbonFormGroupID'];
@@ -309,7 +310,7 @@ class StaffDashboard implements OutputableInterface
 
             $formGroups[$count][2] = $formGroupTable->getOutput();
 
-            $behaviourView = isActionAccessible($guid, $connection2, '/modules/Behaviour/behaviour_view.php');
+            $behaviourView = isActionAccessible($guid, $connection2, new Action('Behaviour', 'behaviour_view'));
             if ($behaviourView) {
                 //Behaviour
                 $formGroups[$count][3] = '';
@@ -326,7 +327,7 @@ class StaffDashboard implements OutputableInterface
                     $formGroups[$count][3] .= "<div class='error'>".$e->getMessage().'</div>';
                 }
 
-                if (isActionAccessible($guid, $connection2, '/modules/Behaviour/behaviour_manage_add.php')) {
+                if (isActionAccessible($guid, $connection2, new Action('Behaviour', 'behaviour_manage_add'))) {
                     $formGroups[$count][3] .= "<div class='linkTop'>";
                     $formGroups[$count][3] .= "<a href='".Url::fromModuleRoute('Behaviour', 'behaviour_manage_add')->withQueryParams([
                         'gibbonPersonID' => '',
@@ -497,7 +498,7 @@ class StaffDashboard implements OutputableInterface
                 }
             }
 
-            if (isActionAccessible($guid, $connection2, '/modules/Students/student_view.php')) {
+            if (isActionAccessible($guid, $connection2, new Action('Students', 'student_view'))) {
                 $return .= "<li><a href='#tabs".$tabCount."'>".__('Enrolment').'</a></li>';
                 if ($staffDashboardDefaultTab == 'Enrolment') {
                     $staffDashboardDefaultTabCount = $tabCount;
@@ -539,7 +540,7 @@ class StaffDashboard implements OutputableInterface
             }
 
             // Enrolment tab
-            if (isActionAccessible($guid, $connection2, '/modules/Admissions/report_students_left.php') || isActionAccessible($guid, $connection2, '/modules/Admissions/report_students_new.php')) {
+            if (isActionAccessible($guid, $connection2, new Action('Admissions', 'report_students_left')) || isActionAccessible($guid, $connection2, new Action('Admissions', 'report_students_new'))) {
                 $return .= "<div id='tabs".$tabCount."'>";
                 $return .= $this->enrolmentTable->getOutput();
                 $return .= '</div>';

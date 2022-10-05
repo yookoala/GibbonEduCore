@@ -359,9 +359,9 @@ function getFastFinder($connection2, $guid)
 
     $templateData = [
         'roleCategory'        => getRoleCategory($session->get('gibbonRoleIDCurrent'), $connection2),
-        'studentIsAccessible' => isActionAccessible($guid, $connection2, '/modules/students/student_view.php'),
-        'staffIsAccessible'   => isActionAccessible($guid, $connection2, '/modules/Staff/staff_view.php'),
-        'classIsAccessible'   => isActionAccessible($guid, $connection2, '/modules/Planner/planner.php') && $highestActionClass != 'Lesson Planner_viewMyChildrensClasses',
+        'studentIsAccessible' => isActionAccessible($guid, $connection2, new Action('students', 'student_view')),
+        'staffIsAccessible'   => isActionAccessible($guid, $connection2, new Action('Staff', 'staff_view')),
+        'classIsAccessible'   => isActionAccessible($guid, $connection2, new Action('Planner', 'planner')) && $highestActionClass != 'Lesson Planner_viewMyChildrensClasses',
         'form'                => $form->getOutput(),
     ];
 

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Forms\Form;
 use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
@@ -29,7 +30,7 @@ use Gibbon\Http\Url;
 //Module includes for Timetable module
 require_once __DIR__ . '/../Timetable/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/courseEnrolment_manage_byPerson_edit.php') == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'courseEnrolment_manage_byPerson_edit')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {

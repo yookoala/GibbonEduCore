@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Forms\Form;
 use Gibbon\Services\Format;
@@ -33,7 +34,7 @@ require_once __DIR__ . '/src/AttendanceView.php';
 // set page breadcrumb
 $page->breadcrumbs->add(__('Set Future Absence'));
 
-if (isActionAccessible($guid, $connection2, '/modules/Attendance/attendance_future_byPerson.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_future_byPerson')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
@@ -86,7 +87,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Attendance/attendance_futu
         $row->addLabel('gibbonPersonID', __('Students'));
         $row->addSelectStudent('gibbonPersonID', $gibbon->session->get('gibbonSchoolYearID'), array('allstudents' => true, 'byForm' => true))->setID('gibbonPersonIDMultiple')->required()->selectMultiple()->selected($gibbonPersonID);
 
-    if (isActionAccessible($guid, $connection2, '/modules/Attendance/attendance_take_byCourseClass.php')) {
+    if (isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_take_byCourseClass'))) {
         $availableAbsenceTypes = [
             'full' => __('Full Day'),
             'partial' => __('Partial'),

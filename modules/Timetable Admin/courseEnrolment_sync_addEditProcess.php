@@ -16,6 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+use Gibbon\Services\Module\Action;
 use Gibbon\Data\Validator;
 use Gibbon\Http\Url;
 
@@ -32,7 +33,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'courseEnrolment_sync_edit')
         'gibbonSchoolYearID' => $gibbonSchoolYearID,
     ]);
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/courseEnrolment_sync_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_sync_edit')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
     exit;
 } else {

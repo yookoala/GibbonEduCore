@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Http\Url;
 
 require_once __DIR__ . '/../../gibbon.php';
@@ -40,7 +41,7 @@ if ($gibbonCourseID == '' or $gibbonSchoolYearID == '') { echo 'Fatal error load
             'gibbonSchoolYearID' => $gibbonSchoolYearID,
         ]);
 
-    if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/course_manage_class_delete.php') == false) {
+    if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'course_manage_class_delete')) == false) {
         header('Location: ' . $URL->withReturn('error0'));
     } else {
         //Proceed!

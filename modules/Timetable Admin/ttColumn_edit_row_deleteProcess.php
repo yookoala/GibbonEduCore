@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Http\Url;
 
 require_once __DIR__ . '/../../gibbon.php';
@@ -37,7 +38,7 @@ if ($gibbonTTColumnID == '') { echo 'Fatal error loading this page!';
             'gibbonTTColumnRowID' => $gibbonTTColumnRowID,
         ]);
 
-    if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/ttColumn_edit_row_delete.php') == false) {
+    if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttColumn_edit_row_delete')) == false) {
         header('Location: ' . $URL->withReturn('error0'));
     } else {
         //Proceed!

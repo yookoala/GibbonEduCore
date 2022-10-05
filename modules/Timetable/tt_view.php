@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Domain\DataSet;
 use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
@@ -24,7 +25,7 @@ use Gibbon\Tables\DataTable;
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable/tt_view.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Timetable', 'tt_view')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
@@ -88,7 +89,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Timetable/tt_view.php') ==
                 ->add(__('View Timetable by Person'), 'tt.php', ['allUsers' => $allUsers])
                 ->add(Format::name($row['title'], $row['preferredName'], $row['surname'], $row['type']));
 
-            $canEdit = isActionAccessible($guid, $connection2, '/modules/Timetable Admin/courseEnrolment_manage_byPerson_edit.php');
+            $canEdit = isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_manage_byPerson_edit'));
             $roleCategory = getRoleCategory($row['gibbonRoleIDPrimary'], $connection2);
 
             // DISPLAY PERSON DATA

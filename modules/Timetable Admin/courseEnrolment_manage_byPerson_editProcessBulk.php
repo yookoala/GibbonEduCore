@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Http\Url;
 
 require_once __DIR__ . '/../../gibbon.php';
@@ -37,7 +38,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'courseEnrolment_manage_byPerson_
         'search' => $search,
     ]);
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/courseEnrolment_manage_byPerson_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_manage_byPerson_edit')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else if ($gibbonPersonID == '' or $gibbonSchoolYearID == '' or $action == '') {
     header('Location: ' . $URL->withReturn('error1'));

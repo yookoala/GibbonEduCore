@@ -17,11 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Forms\Form;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Http\Url;
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/ttSettings.php') == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttSettings')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {

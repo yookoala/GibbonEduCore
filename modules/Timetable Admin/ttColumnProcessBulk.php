@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Domain\Timetable\TimetableColumnGateway;
 use Gibbon\Http\Url;
 
@@ -26,7 +27,7 @@ $action = $_POST['action'] ?? '';
 
 $URL = Url::fromModuleRoute('Timetable Admin', 'ttColumn');
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/ttColumn.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttColumn')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else if ($action == '') {
     header('Location: ' . $URL->withReturn('error1'));

@@ -16,6 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+use Gibbon\Services\Module\Action;
 use Gibbon\Data\Validator;
 use Gibbon\Domain\Timetable\CourseGateway;
 use Gibbon\Domain\Timetable\CourseClassGateway;
@@ -29,7 +30,7 @@ $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
 $gibbonSchoolYearIDNext = $_GET['gibbonSchoolYearIDNext'] ?? '';
 $URL = Url::fromModuleRoute('Timetable Admin', 'course_manage')->withQueryParam('gibbonSchoolYearID', $gibbonSchoolYearIDNext);
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/course_manage.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'course_manage')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

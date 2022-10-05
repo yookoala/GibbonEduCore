@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Domain\Timetable\TimetableDayGateway;
 use Gibbon\Http\Url;
 
@@ -31,7 +32,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'tt_edit')->withQueryParams([
     'gibbonSchoolYearID' => $gibbonSchoolYearID,
 ]);
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/tt_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'tt_edit')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else if ($action == '') {
     header('Location: ' . $URL->withReturn('error1'));

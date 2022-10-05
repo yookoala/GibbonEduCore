@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Forms\CustomFieldHandler;
 use Gibbon\Data\Validator;
 use Gibbon\Http\Url;
@@ -40,7 +41,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'course_manage_class_add')
         'gibbonCourseID' => $gibbonCourseID,
     ]);
 
-if (isActionAccessible($guid, $connection2, '/modules/Timetable Admin/course_manage_class_add.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'course_manage_class_add')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

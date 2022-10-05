@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Module\Action;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Services\Format;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -34,7 +35,7 @@ include '../../version.php';
 //Module includes
 include './moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Activities/report_attendanceExport.php') == false) {
+if (isActionAccessible($guid, $connection2, new Action('Activities', 'report_attendanceExport')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
