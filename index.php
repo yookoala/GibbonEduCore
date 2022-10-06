@@ -25,6 +25,7 @@ use Gibbon\Domain\System\ModuleGateway;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Domain\User\UserGateway;
 use Gibbon\Http\Url;
+use Gibbon\Services\Module\AccessManager;
 
 /**
  * BOOTSTRAP
@@ -48,6 +49,7 @@ $session = $container->get('session');
 $isLoggedIn = $session->has('username') && $session->has('gibbonRoleIDCurrent');
 
 $settingGateway = $container->get(SettingGateway::class);
+$accessManager = $container->get(AccessManager::class);
 
 /**
  * USER ROLES
@@ -695,6 +697,7 @@ if (!$session->has('address')) {
             'container'   => $container,
             'page'        => $page,
             'session'     => $session,
+            'accessManager' => $accessManager,
         ];
 
         if (is_file('./'.$address)) {
