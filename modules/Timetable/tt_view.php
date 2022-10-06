@@ -25,7 +25,7 @@ use Gibbon\Tables\DataTable;
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable', 'tt_view')) == false) {
+if ($accessManager->allow(new Action('Timetable', 'tt_view')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
@@ -89,7 +89,7 @@ if (isActionAccessible($guid, $connection2, new Action('Timetable', 'tt_view')) 
                 ->add(__('View Timetable by Person'), 'tt.php', ['allUsers' => $allUsers])
                 ->add(Format::name($row['title'], $row['preferredName'], $row['surname'], $row['type']));
 
-            $canEdit = isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_manage_byPerson_edit'));
+            $canEdit = $accessManager->allow(new Action('Timetable Admin', 'courseEnrolment_manage_byPerson_edit'));
             $roleCategory = getRoleCategory($row['gibbonRoleIDPrimary'], $connection2);
 
             // DISPLAY PERSON DATA

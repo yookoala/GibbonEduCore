@@ -30,7 +30,7 @@ include './moduleFunctions.php';
 
 $URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/spaceBooking_manage_add.php';
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable', 'spaceBooking_manage_add')) == false) {
+if ($accessManager->allow(new Action('Timetable', 'spaceBooking_manage_add')) == false) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
 } else {
