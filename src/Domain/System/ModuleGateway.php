@@ -37,7 +37,7 @@ class ModuleGateway extends QueryableGateway
     private static $primaryKey = 'gibbonModuleID';
 
     private static $searchableColumns = ['name'];
-    
+
     /**
      * Queries the list for the Manage Modules page.
      *
@@ -115,5 +115,47 @@ class ModuleGateway extends QueryableGateway
                 ORDER BY gibbonModule.name, gibbonAction.category, gibbonAction.name, precedence DESC";
 
         return $this->db()->select($sql, $data);
+    }
+
+    /**
+     * Check the specified role has access rights to the specified action.
+     *
+     * @param string       $gibbonRoleID  The role ID.
+     * @param string       $moduleName    The module name.
+     * @param string       $action        Partial string of the action URL.
+     * @param string|null  $actionName    Specific action name string, or null if unspecified.
+     *                                    Default: null.
+     *
+     * @return bool
+     */
+    public function checkActionAccessible(
+        string $gibbonRoleID,
+        string $moduleName,
+        string $action,
+        ?string $actionName = null
+    ) {
+        $data = [
+            'gibbonRoleID' => $gibbonRoleID,
+            'moduleName' => $moduleName,
+            'actionURL' => '%'.$action.'%',
+        ];
+        $sql = 'SELECT gibbonAction.name FROM gibbonAction
+        JOIN gibbonModule ON (gibbonModule.gibbonModuleID=gibbonAction.gibbonModuleID)
+        JOIN gibbonPermission ON (gibbonAction.gibbonActionID=gibbonPermission.gibbonActionID)
+        JOIN gibbonRole ON (gibbonPermission.gibbonRoleID=gibbonRole.gibbonRoleID)
+        WHERE
+            gibbonAction.URLList LIKE :actionURL
+            AND gibbonPermission.gibbonRoleID=:gibbonRoleID
+            AND gibbonModule.name=:moduleName';
+
+        if (!empty($actionName)) {
+            $data['actionName'] = $actionName;
+            $sql .= ' AND gibbonAction.name=:actionName';
+        }
+
+        return $this
+            ->db()
+            ->select($sql, $data)
+            ->isNotEmpty();
     }
 }
