@@ -1077,6 +1077,7 @@ function setLanguageSession($guid, $row, $defaultLanguage = true)
 /**
  * Check if a module action is accessible to the session user.
  *
+ * @deprecated v25
  * @version v25
  * @since   v12
  *
