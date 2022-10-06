@@ -25,7 +25,7 @@ use Gibbon\Domain\Admissions\AdmissionsAccountGateway;
 use Gibbon\Services\Format;
 
 
-if (isActionAccessible($guid, $connection2, new Action('Admissions', 'applications_manage_add')) == false) {
+if ($accessManager->allow(new Action('Admissions', 'applications_manage_add')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {

@@ -40,7 +40,7 @@ if (!$session->has('gibbonPersonID')) {
     if (!empty($accessID) && !empty($accessToken)) {
         $proceed = true;
     }
-} else if (isActionAccessible($guid, $connection2, new Action('Admissions', 'applicationFormView')) != false) {
+} else if ($accessManager->allow(new Action('Admissions', 'applicationFormView')) != false) {
     $proceed = true;
 }
 

@@ -28,7 +28,7 @@ $search = $_POST['search'] ?? '';
 
 $URL = Url::fromModuleRoute('Admissions', 'admissions_manage_edit')->withQueryParams(['gibbonAdmissionsAccountID' => $gibbonAdmissionsAccountID, 'search' => $search]);
 
-if (isActionAccessible($guid, $connection2, new Action('Admissions', 'admissions_manage_edit')) == false) {
+if ($accessManager->allow(new Action('Admissions', 'admissions_manage_edit')) == false) {
     header("Location: {$URL->withReturn('error0')}");
     exit;
 } else {

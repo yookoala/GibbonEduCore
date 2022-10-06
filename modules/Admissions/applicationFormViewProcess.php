@@ -28,7 +28,7 @@ $gibbonPersonID = $session->get('gibbonPersonID');
 
 $URL = Url::fromModuleRoute('Admissions', 'applicationFormView');
 
-if (isActionAccessible($guid, $connection2, new Action('Admissions', 'applicationFormView')) == false) {
+if ($accessManager->allow(new Action('Admissions', 'applicationFormView')) == false) {
     header("Location: {$URL->withReturn('error0')}");
     exit;
 } else {
