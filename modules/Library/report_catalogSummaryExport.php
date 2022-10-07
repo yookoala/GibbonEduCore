@@ -19,10 +19,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Services\Module\Action;
 
-include '../../gibbon.php';
+require_once __DIR__ . '/../../gibbon.php';
 
 //Module includes
-include './moduleFunctions.php';
+require_once __DIR__ . '/moduleFunctions.php';
 
 $URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_GET['address']).'/report_catalogSummary.php';
 
@@ -88,6 +88,6 @@ if (isActionAccessible($guid, $connection2, new Action('Library', 'report_catalo
         header("Location: {$URL}");
     } else {
         //Proceed!
-		include './report_catalogSummaryExportContents.php';
+		include __DIR__ . '/report_catalogSummaryExportContents.php';
     }
 }

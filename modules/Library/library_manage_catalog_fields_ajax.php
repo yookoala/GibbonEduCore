@@ -21,10 +21,10 @@ use Gibbon\Services\Module\Action;
 use Gibbon\Forms\FormFactory;
 
 //Gibbon system-wide include
-include '../../gibbon.php';
+require_once __DIR__ . '/../../gibbon.php';
 
 //Module includes
-include $session->get('absolutePath').'/modules/Library/moduleFunctions.php';
+require_once __DIR__ . '/moduleFunctions.php';
 
 //Setup variables
 $gibbonLibraryTypeID = $_POST['gibbonLibraryTypeID'] ?? '';
