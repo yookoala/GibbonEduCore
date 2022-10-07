@@ -21,7 +21,7 @@ use Gibbon\Services\Module\Action;
 use Gibbon\Services\Format;
 use Gibbon\Data\Validator;
 
-include '../../gibbon.php';
+require_once __DIR__ . '/../../gibbon.php';
 
 $_POST = $container->get(Validator::class)->sanitize($_POST);
 
