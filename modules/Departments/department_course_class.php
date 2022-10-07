@@ -33,7 +33,7 @@ require_once __DIR__ . '/moduleFunctions.php';
 $settingGateway = $container->get(SettingGateway::class);
 
 $makeDepartmentsPublic = $settingGateway->getSettingByScope('Departments', 'makeDepartmentsPublic');
-if (isActionAccessible($guid, $connection2, new Action('Departments', 'department_course_class')) == false) {
+if ($accessManager->allow(new Action('Departments', 'department_course_class')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
@@ -93,7 +93,7 @@ if (isActionAccessible($guid, $connection2, new Action('Departments', 'departmen
             $menuItems = [];
 
             // Attendance
-            if ($row['attendance'] == 'Y' && isActionAccessible($guid, $connection2, "/modules/Attendance/attendance_take_byCourseClass.php")) {
+            if ($row['attendance'] == 'Y' && $accessManager->allow(new Action('Attendance', 'attendance_take_byCourseClass'))) {
                 $menuItems[] = [
                     'name' => __('Attendance'),
                     'url'  => './index.php?q=/modules/Attendance/attendance_take_byCourseClass.php&gibbonCourseClassID='.$gibbonCourseClassID.'&currentDate='.$currentDate,
@@ -101,7 +101,7 @@ if (isActionAccessible($guid, $connection2, new Action('Departments', 'departmen
                 ];
             }
             // Planner
-            if (isActionAccessible($guid, $connection2, new Action('Planner', 'planner'))) {
+            if ($accessManager->allow(new Action('Planner', 'planner'))) {
                 $menuItems[] = [
                     'name' => __('Planner'),
                     'url'  => './index.php?q=/modules/Planner/planner.php&gibbonCourseClassID='.$gibbonCourseClassID.'&viewBy=class',
@@ -117,7 +117,7 @@ if (isActionAccessible($guid, $connection2, new Action('Departments', 'departmen
                 ];
             }
             // Homework
-            if (isActionAccessible($guid, $connection2, new Action('Planner', 'planner_deadlines'))) {
+            if ($accessManager->allow(new Action('Planner', 'planner_deadlines'))) {
                 $homeworkNamePlural = $settingGateway->getSettingByScope('Planner', 'homeworkNamePlural');
                 $menuItems[] = [
                     'name' => __($homeworkNamePlural),
@@ -126,7 +126,7 @@ if (isActionAccessible($guid, $connection2, new Action('Departments', 'departmen
                 ];
             }
             // Internal Assessment
-            if (isActionAccessible($guid, $connection2, new Action('Formal Assessment', 'internalAssessment_write'))) {
+            if ($accessManager->allow(new Action('Formal Assessment', 'internalAssessment_write'))) {
                 $menuItems[] = [
                     'name' => __('Internal Assessment'),
                     'url'  => './index.php?q=/modules/Formal Assessment/internalAssessment_write.php&gibbonCourseClassID='.$gibbonCourseClassID,
