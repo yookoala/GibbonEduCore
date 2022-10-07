@@ -26,7 +26,7 @@ require_once __DIR__ . '/moduleFunctions.php';
 
 $URL = $session->get('absoluteURL').'/index.php?q=/modules/'.getModuleName($_GET['address']).'/report_catalogSummary.php';
 
-if (isActionAccessible($guid, $connection2, new Action('Library', 'report_catalogSummary')) == false) {
+if ($accessManager->allow(new Action('Library', 'report_catalogSummary')) == false) {
     $URL .= '&return=error0';
     header("Location: {$URL}");
 } else {

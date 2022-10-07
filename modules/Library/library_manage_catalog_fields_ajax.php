@@ -30,7 +30,7 @@ require_once __DIR__ . '/moduleFunctions.php';
 $gibbonLibraryTypeID = $_POST['gibbonLibraryTypeID'] ?? '';
 $gibbonLibraryItemID = $_POST['gibbonLibraryItemID'] ?? '';
 
-if (isActionAccessible($guid, $connection2, new Action('Library', 'library_manage_catalog_add')) == false) {
+if ($accessManager->allow(new Action('Library', 'library_manage_catalog_add')) == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __('Your request failed because you do not have access to this action.');

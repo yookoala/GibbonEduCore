@@ -22,7 +22,7 @@ use Gibbon\Services\Format;
 
 include __DIR__ . '/../../config.php';
 
-if (isActionAccessible($guid, $connection2, new Action('Library', 'report_catalogSummary')) == false) {
+if ($accessManager->allow(new Action('Library', 'report_catalogSummary')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {

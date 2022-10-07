@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../gibbon.php';
 require_once __DIR__ . '/moduleFunctions.php';
 
 $queryArr = [
-  "q" => "/modules/".getModuleName($_POST['address'])."/library_manage_catalog_delete.php",
+  "q" => "/modules/Library/library_manage_catalog_delete.php",
   "gibbonLibraryItemID" => $_POST['gibbonLibraryItemID'] ?? '',
   "name" => $_GET['name'] ?? '',
   "gibbonLibraryTypeID" => $_GET['gibbonLibraryTypeID'] ?? '',
@@ -35,7 +35,7 @@ $queryArr = [
 ];
 $baseURL = $session->get('absoluteURL').'/index.php?';
 
-if (isActionAccessible($guid, $connection2, $queryArr['q']) == false) {
+if ($accessManager->allow(new Action('Library', 'library_manage_catalog_delete')) == false) {
     $queryArr['return'] = "error0";
     header("Location: " . $baseURL . http_build_query($queryArr));
 } else {
