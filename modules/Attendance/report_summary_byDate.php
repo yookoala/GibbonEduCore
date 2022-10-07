@@ -86,10 +86,10 @@ if (isActionAccessible($guid, $connection2, new Action('Attendance', 'report_sum
         $row->addDate('dateEnd')->setValue(Format::date($dateEnd))->required();
 
     $options = array("all" => __('All Students'));
-    if (isActionAccessible($guid, $connection2, "/modules/Attendance/attendance_take_byCourseClass.php")) {
+    if (isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_take_byCourseClass'))) {
         $options["class"] = __('Class');
     }
-    if (isActionAccessible($guid, $connection2, "/modules/Attendance/attendance_take_byFormGroup.php")) {
+    if (isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_take_byFormGroup'))) {
         $options["formGroup"] = __('Form Group');
     }
     $row = $form->addRow();

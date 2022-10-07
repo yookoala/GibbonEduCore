@@ -42,8 +42,8 @@ if (!isActionAccessible($guid, $connection2, new Action('Attendance', 'attendanc
 $currentDate = isset($_GET['currentDate']) ? Format::dateConvert($_GET['currentDate']) : date('Y-m-d');
 $today = date("Y-m-d");
 $lastNSchoolDays = getLastNSchoolDays($guid, $connection2, $currentDate, 10, true);
-$accessNotRegistered = isActionAccessible($guid, $connection2, "/modules/Attendance/report_formGroupsNotRegistered_byDate.php")
-    && isActionAccessible($guid, $connection2, "/modules/Attendance/report_courseClassesNotRegistered_byDate.php");
+$accessNotRegistered = isActionAccessible($guid, $connection2, new Action('Attendance', 'report_formGroupsNotRegistered_byDate'))
+    && isActionAccessible($guid, $connection2, new Action('Attendance', 'report_courseClassesNotRegistered_byDate'));
 $gibbonPersonID = ($accessNotRegistered && isset($_GET['gibbonPersonID'])) ?
     $_GET['gibbonPersonID'] : $session->get('gibbonPersonID');
 
@@ -197,7 +197,7 @@ if ($session->has('username')) {
         return;
     }
 
-    if (isActionAccessible($guid, $connection2, "/modules/Attendance/attendance_take_byFormGroup.php")) {
+    if (isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_take_byFormGroup'))) {
         // Show My Form Groups
         try {
             $result = $connection2->prepare("SELECT gibbonFormGroupID, gibbonFormGroup.nameShort as name, firstDay, lastDay FROM gibbonFormGroup JOIN gibbonSchoolYear ON (gibbonFormGroup.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE (gibbonPersonIDTutor=:gibbonPersonIDTutor1 OR gibbonPersonIDTutor2=:gibbonPersonIDTutor2 OR gibbonPersonIDTutor3=:gibbonPersonIDTutor3) AND gibbonFormGroup.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonFormGroup.attendance = 'Y'");
@@ -300,7 +300,7 @@ if ($session->has('username')) {
         }
     }
 
-    if (isActionAccessible($guid, $connection2, "/modules/Attendance/attendance_take_byCourseClass.php")) {
+    if (isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_take_byCourseClass'))) {
         // Produce array of attendance data
         try {
             $result = $connection2->prepare("SELECT date, gibbonCourseClassID FROM gibbonAttendanceLogCourseClass WHERE date>=:dateStart AND date<=:dateEnd ORDER BY date");

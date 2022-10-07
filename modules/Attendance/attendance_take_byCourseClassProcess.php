@@ -42,7 +42,7 @@ if ($moduleName == "Planner") {
     $URL=$session->get("absoluteURL") . "/index.php?q=/modules/" . $moduleName . "/attendance_take_byCourseClass.php&gibbonCourseClassID=$gibbonCourseClassID&currentDate=" . Format::date($currentDate) ;
 }
 
-if (isActionAccessible($guid, $connection2, "/modules/Attendance/attendance_take_byCourseClass.php")==FALSE) {
+if (isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_take_byCourseClass'))==FALSE) {
     //Fail 0
     $URL.="&return=error0" ;
     header("Location: {$URL}");

@@ -31,7 +31,7 @@ require_once __DIR__ . '/src/AttendanceView.php';
 // set page breadcrumb
 $page->breadcrumbs->add(__('Take Attendance by Class'));
 
-if (isActionAccessible($guid, $connection2, "/modules/Attendance/attendance_take_byCourseClass.php") == false) {
+if (isActionAccessible($guid, $connection2, new Action('Attendance', 'attendance_take_byCourseClass')) == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __("You do not have access to this action.");
