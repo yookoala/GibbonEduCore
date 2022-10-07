@@ -19,9 +19,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Services\Module\Action;
 
-include '../../gibbon.php';
+require_once __DIR__ . '/../../gibbon.php';
 
-include './moduleFunctions.php';
+require_once __DIR__ . '/moduleFunctions.php';
 
 //Search & Filters
 $search = $_GET['search'] ?? '';
