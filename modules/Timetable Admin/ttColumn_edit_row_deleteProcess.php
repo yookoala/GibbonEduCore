@@ -38,7 +38,7 @@ if ($gibbonTTColumnID == '') { echo 'Fatal error loading this page!';
             'gibbonTTColumnRowID' => $gibbonTTColumnRowID,
         ]);
 
-    if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttColumn_edit_row_delete')) == false) {
+    if ($accessManager->allow(new Action('Timetable Admin', 'ttColumn_edit_row_delete')) == false) {
         header('Location: ' . $URL->withReturn('error0'));
     } else {
         //Proceed!

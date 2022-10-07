@@ -29,7 +29,7 @@ $nameShort = $_POST['nameShort'] ?? '';
 
 $URL = Url::fromModuleRoute('Timetable Admin', 'ttColumn_add');
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttColumn_add')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttColumn_add')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

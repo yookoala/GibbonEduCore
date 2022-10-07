@@ -52,7 +52,7 @@ if ($gibbonTTDayID == '' or $gibbonTTID == '' or $gibbonSchoolYearID == '' or $g
             'gibbonCourseClassID' => $gibbonCourseClassID,
         ]);
 
-    if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'tt_edit_day_edit_class_exception_delete')) == false) {
+    if ($accessManager->allow(new Action('Timetable Admin', 'tt_edit_day_edit_class_exception_delete')) == false) {
         header('Location: ' . $URL->withReturn('error0'));
     } else {
         //Proceed!

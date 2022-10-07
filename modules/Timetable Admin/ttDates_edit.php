@@ -24,7 +24,7 @@ use Gibbon\Tables\DataTable;
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttDates_edit')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttDates_edit')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {

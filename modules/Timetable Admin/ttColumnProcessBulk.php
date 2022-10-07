@@ -27,7 +27,7 @@ $action = $_POST['action'] ?? '';
 
 $URL = Url::fromModuleRoute('Timetable Admin', 'ttColumn');
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttColumn')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttColumn')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else if ($action == '') {
     header('Location: ' . $URL->withReturn('error1'));

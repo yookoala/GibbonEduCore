@@ -30,7 +30,7 @@ $gibbonTTColumnID = $_POST['gibbonTTColumnID'] ?? '';
 
 $URL = Url::fromModuleRoute('Timetable Admin', 'ttColumn_edit')->withQueryParam('gibbonTTColumnID', $gibbonTTColumnID);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttColumn_edit')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttColumn_edit')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

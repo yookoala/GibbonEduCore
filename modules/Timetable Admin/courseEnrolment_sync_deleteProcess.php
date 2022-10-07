@@ -29,7 +29,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'courseEnrolment_sync')
         'gibbonSchoolYearID' => $gibbonSchoolYearID,
     ]);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_sync_delete')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'courseEnrolment_sync_delete')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
     exit();
 } else {

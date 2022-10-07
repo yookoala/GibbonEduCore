@@ -34,7 +34,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'ttDates_edit_add')
         'dateStamp' => $dateStamp,
     ]);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttDates_edit_add')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttDates_edit_add')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

@@ -30,7 +30,7 @@ $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
 $gibbonSchoolYearIDNext = $_GET['gibbonSchoolYearIDNext'] ?? '';
 $URL = Url::fromModuleRoute('Timetable Admin', 'course_manage')->withQueryParam('gibbonSchoolYearID', $gibbonSchoolYearIDNext);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'course_manage')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'course_manage')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

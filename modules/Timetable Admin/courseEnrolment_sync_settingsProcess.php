@@ -26,7 +26,7 @@ $_POST = $container->get(Validator::class)->sanitize($_POST);
 
 $URL = Url::fromModuleRoute('Timetable Admin', 'courseEnrolment_sync');
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_sync')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'courseEnrolment_sync')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
     exit;
 } else {

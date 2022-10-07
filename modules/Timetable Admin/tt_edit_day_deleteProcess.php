@@ -42,7 +42,7 @@ if ($gibbonTTID == '' or $gibbonSchoolYearID == '') {
             'gibbonSchoolYearID' => $gibbonSchoolYearID,
         ]);
 
-    if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'tt_edit_day_delete')) == false) {
+    if ($accessManager->allow(new Action('Timetable Admin', 'tt_edit_day_delete')) == false) {
         header('Location: ' . $URL->withReturn('error0'));
     } else {
         //Proceed!

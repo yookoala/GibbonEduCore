@@ -30,7 +30,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'tt_delete')
     ]);
 $URLDelete = Url::fromModuleRoute('Timetable Admin', 'tt')->withQueryParam('gibbonSchoolYearID', $_GET['gibbonSchoolYearID'] ?? '');
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'tt_delete')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'tt_delete')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

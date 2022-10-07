@@ -36,7 +36,7 @@ $URLDelete = Url::fromModuleRoute('Timetable Admin', 'course_manage')
         'search' => $_POST['search'] ?? '',
     ]);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'course_manage_delete')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'course_manage_delete')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
     exit();
 } else {

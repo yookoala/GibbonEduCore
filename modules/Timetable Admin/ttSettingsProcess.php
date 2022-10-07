@@ -27,7 +27,7 @@ $_POST = $container->get(Validator::class)->sanitize($_POST);
 
 $URL = Url::fromModuleRoute('Timetable Admin', 'ttSettings');
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttSettings')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttSettings')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
 

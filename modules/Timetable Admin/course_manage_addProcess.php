@@ -37,7 +37,7 @@ $gibbonYearGroupIDList = implode(',', $_POST['gibbonYearGroupIDList'] ?? []);
 
 $URL = Url::fromModuleRoute('Timetable Admin', 'course_manage_add')->withQueryParam('gibbonSchoolYearID', $gibbonSchoolYearID);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'course_manage_add')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'course_manage_add')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

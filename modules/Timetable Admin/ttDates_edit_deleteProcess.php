@@ -34,7 +34,7 @@ if ($gibbonSchoolYearID == '' or $dateStamp == '') { echo 'Fatal error loading t
             'dateStamp' => $dateStamp,
         ]);
 
-    if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttDates_edit_delete')) == false) {
+    if ($accessManager->allow(new Action('Timetable Admin', 'ttDates_edit_delete')) == false) {
         header('Location: ' . $URL->withReturn('error0'));
     } else {
         //Proceed!

@@ -32,7 +32,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'tt_edit')->withQueryParams([
     'gibbonSchoolYearID' => $gibbonSchoolYearID,
 ]);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'tt_edit')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'tt_edit')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else if ($action == '') {
     header('Location: ' . $URL->withReturn('error1'));

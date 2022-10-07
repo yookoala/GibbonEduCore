@@ -40,7 +40,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'tt_edit')
         'gibbonSchoolYearID' => $_POST['gibbonSchoolYearID'] ?? '',
     ]);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'tt_edit')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'tt_edit')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

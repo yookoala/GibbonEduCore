@@ -45,7 +45,7 @@ if ($gibbonCourseClassID == '' or $gibbonCourseID == '' or $gibbonSchoolYearID =
             'search' => $search,
         ]);
 
-    if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_manage_class_edit_delete')) == false) {
+    if ($accessManager->allow(new Action('Timetable Admin', 'courseEnrolment_manage_class_edit_delete')) == false) {
         header('Location: ' . $URL->withReturn('error0'));
     } else {
         //Proceed!

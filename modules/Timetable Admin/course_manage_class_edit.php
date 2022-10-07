@@ -90,7 +90,7 @@ if ($accessManager->allow(new Action('Timetable Admin', 'course_manage_class_edi
 				$row->addLabel('reportable', __('Reportable?'))->description(__('Should this class show in reports?'));
 				$row->addYesNo('reportable');
 
-			if (isActionAccessible($guid, $connection2, "/modules/Attendance/attendance_take_byCourseClass.php")) {
+			if ($accessManager->allow(new Action('Attendance', 'attendance_take_byCourseClass'))) {
 				$row = $form->addRow();
 				$row->addLabel('attendance', __('Track Attendance?'))->description(__('Should this class allow attendance to be taken?'));
 				$row->addYesNo('attendance');

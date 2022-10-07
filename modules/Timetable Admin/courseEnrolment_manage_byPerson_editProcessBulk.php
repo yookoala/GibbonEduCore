@@ -38,7 +38,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'courseEnrolment_manage_byPerson_
         'search' => $search,
     ]);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_manage_byPerson_edit')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'courseEnrolment_manage_byPerson_edit')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else if ($gibbonPersonID == '' or $gibbonSchoolYearID == '' or $action == '') {
     header('Location: ' . $URL->withReturn('error1'));

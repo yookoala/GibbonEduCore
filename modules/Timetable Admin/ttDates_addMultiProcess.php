@@ -35,7 +35,7 @@ $overwrite = $_POST['overwrite'] ?? 'N';
 
 $URL = Url::fromModuleRoute('Timetable Admin', 'ttDates')->withQueryParam('gibbonSchoolYearID', $gibbonSchoolYearID);
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttDates_edit_add')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttDates_edit_add')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     // Proceed!

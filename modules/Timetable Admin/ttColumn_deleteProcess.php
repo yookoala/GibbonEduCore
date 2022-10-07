@@ -26,7 +26,7 @@ $gibbonTTColumnID = $_GET['gibbonTTColumnID'] ?? '';
 $URL = Url::fromModuleRoute('Timetable Admin', 'ttColumn_delete')->withQueryParam('gibbonTTColumnID', $gibbonTTColumnID);
 $URLDelete = Url::fromModuleRoute('Timetable Admin', 'ttColumn.php');
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'ttColumn_delete')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'ttColumn_delete')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
 } else {
     //Proceed!

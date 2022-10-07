@@ -34,7 +34,7 @@ $URL = Url::fromModuleRoute('Timetable Admin', 'courseEnrolment_sync_run')
     ]);
 $URLSuccess = Url::fromModuleRoute('Timetable Admin', 'courseEnrolment_sync.php');
 
-if (isActionAccessible($guid, $connection2, new Action('Timetable Admin', 'courseEnrolment_sync_run')) == false) {
+if ($accessManager->allow(new Action('Timetable Admin', 'courseEnrolment_sync_run')) == false) {
     header('Location: ' . $URL->withReturn('error0'));
     exit;
 } else {
