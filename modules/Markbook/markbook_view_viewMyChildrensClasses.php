@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Forms\Form;
+use Gibbon\Http\Url;
 use Gibbon\Services\Format;
 
 $page->breadcrumbs->add(__('View Markbook'));
@@ -78,11 +79,13 @@ if ($result->rowCount() < 1) {
 
         $gibbonPersonID = (isset($_GET['search']))? $_GET['search'] : null;
 
-        $form = Form::create('filter', $session->get('absoluteURL').'/index.php', 'get');
+        $form = Form::create(
+            'filter',
+            Url::fromModuleRoute('Markbook', 'markbook_view')
+                ->withQueryParam('address', $session->get('address')),
+            'get'
+        );
         $form->setClass('noIntBorder fullWidth standardForm');
-
-        $form->addHiddenValue('q', '/modules/Markbook/markbook_view.php');
-        $form->addHiddenValue('address', $session->get('address'));
 
         $row = $form->addRow();
             $row->addLabel('search', __('Student'));
@@ -140,11 +143,12 @@ if ($result->rowCount() < 1) {
                 $and2 .= ' AND type=:filter3';
             }
 
-            $form = Form::create('filter', $session->get('absoluteURL').'/index.php','get');
+            $form = Form::create(
+                'filter',
+                Url::fromModuleRoute('Markbook', 'markbook_view')->withQueryParam('search', $gibbonPersonID),
+                'get'
+            );
             $form->setClass('noIntBorder fullWidth');
-
-            $form->addHiddenValue('q', '/modules/'.$session->get('module').'/markbook_view.php');
-            $form->addHiddenValue('search', $gibbonPersonID);
 
             $sqlSelect = "SELECT gibbonDepartmentID as value, name FROM gibbonDepartment WHERE type='Learning Area' ORDER BY name";
             $rowFilter = $form->addRow();
@@ -505,7 +509,7 @@ if ($result->rowCount() < 1) {
                             $session->set('sidebarExtra', $session->get('sidebarExtra').__('Recent Marks'));
                             $session->set('sidebarExtra', $session->get('sidebarExtra').'</h2>');
 
-                            $session-set('sidebarExtra', $session->get('sidebarExtra').'<ol>');
+                            $session->set('sidebarExtra', $session->get('sidebarExtra').'<ol>');
                             $count = 0;
 
                             while ($rowEntry2 = $resultEntry2->fetch() and $count < 5) {

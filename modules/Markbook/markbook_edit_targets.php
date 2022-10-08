@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Services\Module\Action;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Forms\Form;
+use Gibbon\Http\Url;
 use Gibbon\Services\Format;
 
 //Module includes
@@ -87,7 +88,10 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                     )
                     ->add(__('Set Personalised Attainment Targets'));
 
-                $form = Form::create('markbookTargets', $session->get('absoluteURL').'/modules/'.$session->get('module').'/markbook_edit_targetsProcess.php?gibbonCourseClassID='.$gibbonCourseClassID);
+                $form = Form::create(
+                    'markbookTargets',
+                    Url::fromModuleRoute('Markbook', 'markbook_edit_targetsProcess')->withQueryParam('gibbonCourseClassID', $gibbonCourseClassID)
+                );
                 $form->setFactory(DatabaseFormFactory::create($pdo));
                 $form->addHiddenValue('address', $session->get('address'));
 

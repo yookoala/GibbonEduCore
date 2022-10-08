@@ -22,6 +22,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Services\Format;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Domain\School\SchoolYearTermGateway;
+use Gibbon\Http\Url;
 
 $page->breadcrumbs->add(__('View Markbook'));
 
@@ -77,10 +78,12 @@ if (MARKBOOK_VIEW_LOCK !== sha1( $highestAction . $session->get('gibbonPersonID'
         $and2 .= ' AND type=:type';
     }
 
-    $form = Form::create('filter', $session->get('absoluteURL').'/index.php','get');
+    $form = Form::create(
+        'filter',
+        Url::fromModuleRoute('Markbook', 'markbook_view'),
+        'get'
+    );
     $form->setClass('noIntBorder fullWidth');
-
-    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/markbook_view.php');
 
     $sqlSelect = "SELECT gibbonDepartmentID as value, name FROM gibbonDepartment WHERE type='Learning Area' ORDER BY name";
     $rowFilter = $form->addRow();

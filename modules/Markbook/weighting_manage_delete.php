@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Services\Module\Action;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Forms\Prefab\DeleteForm;
+use Gibbon\Http\Url;
 use Gibbon\Services\Format;
 
 //Module includes
@@ -100,7 +101,7 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'weighting_ma
                     $row = $result->fetch();
                     $row2 = $result2->fetch();
 
-                    $form = DeleteForm::createForm($session->get('absoluteURL').'/modules/'.$session->get('module')."/weighting_manage_deleteProcess.php?gibbonCourseClassID=$gibbonCourseClassID");
+                    $form = DeleteForm::createForm(Url::fromModuleRoute('Markbook', 'weighting_manage_deleteProcess')->withQueryParam('gibbonCourseClassID', $gibbonCourseClassID));
                     echo $form->getOutput();
                 }
             }

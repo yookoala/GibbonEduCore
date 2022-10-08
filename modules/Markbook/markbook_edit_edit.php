@@ -21,6 +21,7 @@ use Gibbon\Services\Module\Action;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Forms\Form;
+use Gibbon\Http\Url;
 use Gibbon\Services\Format;
 
 //Module includes
@@ -126,17 +127,25 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                         $returns['success1'] = __('Planner was successfully added: you opted to add a linked Markbook column, and you can now do so below.');
                         $page->return->addReturns($returns);
 
-                        $form = Form::create('markbook', $session->get('absoluteURL').'/modules/'.$session->get('module').'/markbook_edit_editProcess.php?gibbonMarkbookColumnID='.$gibbonMarkbookColumnID.'&gibbonCourseClassID='.$gibbonCourseClassID.'&address='.$session->get('address'));
+                        $form = Form::create(
+                            'markbook',
+                            Url::fromModuleRoute('Markbook', 'markbook_edit_editProcess')
+                                ->withQueryParams([
+                                    'gibbonMarkbookColumnID' => $gibbonMarkbookColumnID,
+                                    'gibbonCourseClassID' => $gibbonCourseClassID,
+                                    'address' => $session->get('address'),
+                                ])
+                        );
                         $form->setFactory(DatabaseFormFactory::create($pdo));
                         $form->addHiddenValue('address', $session->get('address'));
-                        
+
                          // Add header actions
                         if (!empty($values['gibbonPlannerEntryID'])) {
                             $params = [
                                 "viewBy" => 'class',
                                 "gibbonCourseClassID" => $gibbonCourseClassID,
                                 "gibbonPlannerEntryID" => $values['gibbonPlannerEntryID'],
-                            
+
                             ];
                             $form->addHeaderAction('view', __('View Linked Lesson'))
                                 ->setURL('/modules/Planner/planner_view_full.php')
@@ -147,7 +156,7 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                         $params = [
                             "gibbonCourseClassID" => $gibbonCourseClassID,
                             "gibbonMarkbookColumnID" => $gibbonMarkbookColumnID,
-                        
+
                         ];
                         $form->addHeaderAction('data', __('Enter Data'))
                             ->setURL('/modules/Markbook/markbook_edit_data.php')
@@ -155,7 +164,7 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                             ->setIcon('markbook')
                             ->displayLabel()
                             ->prepend((!empty($values['gibbonPlannerEntryID'])) ? ' | ' : '');
-                            
+
                         $form->addRow()->addHeading('Basic Information', __('Basic Information'));
 
                         $row = $form->addRow();

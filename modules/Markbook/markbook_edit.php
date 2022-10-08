@@ -22,6 +22,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Services\Format;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Domain\System\SettingGateway;
+use Gibbon\Http\Url;
 
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
@@ -251,11 +252,14 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                     echo __('Copy Markbook Columns');
                     echo '</h1>';
 
-                    $form = Form::create('searchForm', $gibbon->session->get('absoluteURL').'/index.php?q=/modules/Markbook/markbook_edit_copy.php&gibbonCourseClassID='.$gibbonCourseClassID);
+                    $form = Form::create(
+                        'searchForm',
+                        Url::fromModuleRoute('Markbook', 'markbook_edit_copy')->withQueryParam('gibbonCourseClassID', $gibbonCourseClassID)
+                    );
                     $form->setFactory(DatabaseFormFactory::create($pdo));
                     $form->setClass('noIntBorder fullWidth');
 
-                    $form->addHiddenValue('q', '/modules/'.$gibbon->session->get('module').'/applicationForm_manage.php');
+                    $form->addHiddenValue('q', '/modules/Markbook/applicationForm_manage.php');
 
                     $col = $form->addRow()->addColumn()->addClass('inline right');
                         $col->addContent(__('Copy from').' '.__('Class').': &nbsp;');

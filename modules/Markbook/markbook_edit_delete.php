@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Services\Module\Action;
 use Gibbon\Forms\Prefab\DeleteForm;
+use Gibbon\Http\Url;
 use Gibbon\Services\Format;
 
 //Module includes
@@ -92,7 +93,7 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                         echo __('This column is part of a set of columns, and so cannot be individually deleted.');
                         echo '</div>';
                     } else {
-                        $form = DeleteForm::createForm($session->get('absoluteURL').'/modules/'.$session->get('module')."/markbook_edit_deleteProcess.php?gibbonMarkbookColumnID=$gibbonMarkbookColumnID");
+                        $form = DeleteForm::createForm(Url::fromModuleRoute('Markbook', 'markbook_edit_deleteProcess')->withQueryParam('gibbonMarkbookColumnID', $gibbonMarkbookColumnID));
                         echo $form->getOutput();
                     }
                 }

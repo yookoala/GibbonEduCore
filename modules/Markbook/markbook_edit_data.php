@@ -21,6 +21,7 @@ use Gibbon\Services\Module\Action;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Forms\Form;
+use Gibbon\Http\Url;
 use Gibbon\Services\Format;
 
 //Module includes
@@ -296,7 +297,15 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                     $result = $pdo->executeQuery($data, $sql);
                     $individualNeeds = ($result->rowCount() > 0)? $result->fetchAll() : array();
 
-                    $form = Form::create('markbookEditData', $session->get('absoluteURL').'/modules/'.$session->get('module').'/markbook_edit_dataProcess.php?gibbonCourseClassID='.$gibbonCourseClassID.'&gibbonMarkbookColumnID='.$gibbonMarkbookColumnID.'&address='.$session->get('address'));
+                    $form = Form::create(
+                        'markbookEditData',
+                        Url::fromModuleRoute('Markbook', 'markbook_edit_dataProcess')
+                            ->withQueryParams([
+                                'gibbonCourseClassID' => $gibbonCourseClassID,
+                                'gibbonMarkbookColumnID' => $gibbonMarkbookColumnID,
+                                'address' => $session->get('address'),
+                            ])
+                    );
                     $form->setFactory(DatabaseFormFactory::create($pdo));
                     $form->addHiddenValue('address', $session->get('address'));
 

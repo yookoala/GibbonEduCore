@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Services\Module\Action;
 use Gibbon\Forms\Form;
+use Gibbon\Http\Url;
 use Gibbon\Services\Format;
 
 //Module includes
@@ -120,7 +121,14 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
 
                         echo '<fieldset>';
 
-                        $form = Form::create('action', $session->get('absoluteURL').'/modules/Markbook/markbook_edit_copyProcess.php?gibbonCourseClassID='.$gibbonCourseClassID.'&gibbonMarkbookCopyClassID='.$gibbonMarkbookCopyClassID);
+                        $form = Form::create(
+                            'action',
+                            Url::fromModuleRoute('Markbook', 'markbook_edit_copyProcess')
+                                ->withQueryParams([
+                                    'gibbonCourseClassID' => $gibbonCourseClassID,
+                                    'gibbonMarkbookCopyClassID' => $gibbonMarkbookCopyClassID,
+                                ])
+                        );
                         $form->setClass('fullWidth');
 
                         $form->addHiddenValue('address', $session->get('address'));
