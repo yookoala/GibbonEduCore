@@ -27,7 +27,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 include '../../config.php';
 
 //Module includes
-include './moduleFunctions.php';
+require_once __DIR__ . '/moduleFunctions.php';
 
 //Get settings
 $settingGateway = $container->get(SettingGateway::class);
