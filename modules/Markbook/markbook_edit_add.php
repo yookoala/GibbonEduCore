@@ -46,7 +46,7 @@ $name = $_GET['name'] ?? null;
 $summary = $_GET['summary'] ?? null;
 $date = $_GET['date'] ?? date('Y-m-d');
 
-if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edit_add')) == false) {
+if ($accessManager->allow(new Action('Markbook', 'markbook_edit_add')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {

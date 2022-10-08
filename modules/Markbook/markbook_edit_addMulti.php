@@ -39,7 +39,7 @@ $attainmentAlternativeNameAbrev = $settingGateway->getSettingByScope('Markbook',
 $effortAlternativeName = $settingGateway->getSettingByScope('Markbook', 'effortAlternativeName');
 $effortAlternativeNameAbrev = $settingGateway->getSettingByScope('Markbook', 'effortAlternativeNameAbrev');
 
-if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edit_addMulti')) == false) {
+if ($accessManager->allow(new Action('Markbook', 'markbook_edit_addMulti')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {

@@ -23,7 +23,7 @@ require_once __DIR__ . '/moduleFunctions.php';
 
 $order = (isset($_POST['order']))? $_POST['order'] : '';
 
-if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edit')) == false) {
+if ($accessManager->allow(new Action('Markbook', 'markbook_edit')) == false) {
 
     echo __('Your request failed because Gibbon\Services\Module\Action;
 use you do not have access to this action.');

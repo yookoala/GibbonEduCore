@@ -27,7 +27,7 @@ use Gibbon\Http\Url;
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edit')) == false) {
+if ($accessManager->allow(new Action('Markbook', 'markbook_edit')) == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __('Your request failed because you do not have access to this action.');
@@ -96,7 +96,7 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                 ]));
 
                 //Add multiple columns
-                if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edit'))) {
+                if ($accessManager->allow(new Action('Markbook', 'markbook_edit'))) {
                     if ($highestAction2 == 'Edit Markbook_multipleClassesAcrossSchool' or $highestAction2 == 'Edit Markbook_multipleClassesInDepartment' or $highestAction2 == 'Edit Markbook_everything') {
                         //Check highest role in any department
                         $isCoordinator = isDepartmentCoordinator( $pdo, $gibbon->session->get('gibbonPersonID') );
@@ -154,7 +154,7 @@ if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edi
                     echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module')."/markbook_edit_add.php&gibbonCourseClassID=$gibbonCourseClassID'>".__('Add')."<img style='margin-left: 5px' title='".__('Add')."' src='./themes/".$gibbon->session->get('gibbonThemeName')."/img/page_new.png'/></a>";
 
                     if ($container->get(SettingGateway::class)->getSettingByScope('Markbook', 'enableColumnWeighting') == 'Y') {
-                        if (isActionAccessible($guid, $connection2, new Action('Markbook', 'weighting_manage')) == true) {
+                        if ($accessManager->allow(new Action('Markbook', 'weighting_manage')) == true) {
                             echo " | <a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module')."/weighting_manage.php&gibbonCourseClassID=$gibbonCourseClassID'>".__('Manage Weightings')."<img title='".__('Manage Weightings')."' src='./themes/".$gibbon->session->get('gibbonThemeName')."/img/run.png'/></a>";
                         }
                     }

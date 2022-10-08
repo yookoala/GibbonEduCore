@@ -25,7 +25,7 @@ use Gibbon\Services\Format;
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, new Action('Markbook', 'markbook_edit_delete')) == false) {
+if ($accessManager->allow(new Action('Markbook', 'markbook_edit_delete')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
