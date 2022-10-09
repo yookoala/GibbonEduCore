@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
+use Gibbon\Http\Url;
 use Gibbon\Module\Markbook\MarkbookView;
 use Gibbon\Services\Format;
 
@@ -70,11 +71,13 @@ function classChooser($guid, $pdo, $gibbonCourseClassID)
     $output .= __('Choose Class');
     $output .= '</h3>';
 
-    $form = Form::create('searchForm', $session->get('absoluteURL').'/index.php', 'get');
+    $form = Form::create(
+        'searchForm',
+        Url::fromModuleRoute('Markbook', 'markbook_view'),
+        'get'
+    );
     $form->setFactory(DatabaseFormFactory::create($pdo));
     $form->setClass('noIntBorder fullWidth');
-
-    $form->addHiddenValue('q', '/modules/Markbook/markbook_view.php');
 
     $col = $form->addRow()->addColumn()->addClass('inline right');
 
