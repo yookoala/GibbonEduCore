@@ -69,16 +69,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
             if ($role == '' or empty($comment)) {
                 header('Location: ' . $URL->withReturn('error2'));
             } else {
-                $sqlList = getStudents($guid, $connection2, $role, $row['gibbonCourseClassID'], $row['homeworkCrowdAssessOtherTeachersRead'], $row['homeworkCrowdAssessOtherParentsRead'], $row['homeworkCrowdAssessSubmitterParentsRead'], $row['homeworkCrowdAssessClassmatesParentsRead'], $row['homeworkCrowdAssessOtherStudentsRead'], $row['homeworkCrowdAssessClassmatesRead'], " AND gibbonPerson.gibbonPersonID=$gibbonPersonID");
-
-                if ($sqlList[1] != '') {
-                    try {
-                        $resultList = $connection2->prepare($sqlList[1]);
-                        $resultList->execute($sqlList[0]);
-                    } catch (PDOException $e) {
-                        header('Location: ' . $URL->withReturn('error2'));
-                        exit();
-                    }
+                /** @var CourseClassPersonGateway */
+                $courseClassPersonGateway = $container->get(CourseClassPersonGateway::class);
+                try {
+                    $resultList = $courseClassPersonGateway->selectCrowdAssessStudents(
+                        $role,
+                        $row['gibbonCourseClassID'],
+                        $row['homeworkCrowdAssessOtherTeachersRead'],
+                        $row['homeworkCrowdAssessOtherParentsRead'],
+                        $row['homeworkCrowdAssessSubmitterParentsRead'],
+                        $row['homeworkCrowdAssessClassmatesParentsRead'],
+                        $row['homeworkCrowdAssessOtherStudentsRead'],
+                        $row['homeworkCrowdAssessClassmatesRead'],
+                        " AND gibbonPerson.gibbonPersonID=$gibbonPersonID"
+                    )->fetch();
 
                     if ($resultList->rowCount() != 1) {
                         header('Location: ' . $URL->withReturn('error2'));
@@ -139,6 +143,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
 
                         header('Location: ' . $URL->withReturn('success0')->withFragment($replyTo));
                     }
+
+                } catch (\Exception $e) {
+                    $page->addError($e->getMessage());
                 }
             }
         }

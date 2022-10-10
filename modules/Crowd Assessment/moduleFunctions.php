@@ -189,6 +189,29 @@ function getCARole($guid, $connection2, $gibbonCourseClassID)
     return $role;
 }
 
+/**
+ * Parse the proper SQL query string and data array of students
+ * for crowd assessment purpose.
+ *
+ * Deprecated. Use CourseClassPersonGateway::selectCrowdAssessStudents() instead.
+ *
+ * @deprecated v25
+ * @version v12
+ * @since   v12
+ *
+ * @param string $guid
+ * @param \PDO   $connection2
+ * @param string $role
+ * @param int    $gibbonCourseClassID
+ * @param string $homeworkCrowdAssessOtherTeachersRead
+ * @param string $homeworkCrowdAssessOtherParentsRead
+ * @param string $homeworkCrowdAssessSubmitterParentsRead
+ * @param string $homeworkCrowdAssessClassmatesParentsRead
+ * @param string $homeworkCrowdAssessOtherStudentsRead
+ * @param string $homeworkCrowdAssessClassmatesRead
+ * @param string $and
+ * @return void
+ */
 function getStudents($guid, $connection2, $role, $gibbonCourseClassID, $homeworkCrowdAssessOtherTeachersRead, $homeworkCrowdAssessOtherParentsRead, $homeworkCrowdAssessSubmitterParentsRead, $homeworkCrowdAssessClassmatesParentsRead, $homeworkCrowdAssessOtherStudentsRead, $homeworkCrowdAssessClassmatesRead, $and = '')
 {
     global $session;

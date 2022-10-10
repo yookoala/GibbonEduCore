@@ -22,6 +22,7 @@ use Gibbon\Tables\DataTable;
 use Gibbon\Domain\CrowdAssessment\CrowdAssessDiscussGateway;
 use Gibbon\Domain\Planner\PlannerEntryGateway;
 use Gibbon\Domain\Planner\PlannerEntryHomeworkGateway;
+use Gibbon\Domain\Timetable\CourseClassPersonGateway;
 
 // Module includes
 require_once __DIR__ . '/moduleFunctions.php';
@@ -53,6 +54,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
 
     $plannerHomeworkGateway = $container->get(PlannerEntryHomeworkGateway::class);
     $crowdDiscussionGateway = $container->get(CrowdAssessDiscussGateway::class);
+    /** @var CourseClassPersonGateway */
+    $courseClassPersonGateway = $container->get(CourseClassPersonGateway::class);
 
     // DETAILS
     $table = DataTable::createDetails('crowdAssessment');
@@ -68,10 +71,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     // Get Student work
     $role = getCARole($guid, $connection2, $lesson['gibbonCourseClassID']);
 
-    $sqlList = getStudents($guid, $connection2, $role, $lesson['gibbonCourseClassID'], $lesson['homeworkCrowdAssessOtherTeachersRead'], $lesson['homeworkCrowdAssessOtherParentsRead'], $lesson['homeworkCrowdAssessSubmitterParentsRead'], $lesson['homeworkCrowdAssessClassmatesParentsRead'], $lesson['homeworkCrowdAssessOtherStudentsRead'], $lesson['homeworkCrowdAssessClassmatesRead']);
-
     // DATA TABLE
-    $students = $pdo->select($sqlList[1], $sqlList[0])->fetchAll();
+    $students = $courseClassPersonGateway->selectCrowdAssessStudents(
+        $role,
+        $lesson['gibbonCourseClassID'],
+        $lesson['homeworkCrowdAssessOtherTeachersRead'],
+        $lesson['homeworkCrowdAssessOtherParentsRead'],
+        $lesson['homeworkCrowdAssessSubmitterParentsRead'],
+        $lesson['homeworkCrowdAssessClassmatesParentsRead'],
+        $lesson['homeworkCrowdAssessOtherStudentsRead'],
+        $lesson['homeworkCrowdAssessClassmatesRead']
+    )->fetchAll();
     foreach ($students as $index => $student) {
         $homework = $plannerHomeworkGateway->selectBy(['gibbonPlannerEntryID' => $gibbonPlannerEntryID, 'gibbonPersonID' => $student['gibbonPersonID']])->fetch();
         $discuss = $crowdDiscussionGateway->selectDiscussionByHomeworkID($homework['gibbonPlannerEntryHomeworkID'] ?? '');

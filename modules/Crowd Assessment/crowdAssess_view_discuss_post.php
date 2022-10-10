@@ -56,11 +56,22 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     $replyTo = $_GET['replyTo'] ?? null;
 
     // Get Student work
-    $sqlList = getStudents($guid, $connection2, $role, $lesson['gibbonCourseClassID'], $lesson['homeworkCrowdAssessOtherTeachersRead'], $lesson['homeworkCrowdAssessOtherParentsRead'], $lesson['homeworkCrowdAssessSubmitterParentsRead'], $lesson['homeworkCrowdAssessClassmatesParentsRead'], $lesson['homeworkCrowdAssessOtherStudentsRead'], $lesson['homeworkCrowdAssessClassmatesRead'], " AND gibbonPerson.gibbonPersonID=$gibbonPersonID");
-
-    if (empty($sqlList)) {
-        $page->addError(__('The selected record does not exist, or you do not have access to it.'));
-        return;
+    /** @var CourseClassPersonGateway */
+    $courseClassPersonGateway = $container->get(CourseClassPersonGateway::class);
+    try {
+        $student = $courseClassPersonGateway->selectCrowdAssessStudents(
+            $role,
+            $lesson['gibbonCourseClassID'],
+            $lesson['homeworkCrowdAssessOtherTeachersRead'],
+            $lesson['homeworkCrowdAssessOtherParentsRead'],
+            $lesson['homeworkCrowdAssessSubmitterParentsRead'],
+            $lesson['homeworkCrowdAssessClassmatesParentsRead'],
+            $lesson['homeworkCrowdAssessOtherStudentsRead'],
+            $lesson['homeworkCrowdAssessClassmatesRead'],
+            " AND gibbonPerson.gibbonPersonID=$gibbonPersonID"
+        )->fetch();
+    } catch (\Exception $e) {
+        $page->addError($e->getMessage());
     }
 
     $student = $pdo->select($sqlList[1], $sqlList[0])->fetch();

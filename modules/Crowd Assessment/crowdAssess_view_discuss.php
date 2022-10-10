@@ -22,6 +22,7 @@ use Gibbon\Tables\DataTable;
 use Gibbon\Domain\Planner\PlannerEntryHomeworkGateway;
 use Gibbon\Domain\CrowdAssessment\CrowdAssessDiscussGateway;
 use Gibbon\Domain\Planner\PlannerEntryGateway;
+use Gibbon\Domain\Timetable\CourseClassPersonGateway;
 
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
@@ -62,14 +63,24 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     $role = getCARole($guid, $connection2, $lesson['gibbonCourseClassID']);
 
     // Get Student work
-    $sqlList = getStudents($guid, $connection2, $role, $lesson['gibbonCourseClassID'], $lesson['homeworkCrowdAssessOtherTeachersRead'], $lesson['homeworkCrowdAssessOtherParentsRead'], $lesson['homeworkCrowdAssessSubmitterParentsRead'], $lesson['homeworkCrowdAssessClassmatesParentsRead'], $lesson['homeworkCrowdAssessOtherStudentsRead'], $lesson['homeworkCrowdAssessClassmatesRead'], " AND gibbonPerson.gibbonPersonID=$gibbonPersonID");
-
-    if (empty($sqlList)) {
-        $page->addError(__('The selected record does not exist, or you do not have access to it.'));
-        return;
+    /** @var CourseClassPersonGateway */
+    $courseClassPersonGateway = $container->get(CourseClassPersonGateway::class);
+    try {
+        $student = $courseClassPersonGateway->selectCrowdAssessStudents(
+            $role,
+            $lesson['gibbonCourseClassID'],
+            $lesson['homeworkCrowdAssessOtherTeachersRead'],
+            $lesson['homeworkCrowdAssessOtherParentsRead'],
+            $lesson['homeworkCrowdAssessSubmitterParentsRead'],
+            $lesson['homeworkCrowdAssessClassmatesParentsRead'],
+            $lesson['homeworkCrowdAssessOtherStudentsRead'],
+            $lesson['homeworkCrowdAssessClassmatesRead'],
+            " AND gibbonPerson.gibbonPersonID=$gibbonPersonID"
+        )->fetch();
+    } catch (\Exception $e) {
+        $page->addError($e->getMessage());
     }
 
-    $student = $pdo->select($sqlList[1], $sqlList[0])->fetch();
     if (empty($student)) {
         $page->addError(__('There is currently no work to assess.'));
         return;
