@@ -63,14 +63,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
         } else {
             $row = $result->fetch();
 
+            /** @var CourseClassPersonGateway */
+            $courseClassPersonGateway = $container->get(CourseClassPersonGateway::class);
+
             $comment = $_POST['comment'] ?? '';
-            $role = getCARole($guid, $connection2, $row['gibbonCourseClassID']);
+            $role = $courseClassPersonGateway->getCrowdAssessRole($row['gibbonCourseClassID']);
 
             if ($role == '' or empty($comment)) {
                 header('Location: ' . $URL->withReturn('error2'));
             } else {
-                /** @var CourseClassPersonGateway */
-                $courseClassPersonGateway = $container->get(CourseClassPersonGateway::class);
                 try {
                     $resultList = $courseClassPersonGateway->selectCrowdAssessStudents(
                         $role,

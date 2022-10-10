@@ -106,6 +106,21 @@ function getLessons($guid, $connection2, $and = '')
     return array($data, $sql);
 }
 
+/**
+ * Get role string of the session user in the specifiedi course class.
+ *
+ * Deprecated. Use CourseClassPersonGateway::selectCrowdAssessRole() instead.
+ *
+ * @deprecated v25
+ * @version v12
+ * @since   v12
+ *
+ * @param string $guid
+ * @param \PDO   $connection2
+ * @param int    $gibbonCourseClassID
+ *
+ * @return string
+ */
 function getCARole($guid, $connection2, $gibbonCourseClassID)
 {
     global $session;

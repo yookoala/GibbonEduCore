@@ -60,11 +60,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
         return;
     }
 
-    $role = getCARole($guid, $connection2, $lesson['gibbonCourseClassID']);
-
-    // Get Student work
     /** @var CourseClassPersonGateway */
     $courseClassPersonGateway = $container->get(CourseClassPersonGateway::class);
+    $role = $courseClassPersonGateway->getCrowdAssessRole($lesson['gibbonCourseClassID']);
+
+    // Get Student work
     try {
         $student = $courseClassPersonGateway->selectCrowdAssessStudents(
             $role,

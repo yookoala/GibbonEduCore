@@ -69,7 +69,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     echo '<br/>';
 
     // Get Student work
-    $role = getCARole($guid, $connection2, $lesson['gibbonCourseClassID']);
+    $role = $courseClassPersonGateway->getCrowdAssessRole($lesson['gibbonCourseClassID']);
 
     // DATA TABLE
     $students = $courseClassPersonGateway->selectCrowdAssessStudents(
