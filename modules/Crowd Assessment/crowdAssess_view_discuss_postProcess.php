@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Data\Validator;
 use Gibbon\Comms\NotificationSender;
+use Gibbon\Domain\Planner\PlannerEntryGateway;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Http\Url;
 
@@ -48,11 +49,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     if ($gibbonPlannerEntryID == '' or $gibbonPlannerEntryHomeworkID == '' or $gibbonPersonID == '') {
         header('Location: ' . $URL->withReturn('error1'));
     } else {
-        $and = " AND gibbonPlannerEntryID=$gibbonPlannerEntryID";
-        $sql = getLessons($guid, $connection2, $and);
+        /** @var PlannerEntryGateway */
+        $plannerEntryGateway = $container->get(PlannerEntryGateway::class);
         try {
-            $result = $connection2->prepare($sql[1]);
-            $result->execute($sql[0]);
+            $result = $plannerEntryGateway->selectLessons(" AND gibbonPlannerEntryID=$gibbonPlannerEntryID");
         } catch (PDOException $e) {
             header('Location: ' . $URL->withReturn('error2'));
             exit();

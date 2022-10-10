@@ -21,6 +21,7 @@ use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
 use Gibbon\Domain\Planner\PlannerEntryHomeworkGateway;
 use Gibbon\Domain\CrowdAssessment\CrowdAssessDiscussGateway;
+use Gibbon\Domain\Planner\PlannerEntryGateway;
 
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
@@ -50,10 +51,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     }
 
     // Check existence of and access to this lesson.
-    $and = " AND gibbonPlannerEntryID=$gibbonPlannerEntryID";
-    $sql = getLessons($guid, $connection2, $and);
-    $lesson = $pdo->select($sql[1], $sql[0])->fetch();
-
+    /** @var PlannerEntryGateway */
+    $plannerEntryGateway = $container->get(PlannerEntryGateway::class);
+    $lesson = $plannerEntryGateway->selectLessons(" AND gibbonPlannerEntryID=$gibbonPlannerEntryID")->fetch();
     if (empty($lesson)) {
         $page->addError(__('The selected record does not exist, or you do not have access to it.'));
         return;
@@ -114,7 +114,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     echo $table->render([$student + $homework]);
     echo '<br/>';
 
-   
+
     // DISCUSSION - recursive
     $getDiscussion = function ($gibbonPlannerEntryHomeworkID, $urlParams, $parent = null, $level = null) use (&$getDiscussion, &$crowdDiscussionGateway) {
         $discussion = [];
@@ -132,12 +132,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
 
         return $discussion;
     };
-    
+
     $discussion = $getDiscussion($homework['gibbonPlannerEntryHomeworkID'], $urlParams, 0);
 
     echo $page->fetchFromTemplate('ui/discussion.twig.html', [
         'title' => '',
-        'compact' => true, 
+        'compact' => true,
         'discussion' => $discussion
     ]);
 }

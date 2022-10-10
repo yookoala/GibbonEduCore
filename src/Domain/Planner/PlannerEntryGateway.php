@@ -19,6 +19,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Gibbon\Domain\Planner;
 
+use Gibbon\Contracts\Database\Connection;
+use Gibbon\Contracts\Database\Result;
+use Gibbon\Contracts\Services\Session;
 use Gibbon\Domain\Traits\TableAware;
 use Gibbon\Domain\QueryCriteria;
 use Gibbon\Domain\QueryableGateway;
@@ -36,7 +39,22 @@ class PlannerEntryGateway extends QueryableGateway
     private static $tableName = 'gibbonPlannerEntry';
     private static $primaryKey = 'gibbonPlannerEntryID';
     private static $searchableColumns = [];
-    
+
+    /**
+     * Session instance
+     *
+     * @var Session
+     */
+    private $session;
+
+    public function __construct(
+        Connection $db,
+        Session $session
+    )
+    {
+        parent::__construct($db);
+        $this->session = $session;
+    }
 
     public function queryPlannerTimeSlotsByClass($criteria, $gibbonSchoolYearID, $gibbonCourseClassID)
     {
@@ -50,9 +68,9 @@ class PlannerEntryGateway extends QueryableGateway
             ->innerJoin('gibbonSchoolYearTerm', 'gibbonTTDayDate.date BETWEEN gibbonSchoolYearTerm.firstDay AND gibbonSchoolYearTerm.lastDay')
             ->leftJoin('gibbonSpace', 'gibbonSpace.gibbonSpaceID=gibbonTTDayRowClass.gibbonSpaceID')
             ->leftJoin('gibbonSchoolYearSpecialDay', "gibbonSchoolYearSpecialDay.date=gibbonTTDayDate.date and gibbonSchoolYearSpecialDay.type='School Closure'")
-            ->leftJoin('gibbonPlannerEntry', 'gibbonPlannerEntry.date=gibbonTTDayDate.date 
-                AND gibbonPlannerEntry.timeStart=gibbonTTColumnRow.timeStart 
-                AND gibbonPlannerEntry.timeEnd=gibbonTTColumnRow.timeEnd 
+            ->leftJoin('gibbonPlannerEntry', 'gibbonPlannerEntry.date=gibbonTTDayDate.date
+                AND gibbonPlannerEntry.timeStart=gibbonTTColumnRow.timeStart
+                AND gibbonPlannerEntry.timeEnd=gibbonTTColumnRow.timeEnd
                 AND gibbonPlannerEntry.gibbonCourseClassID=gibbonTTDayRowClass.gibbonCourseClassID')
             ->where('gibbonTTDayRowClass.gibbonCourseClassID=:gibbonCourseClassID')
             ->bindValue('gibbonCourseClassID', $gibbonCourseClassID)
@@ -71,26 +89,26 @@ class PlannerEntryGateway extends QueryableGateway
             JOIN gibbonTTDayDate ON (gibbonTTDayDate.gibbonTTDayID=gibbonTTDayRowClass.gibbonTTDayID)
             WHERE gibbonTTDayRowClass.gibbonTTDayRowClassID=:gibbonTTDayRowClassID
             AND gibbonTTDayDate.gibbonTTDayDateID=:gibbonTTDayDateID";
-        
+
         return $this->db()->selectOne($sql, $data);
     }
 
     public function getPlannerTTByClassTimes($gibbonCourseClassID, $date, $timeStart, $timeEnd)
     {
         $data = ['date' => $date, 'timeStart' => $timeStart, 'timeEnd' => $timeEnd, 'gibbonCourseClassID' => $gibbonCourseClassID];
-        $sql = 'SELECT timeStart, timeEnd, date, gibbonTTColumnRow.name AS period, gibbonTTDayRowClassID, gibbonTTDayDateID, gibbonSpace.name as spaceName 
-                FROM gibbonTTDayRowClass 
-                JOIN gibbonTTColumnRow ON (gibbonTTDayRowClass.gibbonTTColumnRowID=gibbonTTColumnRow.gibbonTTColumnRowID) 
-                JOIN gibbonTTColumn ON (gibbonTTColumnRow.gibbonTTColumnID=gibbonTTColumn.gibbonTTColumnID) 
-                JOIN gibbonTTDay ON (gibbonTTDayRowClass.gibbonTTDayID=gibbonTTDay.gibbonTTDayID) 
-                JOIN gibbonTTDayDate ON (gibbonTTDayDate.gibbonTTDayID=gibbonTTDay.gibbonTTDayID) 
+        $sql = 'SELECT timeStart, timeEnd, date, gibbonTTColumnRow.name AS period, gibbonTTDayRowClassID, gibbonTTDayDateID, gibbonSpace.name as spaceName
+                FROM gibbonTTDayRowClass
+                JOIN gibbonTTColumnRow ON (gibbonTTDayRowClass.gibbonTTColumnRowID=gibbonTTColumnRow.gibbonTTColumnRowID)
+                JOIN gibbonTTColumn ON (gibbonTTColumnRow.gibbonTTColumnID=gibbonTTColumn.gibbonTTColumnID)
+                JOIN gibbonTTDay ON (gibbonTTDayRowClass.gibbonTTDayID=gibbonTTDay.gibbonTTDayID)
+                JOIN gibbonTTDayDate ON (gibbonTTDayDate.gibbonTTDayID=gibbonTTDay.gibbonTTDayID)
                 LEFT JOIN gibbonSpace ON (gibbonSpace.gibbonSpaceID=gibbonTTDayRowClass.gibbonSpaceID)
-                WHERE date=:date 
-                AND timeStart=:timeStart 
-                AND timeEnd=:timeEnd AND 
-                gibbonCourseClassID=:gibbonCourseClassID 
+                WHERE date=:date
+                AND timeStart=:timeStart
+                AND timeEnd=:timeEnd AND
+                gibbonCourseClassID=:gibbonCourseClassID
                 ORDER BY date, timestart';
-        
+
         return $this->db()->selectOne($sql, $data);
     }
 
@@ -168,7 +186,7 @@ class PlannerEntryGateway extends QueryableGateway
             ->where("(gibbonPlannerEntry.date < :todayDate OR (gibbonPlannerEntry.date=:todayDate AND timeEnd <= :todayTime))")
             ->bindValue('todayDate', date('Y-m-d'))
             ->bindValue('todayTime', date('H:i:s'));
-          
+
         $this->unionAllWithCriteria($query, $criteria)
             ->cols([
                 "'studentRecorded' AS type",
@@ -199,7 +217,7 @@ class PlannerEntryGateway extends QueryableGateway
             ->innerJoin('gibbonCourseClassPerson', 'gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID')
             ->innerJoin('gibbonCourse', 'gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID')
             ->innerJoin('gibbonPerson', 'gibbonPerson.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID')
-            ->innerJoin('gibbonPlannerEntryStudentHomework', 'gibbonPlannerEntryStudentHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID 
+            ->innerJoin('gibbonPlannerEntryStudentHomework', 'gibbonPlannerEntryStudentHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID
             AND gibbonPlannerEntryStudentHomework.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID')
             ->leftJoin('gibbonUnit', 'gibbonUnit.gibbonUnitID=gibbonPlannerEntry.gibbonUnitID')
             ->where('gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID')
@@ -242,34 +260,34 @@ class PlannerEntryGateway extends QueryableGateway
         ];
         $sql = "
             (SELECT 'teacherRecorded' AS type, gibbonPlannerEntry.gibbonPlannerEntryID, gibbonUnitID, gibbonCourse.nameShort AS course, gibbonCourseClass.nameShort AS class, gibbonPlannerEntry.name, date, timeStart, timeEnd, viewableStudents, viewableParents, homework, homeworkDueDateTime, role, gibbonPlannerEntryStudentTracker.homeworkComplete, (CASE WHEN gibbonPlannerEntryHomework.gibbonPlannerEntryHomeworkID IS NOT NULL THEN 'Y' ELSE 'N' END) as onlineSubmission
-                FROM gibbonPlannerEntry 
-                JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) 
-                JOIN gibbonCourseClassPerson ON (gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID) 
-                JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) 
-                LEFT JOIN gibbonPlannerEntryStudentTracker ON (gibbonPlannerEntryStudentTracker.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID 
+                FROM gibbonPlannerEntry
+                JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID)
+                JOIN gibbonCourseClassPerson ON (gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID)
+                JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID)
+                LEFT JOIN gibbonPlannerEntryStudentTracker ON (gibbonPlannerEntryStudentTracker.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID
                     AND gibbonPlannerEntryStudentTracker.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID)
-                LEFT JOIN gibbonPlannerEntryHomework ON (gibbonPlannerEntryHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID 
+                LEFT JOIN gibbonPlannerEntryHomework ON (gibbonPlannerEntryHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID
                     AND gibbonPlannerEntryHomework.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID AND gibbonPlannerEntryHomework.version='Final')
-                WHERE gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID 
-                AND homework='Y' 
-                AND (role='Teacher' OR (role='Student' AND $viewableBy='Y')) 
-                AND homeworkDueDateTime>:todayTime 
+                WHERE gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID
+                AND homework='Y'
+                AND (role='Teacher' OR (role='Student' AND $viewableBy='Y'))
+                AND homeworkDueDateTime>:todayTime
                 AND ((date<:todayDate) OR (date=:todayDate AND timeEnd<=:time))
                 AND (gibbonCourseClassPerson.dateEnrolled IS NULL OR gibbonCourseClassPerson.dateEnrolled <= gibbonPlannerEntry.date)
                 AND (gibbonCourseClassPerson.dateUnenrolled IS NULL OR gibbonCourseClassPerson.dateUnenrolled > gibbonPlannerEntry.homeworkDueDateTime)
             )
             UNION
-            (SELECT 'studentRecorded' AS type, gibbonPlannerEntry.gibbonPlannerEntryID, gibbonUnitID, gibbonCourse.nameShort AS course, gibbonCourseClass.nameShort AS class, gibbonPlannerEntry.name, date, timeStart, timeEnd, 'Y' AS viewableStudents, 'Y' AS viewableParents, 'Y' AS homework, gibbonPlannerEntryStudentHomework.homeworkDueDateTime, role, gibbonPlannerEntryStudentHomework.homeworkComplete, (CASE WHEN gibbonPlannerEntryHomework.gibbonPlannerEntryHomeworkID IS NOT NULL THEN 'Y' ELSE 'N' END) as onlineSubmission FROM gibbonPlannerEntry JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) 
-                JOIN gibbonCourseClassPerson ON (gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID) 
-                JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) 
-                JOIN gibbonPlannerEntryStudentHomework ON (gibbonPlannerEntryStudentHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID 
-                AND gibbonPlannerEntryStudentHomework.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID) 
-                LEFT JOIN gibbonPlannerEntryHomework ON (gibbonPlannerEntryHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID 
+            (SELECT 'studentRecorded' AS type, gibbonPlannerEntry.gibbonPlannerEntryID, gibbonUnitID, gibbonCourse.nameShort AS course, gibbonCourseClass.nameShort AS class, gibbonPlannerEntry.name, date, timeStart, timeEnd, 'Y' AS viewableStudents, 'Y' AS viewableParents, 'Y' AS homework, gibbonPlannerEntryStudentHomework.homeworkDueDateTime, role, gibbonPlannerEntryStudentHomework.homeworkComplete, (CASE WHEN gibbonPlannerEntryHomework.gibbonPlannerEntryHomeworkID IS NOT NULL THEN 'Y' ELSE 'N' END) as onlineSubmission FROM gibbonPlannerEntry JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID)
+                JOIN gibbonCourseClassPerson ON (gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID)
+                JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID)
+                JOIN gibbonPlannerEntryStudentHomework ON (gibbonPlannerEntryStudentHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID
+                AND gibbonPlannerEntryStudentHomework.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID)
+                LEFT JOIN gibbonPlannerEntryHomework ON (gibbonPlannerEntryHomework.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID
                     AND gibbonPlannerEntryHomework.gibbonPersonID=gibbonCourseClassPerson.gibbonPersonID AND gibbonPlannerEntryHomework.version='Final')
-                WHERE gibbonSchoolYearID=:gibbonSchoolYearID 
-                AND gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID 
-                AND (role='Teacher' OR (role='Student' AND $viewableBy='Y')) 
-                AND gibbonPlannerEntryStudentHomework.homeworkDueDateTime>:todayTime 
+                WHERE gibbonSchoolYearID=:gibbonSchoolYearID
+                AND gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID
+                AND (role='Teacher' OR (role='Student' AND $viewableBy='Y'))
+                AND gibbonPlannerEntryStudentHomework.homeworkDueDateTime>:todayTime
                 AND ((date<:todayDate) OR (date=:todayDate AND timeEnd<=:time))
                 AND (gibbonCourseClassPerson.dateEnrolled IS NULL OR gibbonCourseClassPerson.dateEnrolled <= gibbonPlannerEntry.date)
                 AND (gibbonCourseClassPerson.dateUnenrolled IS NULL OR gibbonCourseClassPerson.dateUnenrolled > gibbonPlannerEntry.homeworkDueDateTime)
@@ -283,7 +301,7 @@ class PlannerEntryGateway extends QueryableGateway
     {
         $data = ['gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $gibbonPersonID];
         $sql = "
-            (SELECT gibbonPlannerEntryStudentTracker.gibbonPlannerEntryID, 'teacherRecorded' AS type, homeworkComplete 
+            (SELECT gibbonPlannerEntryStudentTracker.gibbonPlannerEntryID, 'teacherRecorded' AS type, homeworkComplete
             FROM gibbonPlannerEntryStudentTracker JOIN gibbonPlannerEntry ON (gibbonPlannerEntryStudentTracker.gibbonPlannerEntryID=gibbonPlannerEntry.gibbonPlannerEntryID) JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) JOIN gibbonCourse ON (gibbonCourseClass.gibbonCourseID=gibbonCourse.gibbonCourseID) WHERE gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonPersonID=:gibbonPersonID and homeworkComplete='Y')
             UNION
             (SELECT gibbonPlannerEntryStudentHomework.gibbonPlannerEntryID, 'studentRecorded' AS type, homeworkComplete
@@ -297,13 +315,13 @@ class PlannerEntryGateway extends QueryableGateway
     public function selectHomeworkSubmissionsByStudent($gibbonSchoolYearID, $gibbonPersonID)
     {
         $data = ['gibbonSchoolYearID' => $gibbonSchoolYearID, 'gibbonPersonID' => $gibbonPersonID];
-        $sql = "SELECT TRIM(LEADING '0' FROM gibbonPlannerEntryHomework.gibbonPlannerEntryID) as groupBy, gibbonPlannerEntryHomework.* 
-            FROM gibbonPlannerEntryHomework 
-            JOIN gibbonPlannerEntry ON (gibbonPlannerEntry.gibbonPlannerEntryID=gibbonPlannerEntryHomework.gibbonPlannerEntryID) 
-            JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) 
-            JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) 
+        $sql = "SELECT TRIM(LEADING '0' FROM gibbonPlannerEntryHomework.gibbonPlannerEntryID) as groupBy, gibbonPlannerEntryHomework.*
+            FROM gibbonPlannerEntryHomework
+            JOIN gibbonPlannerEntry ON (gibbonPlannerEntry.gibbonPlannerEntryID=gibbonPlannerEntryHomework.gibbonPlannerEntryID)
+            JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID)
+            JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID)
             WHERE gibbonCourse.gibbonSchoolYearID=:gibbonSchoolYearID
-            AND gibbonPlannerEntryHomework.gibbonPersonID=:gibbonPersonID 
+            AND gibbonPlannerEntryHomework.gibbonPersonID=:gibbonPersonID
             ORDER BY count DESC";
 
         return $this->db()->select($sql, $data);
@@ -335,10 +353,10 @@ class PlannerEntryGateway extends QueryableGateway
     public function selectAllUpcomingHomework($gibbonSchoolYearID)
     {
         $data = ['gibbonSchoolYearID' => $gibbonSchoolYearID, 'homeworkDueDateTime' => date('Y-m-d H:i:s'), 'date1' => date('Y-m-d'), 'date2' => date('Y-m-d'), 'timeEnd' => date('H:i:s')];
-        $sql = "SELECT gibbonPlannerEntryID, gibbonUnitID, gibbonCourse.nameShort AS course, gibbonCourseClass.nameShort AS class, gibbonPlannerEntry.name, date, timeStart, timeEnd, viewableStudents, viewableParents, homework, homeworkDueDateTime 
-            FROM gibbonPlannerEntry 
-            JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) 
-            JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) 
+        $sql = "SELECT gibbonPlannerEntryID, gibbonUnitID, gibbonCourse.nameShort AS course, gibbonCourseClass.nameShort AS class, gibbonPlannerEntry.name, date, timeStart, timeEnd, viewableStudents, viewableParents, homework, homeworkDueDateTime
+            FROM gibbonPlannerEntry
+            JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID)
+            JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID)
             WHERE gibbonCourse.gibbonSchoolYearID=:gibbonSchoolYearID AND homework='Y' AND homeworkDueDateTime>:homeworkDueDateTime AND ((date<:date1) OR (date=:date2 AND timeEnd<=:timeEnd)) ORDER BY homeworkDueDateTime";
 
         return $this->db()->select($sql, $data);
@@ -351,15 +369,15 @@ class PlannerEntryGateway extends QueryableGateway
             'gibbonPersonID' => $gibbonPersonID,
             'today' => date('Y-m-d'),
         ];
-        $sql = "SELECT DISTINCT gibbonCourseClass.gibbonCourseClassID as value, CONCAT(gibbonCourse.nameShort, '.', gibbonCourseClass.nameShort) as name 
-            FROM gibbonPlannerEntry 
-            JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) 
-            JOIN gibbonCourseClassPerson ON (gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID) 
-            JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) 
-            WHERE gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID 
-            AND gibbonSchoolYearID=:gibbonSchoolYearID  
-            AND NOT role='Student - Left' AND NOT role='Teacher - Left' 
-            AND homework='Y' AND date<=:today 
+        $sql = "SELECT DISTINCT gibbonCourseClass.gibbonCourseClassID as value, CONCAT(gibbonCourse.nameShort, '.', gibbonCourseClass.nameShort) as name
+            FROM gibbonPlannerEntry
+            JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID)
+            JOIN gibbonCourseClassPerson ON (gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID)
+            JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID)
+            WHERE gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID
+            AND gibbonSchoolYearID=:gibbonSchoolYearID
+            AND NOT role='Student - Left' AND NOT role='Teacher - Left'
+            AND homework='Y' AND date<=:today
             AND (gibbonCourseClassPerson.dateEnrolled IS NULL OR gibbonCourseClassPerson.dateEnrolled <= gibbonPlannerEntry.date)
             AND (gibbonCourseClassPerson.dateUnenrolled IS NULL OR gibbonCourseClassPerson.dateUnenrolled > gibbonPlannerEntry.date)
             ORDER BY name";
@@ -371,11 +389,11 @@ class PlannerEntryGateway extends QueryableGateway
     {
         $data = ['gibbonPlannerEntryID' => $gibbonPlannerEntryID];
         $sql = "SELECT title, surname, preferredName, image_240, gibbonPlannerEntryGuest.role
-                FROM gibbonPlannerEntryGuest 
-                JOIN gibbonPerson ON gibbonPlannerEntryGuest.gibbonPersonID=gibbonPerson.gibbonPersonID 
-                JOIN gibbonRole ON (gibbonPerson.gibbonRoleIDPrimary=gibbonRole.gibbonRoleID) 
-                WHERE gibbonPlannerEntryID=:gibbonPlannerEntryID 
-                AND status='Full' 
+                FROM gibbonPlannerEntryGuest
+                JOIN gibbonPerson ON gibbonPlannerEntryGuest.gibbonPersonID=gibbonPerson.gibbonPersonID
+                JOIN gibbonRole ON (gibbonPerson.gibbonRoleIDPrimary=gibbonRole.gibbonRoleID)
+                WHERE gibbonPlannerEntryID=:gibbonPlannerEntryID
+                AND status='Full'
                 ORDER BY role DESC, surname, preferredName";
 
         return $this->db()->select($sql, $data);
@@ -384,9 +402,9 @@ class PlannerEntryGateway extends QueryableGateway
     public function getLatestLessonByClass($gibbonCourseClassID)
     {
         $data = ['gibbonCourseClassID' => $gibbonCourseClassID];
-        $sql = "SELECT * FROM gibbonPlannerEntry 
+        $sql = "SELECT * FROM gibbonPlannerEntry
                 WHERE gibbonPlannerEntry.gibbonCourseClassID=:gibbonCourseClassID
-                ORDER BY date DESC 
+                ORDER BY date DESC
                 LIMIT 1";
 
         return $this->db()->selectOne($sql, $data);
@@ -401,7 +419,7 @@ class PlannerEntryGateway extends QueryableGateway
                 JOIN gibbonTTColumn ON (gibbonTTColumnRow.gibbonTTColumnID=gibbonTTColumn.gibbonTTColumnID)
                 JOIN gibbonTTDay ON (gibbonTTDayRowClass.gibbonTTDayID=gibbonTTDay.gibbonTTDayID)
                 JOIN gibbonTTDayDate ON (gibbonTTDayDate.gibbonTTDayID=gibbonTTDay.gibbonTTDayID)
-                LEFT JOIN gibbonSchoolYearSpecialDay ON (gibbonSchoolYearSpecialDay.date=gibbonTTDayDate.date 
+                LEFT JOIN gibbonSchoolYearSpecialDay ON (gibbonSchoolYearSpecialDay.date=gibbonTTDayDate.date
                     AND gibbonSchoolYearSpecialDay.type='School Closure')
                 WHERE gibbonTTDayRowClass.gibbonCourseClassID=:gibbonCourseClassID
                 AND gibbonTTDayDate.date>=:date
@@ -409,6 +427,90 @@ class PlannerEntryGateway extends QueryableGateway
                 ORDER BY gibbonTTDayDate.date, gibbonTTColumnRow.timestart
                 LIMIT 0, 10";
 
+        return $this->db()->select($sql, $data);
+    }
+
+    /**
+     * Select lessons, related to the person in current session, from database.
+     *
+     * @param string $extraWhereClause  Extra SQL string to be added to the end of
+     *                                  the where clause constructed.
+     *
+     * @return Result  The database select result.
+     */
+    public function selectLessons($extraWhereClause = ''): Result
+    {
+        $today = date('Y-m-d');
+        $now = date('Y-m-d H:i:s');
+
+        $fields = 'gibbonPlannerEntryID, gibbonUnitID, gibbonCourse.nameShort AS course, gibbonCourseClass.nameShort AS class, gibbonPlannerEntry.name, timeStart, timeEnd, viewableStudents, viewableParents, homework, homeworkDetails, date, gibbonPlannerEntry.gibbonCourseClassID, homeworkCrowdAssessOtherTeachersRead, homeworkCrowdAssessClassmatesRead, homeworkCrowdAssessOtherStudentsRead, homeworkCrowdAssessSubmitterParentsRead, homeworkCrowdAssessClassmatesParentsRead, homeworkCrowdAssessOtherParentsRead';
+        // Get my classes (student, teacher, classmates)
+        $data = [
+            'today1' => $today,
+            'gibbonPersonID1' => $this->session->get('gibbonPersonID'),
+            'now1' => $now,
+            'gibbonSchoolYearID1' => $this->session->get('gibbonSchoolYearID'),
+        ];
+        $sql = "(SELECT $fields FROM gibbonPlannerEntry JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) JOIN gibbonCourseClassPerson ON (gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID) JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) WHERE homeworkSubmissionDateOpen<=:today1 AND gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID1 AND (role='Teacher' OR role='Student') AND homeworkCrowdAssess='Y' AND ADDTIME(date, '1344:00:00.0')>=:now1 AND gibbonSchoolYearID=:gibbonSchoolYearID1 $extraWhereClause)";
+
+        // Get other classes if teacher
+        $sqlTeacher = "SELECT * FROM gibbonStaff WHERE gibbonPersonID=:gibbonPersonID AND type='Teaching'";
+        $stmtTeacher = $this->db()->getConnection()->prepare($sqlTeacher);
+        $stmtTeacher->execute([
+            'gibbonPersonID' => $this->session->get('gibbonPersonID')
+        ]);
+        if ($stmtTeacher->rowCount() == 1) {
+            $data['today2'] = $today;
+            $data['gibbonSchoolYearID2'] = $this->session->get('gibbonSchoolYearID');
+            $data['now2'] = $now;
+            $sql = $sql." UNION (SELECT $fields FROM gibbonPlannerEntry JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) WHERE homeworkSubmissionDateOpen<=:today2 AND homeworkCrowdAssess='Y' AND ADDTIME(date, '1344:00:00.0')>=:now2 AND gibbonSchoolYearID=:gibbonSchoolYearID2 AND homeworkCrowdAssessOtherTeachersRead='Y' $extraWhereClause)";
+        }
+
+        //Get other classes if student
+        $sqlStudent = 'SELECT * FROM gibbonStudentEnrolment WHERE gibbonPersonID=:gibbonPersonID AND gibbonSchoolYearID=:gibbonSchoolYearID';
+        $resultStudent = $this->db()->getConnection()->prepare($sqlStudent);
+        $resultStudent->execute([
+            'gibbonPersonID' => $this->session->get('gibbonPersonID'),
+            'gibbonSchoolYearID' => $this->session->get('gibbonSchoolYearID'),
+        ]);
+        if ($resultStudent->rowCount() == 1) {
+            $data['today3'] = $today;
+            $data['gibbonSchoolYearID3'] = $this->session->get('gibbonSchoolYearID');
+            $data['now3'] = $now;
+            $sql = $sql." UNION (SELECT $fields FROM gibbonPlannerEntry JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) WHERE homeworkSubmissionDateOpen<=:today3 AND homeworkCrowdAssess='Y' AND ADDTIME(date, '1344:00:00.0')>=:now3 AND gibbonSchoolYearID=:gibbonSchoolYearID3 AND homeworkCrowdAssessOtherStudentsRead='Y' $extraWhereClause)";
+        }
+
+        // Get classes if parent
+        $sqlParent = "SELECT * FROM gibbonFamilyAdult WHERE gibbonPersonID=:gibbonPersonID AND childDataAccess='Y'";
+        $stmtParent = $this->db()->getConnection()->prepare($sqlParent);
+        $stmtParent->execute([
+            'gibbonPersonID' => $this->session->get('gibbonPersonID'),
+        ]);
+
+        if ($stmtParent->rowCount() > 0) {
+            // Get child list for family
+            $childCount = 0;
+            while ($rowParent = $stmtParent->fetch()) {
+                $dataChild = array('gibbonFamilyID' => $rowParent['gibbonFamilyID']);
+                $sqlChild = "SELECT gibbonPerson.gibbonPersonID, image_240, surname, preferredName, gibbonYearGroup.nameShort AS yearGroup, gibbonFormGroup.nameShort AS formGroup FROM gibbonFamilyChild JOIN gibbonPerson ON (gibbonFamilyChild.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) JOIN gibbonYearGroup ON (gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID) JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID=gibbonFormGroup.gibbonFormGroupID) WHERE gibbonFamilyID=:gibbonFamilyID AND gibbonPerson.status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName ";
+                $resultChild = $this->db()->getConnection()->prepare($sqlChild);
+                $resultChild->execute($dataChild);
+                while ($rowChild = $resultChild->fetch()) {
+                    //submitters+classmates parents
+                    $data['today4'.$childCount] = $today;
+                    $data['gibbonSchoolYearID4'.$childCount] = $this->session->get('gibbonSchoolYearID');
+                    $data['now4'.$childCount] = $now;
+                    $data['gibbonPersonID4'.$childCount] = $rowChild['gibbonPersonID'];
+                    $sql = $sql." UNION (SELECT $fields FROM gibbonPlannerEntry JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) JOIN gibbonCourseClassPerson ON (gibbonCourseClass.gibbonCourseClassID=gibbonCourseClassPerson.gibbonCourseClassID) JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) WHERE homeworkSubmissionDateOpen<=:today4$childCount AND gibbonCourseClassPerson.gibbonPersonID=:gibbonPersonID4$childCount AND role='Student' AND homeworkCrowdAssess='Y' AND ADDTIME(date, '1344:00:00.0')>=:now4$childCount AND gibbonSchoolYearID=:gibbonSchoolYearID4$childCount AND (homeworkCrowdAssessSubmitterParentsRead='Y' OR homeworkCrowdAssessClassmatesParentsRead='Y') $extraWhereClause)";
+                    ++$childCount;
+                }
+            }
+            // Other classes
+            $data['today5'] = $today;
+            $data['gibbonSchoolYearID5'] = $this->session->get('gibbonSchoolYearID');
+            $data['now5'] = $now;
+            $sql = $sql." UNION (SELECT $fields FROM gibbonPlannerEntry JOIN gibbonCourseClass ON (gibbonPlannerEntry.gibbonCourseClassID=gibbonCourseClass.gibbonCourseClassID) JOIN gibbonCourse ON (gibbonCourse.gibbonCourseID=gibbonCourseClass.gibbonCourseID) WHERE homeworkSubmissionDateOpen<=:today5 AND homeworkCrowdAssess='Y' AND ADDTIME(date, '1344:00:00.0')>=:now5 AND gibbonSchoolYearID=:gibbonSchoolYearID5 AND homeworkCrowdAssessOtherParentsRead='Y' $extraWhereClause)";
+        }
         return $this->db()->select($sql, $data);
     }
 }

@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
 use Gibbon\Domain\CrowdAssessment\CrowdAssessDiscussGateway;
+use Gibbon\Domain\Planner\PlannerEntryGateway;
 use Gibbon\Domain\Planner\PlannerEntryHomeworkGateway;
 
 // Module includes
@@ -42,10 +43,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     }
 
     // Check existence of and access to this lesson.
-    $and = " AND gibbonPlannerEntryID=$gibbonPlannerEntryID";
-    $sql = getLessons($guid, $connection2, $and);
-    $lesson = $pdo->select($sql[1], $sql[0])->fetch();
-
+    /** @var PlannerEntryGateway */
+    $plannerEntryGateway = $container->get(PlannerEntryGateway::class);
+    $lesson = $plannerEntryGateway->selectLessons(" AND gibbonPlannerEntryID=$gibbonPlannerEntryID")->fetch();
     if (empty($lesson)) {
         $page->addError(__('The selected record does not exist, or you do not have access to it.'));
         return;
@@ -108,7 +108,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
             }
         });
     $table->addColumn('comments', __('Comments'));
-    
+
     $table->addActionColumn()
         ->addParam('gibbonPersonID')
         ->addParam('gibbonPlannerEntryID', $gibbonPlannerEntryID)

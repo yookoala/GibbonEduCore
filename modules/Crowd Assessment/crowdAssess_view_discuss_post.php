@@ -44,10 +44,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
         return;
     }
 
-    $and = " AND gibbonPlannerEntryID=$gibbonPlannerEntryID";
-    $sql = getLessons($guid, $connection2, $and);
-    $lesson = $pdo->select($sql[1], $sql[0])->fetch();
-
+    /** @var PlannerEntryGateway */
+    $plannerEntryGateway = $container->get(PlannerEntryGateway::class);
+    $lesson = $plannerEntryGateway->selectLessons(" AND gibbonPlannerEntryID=$gibbonPlannerEntryID")->fetch();
     if (empty($lesson)) {
         $page->addError(__('The selected record does not exist, or you do not have access to it.'));
         return;

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Domain\Planner\PlannerEntryGateway;
 use Gibbon\Services\Format;
 use Gibbon\Tables\DataTable;
 use Gibbon\Domain\Planner\UnitGateway;
@@ -29,9 +30,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Crowd Assessment/crowdAsse
     $page->addError(__('You do not have access to this action.'));
 } else {
     $page->breadcrumbs->add(__('View All Assessments'));
-    
-    $sql = getLessons($guid, $connection2);
-    $lessons = $pdo->select($sql[1], $sql[0])->fetchAll();
+
+    /** @var PlannerEntryGateway */
+    $plannerEntryGateway = $container->get(PlannerEntryGateway::class);
+    $lessons = $plannerEntryGateway->selectLessons()->fetchAll();
+
     $unitGateway = $container->get(UnitGateway::class);
 
     $table = DataTable::create('crowdAssessment');

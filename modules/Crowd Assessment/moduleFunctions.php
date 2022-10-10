@@ -19,6 +19,23 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Services\Format;
 
+/**
+ * Parse the proper SQL and data array for query of
+ * lessons.
+ *
+ * Deprecated. Use PlannerEntryGateway::selectLessons() instead.
+ *
+ * @deprecated v25
+ * @version v12
+ * @since   v12
+ *
+ * @param string  $guid
+ * @param \PDO    $connection2
+ * @param string  $and
+ *
+ * @return array  An array of 2 items. First is the $data array. Second is the
+ *                generated SQL statement string.
+ */
 function getLessons($guid, $connection2, $and = '')
 {
     global $session;
