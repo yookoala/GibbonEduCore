@@ -33,7 +33,10 @@ use Gibbon\Database\Result;
  *                      "array" (return array of messages); or
  *                      "count" (return message count); or
  *                      "result" (return database query result)
+<<<<<<< HEAD
  *                      Default: "print".
+=======
+>>>>>>> c51e9d030 (Messenger: migrate getMessages function to gateway)
  * @param string $date         The YYYY-MM-DD representation of date. Default: today's date.
  *
  * @return string|int|Result  Format specified by $mode parameter.
