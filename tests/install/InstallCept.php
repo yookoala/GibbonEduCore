@@ -72,7 +72,7 @@ try {
 
     // Follow the go to homepage link to the front page.
     $I->see('go to your Gibbon homepage', '.success');
-    $I->click('go to your Gibbon homepage');
+    $I->click(['link' => 'go to your Gibbon homepage']);
 
     // The URL should either be empty or a single slash (root).
     $I->canSeeCurrentUrlMatches('/^(|\/)$/');
