@@ -144,6 +144,23 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
+     * Set a hidden input field value.
+     *
+     * @param string  $selector  CSS selector to use in document.querySelector call.
+     * @param mixed   $value
+     *
+     * @return void
+     */
+    public function setHiddenField($selector, $value)
+    {
+        // Set hidden input value
+        $this->executeJS(
+            'document.querySelector(arguments[0]).value = arguments[1];',
+            [$selector, $value]
+        );
+    }
+
+    /**
      * Submit a form to restore the value changed by previous submission.
      *
      * @param string|array      $selector            Selector of the form.

@@ -19,7 +19,6 @@ $newFormValues = array(
     'organisationName'              => 'Syndicate of Wordwide Gibbon Testers',
     'organisationNameShort'         => 'SWGT',
     'organisationEmail'             => 'test@testing.test',
-    'organisationLogo'              => 'test.png',
     'country'                       => 'Antarctica',
     'firstDayOfTheWeek'             => 'Sunday',
     'timezone'                      => 'UTC',
@@ -35,6 +34,9 @@ $I->selectFromDropdown('organisationDBA', 2);
 $I->selectFromDropdown('organisationAdmissions', 2);
 $I->selectFromDropdown('organisationHR', 2);
 $I->selectFromDropdown('defaultAssessmentScale', 1);
+
+// Set hidden input value
+$I->setHiddenField('#content form input[name=organisationLogo]', 'test.png');
 
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
