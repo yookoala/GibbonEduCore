@@ -11,8 +11,8 @@
     ],
     "scripts": {
         "test": [
-            "@test:codeception",
-            "@test:phpunit"
+            "@test:phpunit",
+            "@test:codeception"
         ],
         "test:codeception": [
             "cd tests && codecept run install",
