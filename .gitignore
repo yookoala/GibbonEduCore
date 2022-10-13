@@ -17,7 +17,6 @@ themes/*
 tests/_logs/*
 tests/_dump/*
 tests/_support/_generated/*
-tests/_output
 .phpunit.result.cache
 
 # Template Cache
