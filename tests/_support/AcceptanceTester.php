@@ -37,10 +37,22 @@ class AcceptanceTester extends \Codeception\Actor
         ]);
 
         // hover the user profile icon
-        $I->moveMouseOver('#header > div > div > a');
+        $I->hoverProfilePic();
 
         // see the "Logout" link in the menu
         $I->see('Logout', 'a');
+    }
+
+    /**
+     * Hover over the header profile picture.
+     * Will expand the Logout link.
+     *
+     * @return $this
+     */
+    public function hoverProfilePic()
+    {
+        $this->moveMouseOver('#header > div > div > a');
+        return $this;
     }
 
     public function loginAsAdmin()

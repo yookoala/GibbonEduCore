@@ -41,6 +41,7 @@ class LoginCest
         $I->wantTo('login to Gibbon');
 
         // Logged In
+        $I->hoverProfilePic(); // hover the user profile icon
         $I->see('Logout', 'a');
         $I->see('Preferences', 'a');
         $I->see('Support TestUser');
@@ -143,6 +144,7 @@ class LoginCest
         $I->loginAsParent();
 
         // Logged In
+        $I->hoverProfilePic(); // hover the user profile icon
         $I->see('Logout', 'a');
 
     }
@@ -170,6 +172,7 @@ class LoginCest
         $I->loginAsSupport();
 
         // Logged In
+        $I->hoverProfilePic(); // hover the user profile icon
         $I->see('Logout', 'a');
     }
 
