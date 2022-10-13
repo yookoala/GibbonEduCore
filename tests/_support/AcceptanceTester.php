@@ -130,4 +130,24 @@ class AcceptanceTester extends \Codeception\Actor
 
         return $this->amOnPage($url);
     }
+
+    /**
+     * Submit a form to restore the value changed by previous submission.
+     *
+     * @param string|array      $selector            Selector of the form.
+     * @param array             $newFormValues       An array of previous submission.
+     * @param array             $originalFormValues  An array of form values before previous submission.
+     *                                               This function call is suppose to restore these orginal values.
+     * @param string|array|null $button              Selector of the button for submission.
+     *
+     * @return mixed
+     */
+    public function submitFormRestore($selector, $newFormValues, $originalFormValues, $button = null)
+    {
+        $changedFields = array_keys($newFormValues);
+        $changedOriginalValues = array_filter($originalFormValues, function ($key) use ($changedFields) {
+            return in_array($key, $changedFields);
+        }, ARRAY_FILTER_USE_KEY);
+        return $this->submitForm($selector, $changedOriginalValues, $button);
+    }
 }
