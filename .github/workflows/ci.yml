@@ -24,7 +24,6 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-
       - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
@@ -71,6 +70,9 @@ jobs:
 
       - name: Install PHP vendor libraries
         run: composer install --prefer-dist --no-interaction
+
+      - name: Install WebDriver for Chrome
+        uses: nanasess/setup-chromedriver@master
 
       - name: Run composer test
         run: composer test
