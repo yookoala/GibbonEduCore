@@ -36,6 +36,10 @@ class AcceptanceTester extends \Codeception\Actor
             'password' => $password
         ]);
 
+        // hover the user profile icon
+        $I->moveMouseOver('#header > div > div > a');
+
+        // see the "Logout" link in the menu
         $I->see('Logout', 'a');
     }
 
