@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('update Days Of Week');
 $I->loginAsAdmin();
@@ -11,6 +11,11 @@ $I->seeInFormFields('#content form', $originalFormValues);
 
 // Make Changes ------------------------------------------------
 
+// Tell the browser to select Saturday and Sunday so the
+// hidden form fields are shown.
+$I->selectOption('#content form select[name=SaturdayschoolDay]', ['text' => 'Yes']);
+$I->selectOption('#content form select[name=SundayschoolDay]', ['text' => 'Yes']);
+
 $newFormValues = array(
     'MondayschoolDay'       => 'Y',
     'MondayschoolOpenH'     => '01',
@@ -21,7 +26,7 @@ $newFormValues = array(
     'MondayschoolEndM'      => '30',
     'MondayschoolCloseH'    => '04',
     'MondayschoolCloseM'    => '45',
-    
+
     'TuesdayschoolDay'      => 'Y',
     'TuesdayschoolOpenH'    => '02',
     'TuesdayschoolOpenM'    => '15',
@@ -31,7 +36,7 @@ $newFormValues = array(
     'TuesdayschoolEndM'     => '45',
     'TuesdayschoolCloseH'   => '05',
     'TuesdayschoolCloseM'   => '00',
-    
+
     'WednesdayschoolDay'    => 'Y',
     'WednesdayschoolOpenH'  => '03',
     'WednesdayschoolOpenM'  => '30',
@@ -41,7 +46,7 @@ $newFormValues = array(
     'WednesdayschoolEndM'   => '00',
     'WednesdayschoolCloseH' => '06',
     'WednesdayschoolCloseM' => '15',
-    
+
     'ThursdayschoolDay'     => 'Y',
     'ThursdayschoolOpenH'   => '04',
     'ThursdayschoolOpenM'   => '45',
@@ -51,7 +56,7 @@ $newFormValues = array(
     'ThursdayschoolEndM'    => '15',
     'ThursdayschoolCloseH'  => '07',
     'ThursdayschoolCloseM'  => '30',
-    
+
     'FridayschoolDay'       => 'Y',
     'FridayschoolOpenH'     => '05',
     'FridayschoolOpenM'     => '00',
@@ -61,7 +66,7 @@ $newFormValues = array(
     'FridayschoolEndM'      => '30',
     'FridayschoolCloseH'    => '08',
     'FridayschoolCloseM'    => '45',
-    
+
     'SaturdayschoolDay'     => 'Y',
     'SaturdayschoolOpenH'   => '06',
     'SaturdayschoolOpenM'   => '15',
@@ -71,7 +76,7 @@ $newFormValues = array(
     'SaturdayschoolEndM'    => '45',
     'SaturdayschoolCloseH'  => '09',
     'SaturdayschoolCloseM'  => '00',
-    
+
     'SundayschoolDay'       => 'Y',
     'SundayschoolOpenH'     => '07',
     'SundayschoolOpenM'     => '30',
@@ -92,6 +97,8 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 // Restore Original Settings -----------------------------------
 
-$I->submitForm('#content form', $originalFormValues, 'Submit');
+$I->selectOption('#content form select[name=SaturdayschoolDay]', ['value' => $originalFormValues['SaturdayschoolDay']]);
+$I->selectOption('#content form select[name=SundayschoolDay]',  ['value' => $originalFormValues['SundayschoolDay']]);
+$I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
