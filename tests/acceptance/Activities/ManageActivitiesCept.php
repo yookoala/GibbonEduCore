@@ -9,7 +9,7 @@ $I->clickNavigation('Add');
 $I->seeBreadcrumb('Add Activity');
 
 $I->fillField('name', 'T1 Test Activity');
-$I->click('Submit');
+$I->submitForm('#content form', [], 'Submig');
 $I->seeSuccessMessage();
 $ID = $I->grabValueFromURL('editID');
 
@@ -18,7 +18,7 @@ $I->amOnModulePage('Activities', 'activities_manage.php');
 $I->click("Edit", "//td[contains(text(),'T1 Test Activity')]//..");
 $I->seeBreadcrumb('Edit Activity');
 $I->fillField('name', 'T2 Test Activity');
-$I->click('Submit');
+$I->submitForm('#content form', [], 'Submig');
 $I->seeSuccessMessage();
 
 // Enroll ------------------------------------------------
@@ -27,7 +27,7 @@ $I->click("Enrolment", "//td[contains(text(),'T2 Test Activity')]//..");
 $I->seeBreadcrumb('Activity Enrolment');
 $I->clickNavigation('Add');
 $I->selectOption('Members[]', 'TestUser, Student (testingstudent)');
-$I->click('Submit');
+$I->submitForm('#content form', [], 'Submig');
 $I->seeSuccessMessage();
 
 // View ------------------------------------------------
