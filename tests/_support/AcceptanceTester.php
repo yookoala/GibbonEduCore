@@ -161,6 +161,18 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
+     * Dismiss cookie consent box if it is shown on the page.
+     *
+     * @return void
+     */
+    public function dismissCookieConsentIfNeeded()
+    {
+        if ($this->foundElement('.box-cookie-consent')) {
+            $this->click(['link' => 'OK'], '.box-cookie-consent');
+        }
+    }
+
+    /**
      * Check, with Javascript's querySelector, if an element exists.
      *
      * @param string $selector
@@ -170,8 +182,8 @@ class AcceptanceTester extends \Codeception\Actor
     public function foundElement(string $selector): bool
     {
         return $this->executeJS(<<<JAVASCRIPT
-            return document.querySelector('.box-cookie-consent') !== null;
-        JAVASCRIPT);
+return document.querySelector('.box-cookie-consent') !== null;
+JAVASCRIPT);
     }
 
     /**
