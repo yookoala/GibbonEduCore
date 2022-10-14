@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('update Library Settings');
 $I->loginAsAdmin();
@@ -13,7 +13,7 @@ $I->seeInFormFields('#content form', $originalFormValues);
 
 $newFormValues = array(
     'defaultLoanLength' => '14',
-    'browseBGColor'     => 'CECECE',
+    'browseBGColor'     => '#CECECE',
     'browseBGImage'     => 'test.png',
 );
 
@@ -26,6 +26,7 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 // Restore Original Settings -----------------------------------
 
+$I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->submitForm('#content form', $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
