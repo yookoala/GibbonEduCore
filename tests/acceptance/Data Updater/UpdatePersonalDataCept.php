@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('submit and approve a personal data update');
 $I->loginAsAdmin();
@@ -35,6 +35,7 @@ $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $newStudentsSettings);
 
 
+$I->hoverProfilePic();
 $I->click('Logout', 'a');
 
 // Select ------------------------------------------------
@@ -106,6 +107,7 @@ $I->seeInFormFields('#content form[method="post"]', $editFormValues);
 
 $gibbonPersonUpdateID = $I->grabValueFrom("input[type='hidden'][name='existing']");
 
+$I->hoverProfilePic();
 $I->click('Logout', 'a');
 $I->loginAsAdmin();
 

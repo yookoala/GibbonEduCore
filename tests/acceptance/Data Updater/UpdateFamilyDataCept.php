@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('submit and approve a family data update');
 $I->loginAsParent();
@@ -35,6 +35,7 @@ $I->seeInFormFields('#content form[method="post"]', $editFormValues);
 
 $gibbonFamilyUpdateID = $I->grabValueFrom("input[type='hidden'][name='existing']");
 
+$I->hoverProfilePic();
 $I->click('Logout', 'a');
 
 // Accept ------------------------------------------------
