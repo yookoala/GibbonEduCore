@@ -8,7 +8,7 @@ $I->loginAsAdmin();
 $I->amOnModulePage('User Admin', 'applicationFormSettings.php');
 $originalApplicationSettings = $I->grabAllFormValues();
 
-$newApplicationSettings = array_replace($originalApplicationSettings, array(
+$newApplicationSettings = array(
     'howDidYouHear'               => 'Advertisement, Personal Recommendation, World Wide Web, Others',
     'senOptionsActive'            => 'Y',
     'scholarshipOptionsActive'    => 'Y',
@@ -19,8 +19,12 @@ $newApplicationSettings = array_replace($originalApplicationSettings, array(
     'applicationFormRefereeLink'  => 'http://referee.test',
     'requiredDocuments'           => 'FileUpload0,FileUpload1',
     'agreement'                   => 'Agreement Test',
-));
+);
 
+$I->selectOption('#content form select[senOptionsActive]', $newApplicationSettings['senOptionsActive']);
+$I->selectOption('#content form select[scholarshipOptionsActive]', $newApplicationSettings['scholarshipOptionsActive']);
+$I->selectOption('#content form select[paymentOptionsActive]', $newApplicationSettings['paymentOptionsActive']);
+$I->selectOption('#content form select[languageOptionsActive]', $newApplicationSettings['languageOptionsActive']);
 $I->submitForm('#content form', $newApplicationSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $newApplicationSettings);
@@ -30,13 +34,14 @@ $I->seeInFormFields('#content form', $newApplicationSettings);
 $I->amOnModulePage('User Admin', 'userSettings.php');
 $originalUserSettings = $I->grabAllFormValues();
 
-$newUserSettings = array_replace($originalUserSettings, array(
+$newUserSettings = array(
     'nationality'        => 'Nationality 1, Nationality 2, Nationality 3',
     'privacy'            => 'Y',
     'privacyBlurb'       => 'Privacy Blurb Test',
     'privacyOptions'     => 'Privacy 1, Privacy 2, Privacy 3',
-));
+);
 
+$I->selectOption('#content form select[privacy]', $newUserSettings['privacy']);
 $I->submitForm('#content form', $newUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $newUserSettings);
@@ -46,10 +51,10 @@ $I->seeInFormFields('#content form', $newUserSettings);
 $I->amOnModulePage('User Admin', 'studentsSettings.php');
 $originalStudentsSettings = $I->grabAllFormValues();
 
-$newStudentsSettings = array_replace($originalStudentsSettings, array(
+$newStudentsSettings = array(
     'dayTypeOptions'     => 'Day Type 1, Day Type 2',
     'dayTypeText'        => 'Day-Type Test',
-));
+);
 
 $I->submitForm('#content form', $newStudentsSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
@@ -58,6 +63,7 @@ $I->seeInFormFields('#content form', $newStudentsSettings);
 
 // Go To Application  ------------------------------------------
 
+$I->hoverProfilePic();
 $I->click('Logout', 'a');
 $I->amOnModulePage('Students', 'applicationForm.php');
 $I->seeBreadcrumb('Application Form');
@@ -222,16 +228,16 @@ $I->deleteFromDatabase('gibbonApplicationFormFile', ['gibbonApplicationFormID' =
 // Restore Original Settings -----------------------------------
 
 $I->amOnModulePage('User Admin', 'applicationFormSettings.php');
-$I->submitForm('#content form', $originalApplicationSettings, 'Submit');
+$I->submitFormRestore('#content form', $newApplicationSettings, $originalApplicationSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalApplicationSettings);
 
 $I->amOnModulePage('User Admin', 'userSettings.php');
-$I->submitForm('#content form', $originalUserSettings, 'Submit');
+$I->submitFormRestore('#content form', $newUserSettings, $originalUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalUserSettings);
 
 $I->amOnModulePage('User Admin', 'studentsSettings.php');
-$I->submitForm('#content form', $originalStudentsSettings, 'Submit');
+$I->submitFormRestore('#content form', $newStudentsSettings, $originalStudentsSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalStudentsSettings);
