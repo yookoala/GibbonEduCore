@@ -62,6 +62,7 @@ class LoginCest
         $I->see('Support TestUser');
 
         // Logged back out
+        $I->hoverProfilePic();
         $I->click('Logout', 'a');
         $I->seeElement('#username');
         $I->seeElement('#password');
