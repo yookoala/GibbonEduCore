@@ -13,9 +13,11 @@ class Acceptance extends \Codeception\Module
      * Itterates over an array of DOMElement objects
      *
      * @param    string  $selector
-     * @return   [type]
+     * @param    bool    $includeHidden  Include hidden fields. Default: false
+     *
+     * @return   array
      */
-    public function grabAllFormValues($selector = '#content form') {
+    public function grabAllFormValues($selector = '#content form', bool $includeHidden = false) {
         /** @var \Codeception\Module\WebDriver */
         $module = $this->getModule('WebDriver');
         /** @var \Facebook\WebDriver\Remote\RemoteWebElement[] */
@@ -61,6 +63,10 @@ class Acceptance extends \Codeception\Module
                                     $formValues[$name] = $value;
                                     break;
 
+                case 'hidden':
+                                    if ($includeHidden) {
+                                        $formValues[$name] = $value;
+                                    }
                 default:            $formValues[$name] = $value;
                                     break;
             }
