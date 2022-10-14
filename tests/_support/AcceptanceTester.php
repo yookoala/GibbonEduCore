@@ -82,7 +82,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     public function clickNavigation($text)
     {
-        return $this->click($text, '.linkTop a');
+        return $this->click(['link' => $text], '.linkTop');
     }
 
     public function seeBreadcrumb($text)
