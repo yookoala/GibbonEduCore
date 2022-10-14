@@ -15,7 +15,7 @@ $addFormValues = array(
     'description' => 'This is a test.',
 );
 
-$I->fillField('tags', 'TestTag');
+$I->setHiddenField('input[name=tags]', 'TestTag');
 $I->selectFromDropdown('category', 2);
 
 $I->submitForm('#content form', $addFormValues, 'Submit');
