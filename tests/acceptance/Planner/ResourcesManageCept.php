@@ -15,6 +15,8 @@ $addFormValues = array(
     'description' => 'This is a test.',
 );
 
+$I->selectOption('select[name=type]', 'HTML');
+$I->setHiddenField('textarea[name=html]', '<p>Testing</p>');
 $I->setHiddenField('input[name=tags]', 'TestTag');
 $I->selectFromDropdown('category', 2);
 
