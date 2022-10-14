@@ -34,8 +34,7 @@ $editFormValues = array(
     'name'        => 'HTML Test Too',
     'description' => 'This is also a test.',
 );
-
-$I->fillField('tags', 'TestTag');
+$I->setHiddenField('input[name=tags]', 'TestTag');
 $I->fillField('type', 'HTML');
 
 $I->submitForm('#content form', $editFormValues, 'Submit');
