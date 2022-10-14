@@ -161,6 +161,34 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
+     * Forcefully replace a form input field with a blank new plain input field
+     * by Javascript. Mimic intrusions to circumvent Javascript / Browser checks.
+     *
+     * The value would by default be empty string ''.
+     *
+     * @param string  $selector  CSS selector for element query.
+     * @param string  $value     The value to the new input field. Default: ''.
+     *
+     * @return void
+     */
+    public function replaceInputField(string $selector, string $value='')
+    {
+        // Set hidden input value
+        $this->executeJS(<<<JAVASCRIPT
+// Create a new input element with the same name as
+// the old field for submission.
+const oldField = document.querySelector(arguments[0]);
+const newField = document.createElement('input');
+newField.setAttribute('type', 'text');
+newField.setAttribute('name', oldField.getAttribute('name'));
+newField.setAttribute('value', arguments[1]);
+oldField.replaceWith(newField);
+JAVASCRIPT,
+            [$selector, $value]
+        );
+    }
+
+    /**
      * Submit a form to restore the value changed by previous submission.
      *
      * @param string|array      $selector            Selector of the form.
