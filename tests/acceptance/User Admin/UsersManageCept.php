@@ -184,6 +184,7 @@ $I->deleteFile('../'.$I->grabValueFrom('input[name="attachment1"]'));
 // Delete ------------------------------------------------
 $I->amOnModulePage('User Admin', 'user_manage_delete.php', array('gibbonPersonID' => $gibbonPersonID, 'search' => ''));
 
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->see('Your request was completed successfully.', '.success');
 
