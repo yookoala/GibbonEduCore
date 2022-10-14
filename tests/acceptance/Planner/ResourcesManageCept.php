@@ -10,7 +10,6 @@ $I->seeBreadcrumb('Add Resource');
 
 $addFormValues = array(
     'type'        => 'HTML',
-    'html'        => '<p>Testing</p>',
     'name'        => 'HTML Test',
     'description' => 'This is a test.',
 );
@@ -32,12 +31,12 @@ $I->seeBreadcrumb('Edit Resource');
 $I->seeInFormFields('#content form', $addFormValues);
 
 $editFormValues = array(
-    'html'        => '<p>Testing Also</p>',
     'name'        => 'HTML Test Too',
     'description' => 'This is also a test.',
 );
+$I->selectOption('select[name=type]', 'HTML');
+$I->setHiddenField('textarea[name=html]', '<p>Testing Also</p>');
 $I->setHiddenField('input[name=tags]', 'TestTag');
-$I->fillField('type', 'HTML');
 
 $I->submitForm('#content form', $editFormValues, 'Submit');
 $I->seeSuccessMessage();
