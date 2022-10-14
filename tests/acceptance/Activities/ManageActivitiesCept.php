@@ -4,12 +4,17 @@ $I->wantTo('add, edit and delete an activity as an admin and test the enrollment
 $I->loginAsAdmin();
 $I->amOnModulePage('Activities', 'activities_manage.php');
 
+// If see the cookie consent, dismiss it.
+if ($I->foundElement('.box-cookie-consent')) {
+    $I->click(['link' => 'OK'], '.box-cookie-consent');
+}
+
 // Add ------------------------------------------------
 $I->clickNavigation('Add');
 $I->seeBreadcrumb('Add Activity');
 
 $I->fillField('name', 'T1 Test Activity');
-$I->submitForm('#content form', [], 'Submig');
+$I->submitForm('#content form', [], 'Submit');
 $I->seeSuccessMessage();
 $ID = $I->grabValueFromURL('editID');
 
@@ -18,7 +23,7 @@ $I->amOnModulePage('Activities', 'activities_manage.php');
 $I->click("Edit", "//td[contains(text(),'T1 Test Activity')]//..");
 $I->seeBreadcrumb('Edit Activity');
 $I->fillField('name', 'T2 Test Activity');
-$I->submitForm('#content form', [], 'Submig');
+$I->submitForm('#content form', [], 'Submit');
 $I->seeSuccessMessage();
 
 // Enroll ------------------------------------------------
