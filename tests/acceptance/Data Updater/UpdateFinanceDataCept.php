@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('submit and approve a family data update');
 $I->loginAsAdmin();
@@ -16,7 +16,7 @@ $I->click('Submit');
 // Simple Update ------------------------------------------
 $I->see('Update Data');
 
-$I->selectOption('invoiceTo', 'Family');
+$I->selectOption('input[name=invoiceTo]', 'Family');
 
 $I->click('#content form[method="post"] input[type=submit]');
 $I->seeSuccessMessage();
@@ -25,7 +25,7 @@ $gibbonFinanceInvoiceeID = $I->grabValueFromURL('gibbonFinanceInvoiceeID');
 $I->amOnModulePage('Data Updater', 'data_finance.php', ['gibbonFinanceInvoiceeID' => $gibbonFinanceInvoiceeID]);
 
 // Complex Update ------------------------------------------
-$I->selectOption('invoiceTo', 'Company');
+$I->selectOption('input[name=invoiceTo]', 'Company');
 
 $editFormValues = array(
     'companyName'     => 'McTest Ltd.',
@@ -75,7 +75,7 @@ $I->seeSuccessMessage();
 // Reset Data ------------------------------------------------
 $I->amOnModulePage('Data Updater', 'data_finance.php', ['gibbonFinanceInvoiceeID' => $gibbonFinanceInvoiceeID]);
 
-$I->selectOption('invoiceTo', 'Family');
+$I->selectOption('input[name=invoiceTo]', 'Family');
 
 $I->click('#content form[method="post"] input[type=submit]');
 $I->seeSuccessMessage();
