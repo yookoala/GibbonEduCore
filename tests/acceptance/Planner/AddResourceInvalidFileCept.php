@@ -10,7 +10,7 @@ $I->seeBreadcrumb('Add Resource');
 $I->selectOption('type', 'File');
 $I->attachFile('file', 'invalid.php');
 $I->fillField('name', 'Invalid Upload');
-$I->fillField('tags', 'Text');
+$I->setHiddenField('input[name=tags]', 'Text');
 $I->selectOption('category', 'Text');
 $I->click('Submit');
 

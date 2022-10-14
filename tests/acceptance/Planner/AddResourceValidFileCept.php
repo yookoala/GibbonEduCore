@@ -10,7 +10,7 @@ $I->seeBreadcrumb('Add Resource');
 $I->selectOption('type', 'File');
 $I->attachFile('file', 'image.png');
 $I->fillField('name', 'Valid Upload');
-$I->fillField('tags', 'Photo');
+$I->setHiddenField('input[name=tags]', 'Photo');
 $I->selectOption('category', 'Photo');
 $I->click('Submit');
 
