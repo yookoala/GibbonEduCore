@@ -42,9 +42,9 @@ $newFormValues = array(
     'autoHouseAssign'             => 'Y',
 );
 
-$I->selectOption('#content form select[senOptionsActive]', $newUserSettings['senOptionsActive']);
-$I->selectOption('#content form select[scholarshipOptionsActive]', $newUserSettings['scholarshipOptionsActive']);
-$I->selectOption('#content form select[languageOptionsActive]', $newUserSettings['languageOptionsActive']);
+$I->selectOption('#content form select[senOptionsActive]', $newFormValues['senOptionsActive']);
+$I->selectOption('#content form select[scholarshipOptionsActive]', $newFormValues['scholarshipOptionsActive']);
+$I->selectOption('#content form select[languageOptionsActive]', $newFormValues['languageOptionsActive']);
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
