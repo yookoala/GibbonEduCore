@@ -12,7 +12,7 @@ $I->attachFile('file', 'image.png');
 $I->fillField('name', 'Valid Upload');
 $I->setHiddenField('input[name=tags]', 'Photo');
 $I->selectOption('category', 'Photo');
-$I->click('Submit');
+$I->submitForm('form#action', [], 'Submit');
 
 $I->see('Your request was completed successfully.', '.success');
 

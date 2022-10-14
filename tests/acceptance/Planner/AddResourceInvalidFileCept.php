@@ -12,6 +12,6 @@ $I->attachFile('file', 'invalid.php');
 $I->fillField('name', 'Invalid Upload');
 $I->setHiddenField('input[name=tags]', 'Text');
 $I->selectOption('category', 'Text');
-$I->click('Submit');
+$I->submitForm('form#action', [], 'Submit');
 
 $I->see('', '.error');
