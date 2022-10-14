@@ -5,9 +5,7 @@ $I->loginAsAdmin();
 $I->amOnModulePage('Activities', 'activities_manage.php');
 
 // If see the cookie consent, dismiss it.
-if ($I->foundElement('.box-cookie-consent')) {
-    $I->click(['link' => 'OK'], '.box-cookie-consent');
-}
+$I->dismissCookieConsentIfNeeded();
 
 // Add ------------------------------------------------
 $I->clickNavigation('Add');
