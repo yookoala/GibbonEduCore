@@ -20,6 +20,8 @@ $addFormValues = array(
     'activeApplicationForm' => '1',
 );
 
+$I->selectOption('input[name=active]', 'Y');
+$I->selectOption('input[name=required]', 'Y');
 $I->checkOption('input[type=checkbox][value=activePersonStudent]');
 $I->checkOption('input[type=checkbox][value=activePersonOther]');
 
@@ -54,5 +56,6 @@ $I->seeSuccessMessage();
 // Delete ------------------------------------------------
 $I->amOnModulePage('System Admin', 'customFields_delete.php', array('gibbonCustomFieldID' => $gibbonCustomFieldID));
 
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->seeSuccessMessage();
