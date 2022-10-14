@@ -79,5 +79,6 @@ $I->seeSuccessMessage();
 // Delete Scale ------------------------------------------
 $I->amOnModulePage('School Admin', 'gradeScales_manage_delete.php', array('gibbonScaleID' => $gibbonScaleID));
 
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->seeSuccessMessage();
