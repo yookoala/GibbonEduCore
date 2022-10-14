@@ -161,6 +161,20 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
+     * Check, with Javascript's querySelector, if an element exists.
+     *
+     * @param string $selector
+     *
+     * @return boolean If the element exists or not.
+     */
+    public function foundElement(string $selector): bool
+    {
+        return $this->executeJS(<<<JAVASCRIPT
+            return document.querySelector('.box-cookie-consent') !== null;
+        JAVASCRIPT);
+    }
+
+    /**
      * Forcefully replace a form input field with a blank new plain input field
      * by Javascript. Mimic intrusions to circumvent Javascript / Browser checks.
      *
