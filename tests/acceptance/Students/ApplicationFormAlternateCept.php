@@ -8,16 +8,17 @@ $I->loginAsAdmin();
 $I->amOnModulePage('User Admin', 'applicationFormSettings.php');
 $originalApplicationSettings = $I->grabAllFormValues();
 
-$newApplicationSettings = array_replace($originalApplicationSettings, array(
+$newApplicationSettings = [
     'howDidYouHear'              => '',
-    //'senOptionsActive'           => 'N',
-    //'scholarshipOptionsActive'   => 'N',
-    //'paymentOptionsActive'       => 'N',
-    //'languageOptionsActive'      => 'N',
-    //'applicationFormRefereeLink' => '',
-    //'agreement'                  => '',
-));
+    'senOptionsActive'           => 'N',
+    'scholarshipOptionsActive'   => 'N',
+    'paymentOptionsActive'       => 'N',
+    'languageOptionsActive'      => 'N',
+    'applicationFormRefereeLink' => '',
+    'agreement'                  => '',
+];
 
+$I->selectOption('#content form select[senOptionsActive]', $newApplicationSettings['senOptionsActive']);
 $I->submitForm('#content form', $newApplicationSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $newApplicationSettings);
@@ -27,11 +28,10 @@ $I->seeInFormFields('#content form', $newApplicationSettings);
 $I->amOnModulePage('User Admin', 'userSettings.php');
 $originalUserSettings = $I->grabAllFormValues();
 
-$newUserSettings = array_replace($originalUserSettings, array(
+$newUserSettings = [
     'nationality'        => '',
     'privacy'            => 'N',
-
-));
+];
 
 $I->submitForm('#content form', $newUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
@@ -149,11 +149,12 @@ $I->see('Your request was completed successfully.', '.success');
 // Restore Original Settings -----------------------------------
 
 $I->amOnModulePage('User Admin', 'applicationFormSettings.php');
-$I->submitForm('#content form', $originalApplicationSettings, 'Submit');
+$I->selectOption('#content form select[senOptionsActive]', $originalApplicationSettings['senOptionsActive']);
+$I->submitFormRestore('#content form', $newApplicationSettings, $originalApplicationSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalApplicationSettings);
 
 $I->amOnModulePage('User Admin', 'userSettings.php');
-$I->submitForm('#content form', $originalUserSettings, 'Submit');
+$I->submitFormRestore('#content form', $newUserSettings, $originalUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalUserSettings);
