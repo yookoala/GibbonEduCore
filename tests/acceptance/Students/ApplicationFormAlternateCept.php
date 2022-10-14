@@ -10,12 +10,12 @@ $originalApplicationSettings = $I->grabAllFormValues();
 
 $newApplicationSettings = array_replace($originalApplicationSettings, array(
     'howDidYouHear'              => '',
-    'senOptionsActive'           => 'N',
-    'scholarshipOptionsActive'   => 'N',
-    'paymentOptionsActive'       => 'N',
-    'languageOptionsActive'      => 'N',
-    'applicationFormRefereeLink' => '',
-    'agreement'                  => '',
+    //'senOptionsActive'           => 'N',
+    //'scholarshipOptionsActive'   => 'N',
+    //'paymentOptionsActive'       => 'N',
+    //'languageOptionsActive'      => 'N',
+    //'applicationFormRefereeLink' => '',
+    //'agreement'                  => '',
 ));
 
 $I->submitForm('#content form', $newApplicationSettings, 'Submit');
