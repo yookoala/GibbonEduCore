@@ -36,7 +36,7 @@ $I->seeInFormFields('#content form[method="post"]', $editFormValues);
 $gibbonFamilyUpdateID = $I->grabValueFrom("input[type='hidden'][name='existing']");
 
 $I->hoverProfilePic();
-$I->click('Logout', 'a');
+$I->click(['link' => 'Logout'], '#header');
 
 // Accept ------------------------------------------------
 $I->loginAsAdmin();
