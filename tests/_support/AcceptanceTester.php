@@ -154,8 +154,20 @@ class AcceptanceTester extends \Codeception\Actor
     public function setHiddenField($selector, $value)
     {
         // Set hidden input value
-        $this->executeJS(
-            'document.querySelector(arguments[0]).value = arguments[1];',
+        $this->executeJS(<<<JAVASCRIPT
+const element = document.querySelector(arguments[0]);
+if (element === null) {
+    // early exit.
+    return null;
+}
+if (element.tagName === 'TEXTAREA') {
+    element.innerText = arguments[1];
+} else if (element.tagName === 'INPUT') {
+    element.value = arguments[1];
+} else {
+    throw new Error('Unsupported element type: ' . element.tagName);
+}
+JAVASCRIPT,
             [$selector, $value]
         );
     }
