@@ -31,14 +31,16 @@ $I->click('Submit');
 $I->seeSuccessMessage();
 
 // View ------------------------------------------------
-$I->click('Logout');
+$I->hoverProfilePic();
+$I->click(['link' => 'Logout'], '#header');
 $I->loginAsStudent();
 $I->amOnModulePage('Activities', 'activities_my.php');
 $I->see('T2 Test Activity', 'td');
 
 
 // Delete ------------------------------------------------
-$I->click('Logout');
+$I->hoverProfilePic();
+$I->click(['link' => 'Logout'], '#header');
 $I->loginAsAdmin();
 $I->amOnModulePage('Activities', 'activities_manage.php');
 $I->click("Delete", "//td[contains(text(),'T2 Test Activity')]//..");
