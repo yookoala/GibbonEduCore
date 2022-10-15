@@ -53,7 +53,7 @@ Main Menu: Displays the top-level categories and active modules.
 <script>
     function refreshNotifications() {
         $.ajax({
-            url: "index_notification_ajax.php",
+            url: "{{ absoluteURL }}/index_notification_ajax.php",
             dataType: "json",
             success: function(data) {
                 // Update notification count
