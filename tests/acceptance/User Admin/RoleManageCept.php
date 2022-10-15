@@ -13,7 +13,6 @@ $formValues = array(
     'name'             => 'Testing Role',
     'nameShort'        => 'TSTR',
     'description'      => 'For testing.',
-    'type'             => 'Additional',
     'pastYearsLogin'   => 'N',
     'futureYearsLogin' => 'N',
     'restriction'      => 'Same Role',
@@ -28,14 +27,15 @@ $gibbonRoleID = $I->grabEditIDFromURL();
 $I->amOnModulePage('User Admin', 'role_manage_edit.php', array('gibbonRoleID' => $gibbonRoleID));
 $I->seeBreadcrumb('Edit Role');
 
-$I->seeInFormFields('#content form', $formValues);
+$I->seeInFormFields('#content form', $formValues + [
+    'type' => 'Additional'
+]);
 
 $formValues = array(
     'category'         => 'Staff',
     'name'             => 'Testing Role Too',
     'nameShort'        => 'TST2',
     'description'      => 'Also for testing.',
-    'type'             => 'Additional',
     'pastYearsLogin'   => 'Y',
     'futureYearsLogin' => 'Y',
     'restriction'      => 'None',
@@ -47,6 +47,7 @@ $I->see('Your request was completed successfully.', '.success');
 // Delete ------------------------------------------------
 $I->amOnModulePage('User Admin', 'role_manage_delete.php', array('gibbonRoleID' => $gibbonRoleID));
 
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->see('Your request was completed successfully.', '.success');
 
