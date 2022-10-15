@@ -13,7 +13,7 @@ $I->selectFromDropdown('gibbonCourseClassID', 2);
 $I->fillField('name', 'Testing Markbook');
 $I->fillField('timeStart', '09:00');
 $I->fillField('timeEnd', '10:00');
-$I->selectOption('markbook', 'Y');
+$I->selectOption('input[name=markbook]', 'Y');
 $I->click('Submit');
 
 // Verify Linked Lesson ---------------------------------------
@@ -65,6 +65,7 @@ $I->see('Your request was completed successfully.', '.success');
 $urlParams = array('gibbonCourseClassID' => $gibbonCourseClassID, 'gibbonPlannerEntryID' => $gibbonPlannerEntryID, 'viewBy' => 'class');
 $I->amOnModulePage('Planner', 'planner_delete.php', $urlParams );
 
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->see('Your request was completed successfully.', '.success');
 
