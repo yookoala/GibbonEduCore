@@ -9,6 +9,7 @@ $I->seeBreadcrumb('Add Lesson Plan');
 
 $date = $I->grabAttributeFrom('#date', 'value');
 
+$I->dismissCookieConsentIfNeeded();
 $I->selectFromDropdown('gibbonCourseClassID', 2);
 $I->fillField('name', 'Testing Markbook');
 $I->fillField('timeStart', '09:00');
