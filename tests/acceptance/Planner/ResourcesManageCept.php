@@ -10,12 +10,13 @@ $I->seeBreadcrumb('Add Resource');
 
 $addFormValues = array(
     'type'        => 'HTML',
+    'html'        => '<p>Testing</p>',
     'name'        => 'HTML Test',
     'description' => 'This is a test.',
 );
 
 $I->selectOption('select[name=type]', 'HTML');
-$I->setHiddenField('textarea[name=html]', '<p>Testing</p>');
+$I->replaceInputField('textarea[name=html]'); // FIXME: should test tinymce
 $I->setHiddenField('input[name=tags]', 'TestTag');
 $I->selectFromDropdown('category', 2);
 
@@ -32,10 +33,11 @@ $I->seeInFormFields('#content form', $addFormValues);
 
 $editFormValues = array(
     'name'        => 'HTML Test Too',
+    'html'        => '<p>Testing Also</p>',
     'description' => 'This is also a test.',
 );
 $I->selectOption('select[name=type]', 'HTML');
-$I->setHiddenField('textarea[name=html]', '<p>Testing Also</p>');
+$I->replaceInputField('textarea[name=html]'); // FIXME: should test tinymce
 $I->setHiddenField('input[name=tags]', 'TestTag');
 
 $I->submitForm('#content form', $editFormValues, 'Submit');
