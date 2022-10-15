@@ -18,7 +18,7 @@ $editFormValues = array(
     'longTermMedicationDetails' => 'Test',
 );
 
-$I->selectOption('select[longTermMedication]', $editFormValues['longTermMedication']);
+$I->selectOption('select[name=longTermMedication]', $editFormValues['longTermMedication']);
 $I->submitForm('#content form[method="post"]', $editFormValues, 'Submit');
 
 // Confirm ------------------------------------------------
@@ -66,6 +66,7 @@ $editFormValues = array(
     'longTermMedicationDetails' => 'Test2',
 );
 
+$I->selectOption('select[name=longTermMedication]', $editFormValues['longTermMedication']);
 $I->submitForm('#content form[method="post"]', $editFormValues, 'Submit');
 
 // Confirm ------------------------------------------------
