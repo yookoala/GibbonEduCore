@@ -42,11 +42,13 @@ $I->see('T2 Test Activity', 'td');
 
 
 // Delete ------------------------------------------------
+$I->amGoingTo('Delete the activity as an admin');
 $I->hoverProfilePic();
 $I->click(['link' => 'Logout'], '#header');
 $I->loginAsAdmin();
 $I->amOnModulePage('Activities', 'activities_manage.php');
 $I->click("Delete", "//td[contains(text(),'T2 Test Activity')]//..");
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->seeSuccessMessage();
 
