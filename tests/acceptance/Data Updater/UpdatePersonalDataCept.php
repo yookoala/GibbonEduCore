@@ -34,9 +34,7 @@ $I->submitForm('#content form', $newStudentsSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $newStudentsSettings);
 
-
-$I->hoverProfilePic();
-$I->click('Logout', 'a');
+$I->logout();
 
 // Select ------------------------------------------------
 $I->loginAsParent();
@@ -126,6 +124,7 @@ $gibbonPersonUpdateID = $I->grabValueFromURL('gibbonPersonUpdateID');
 // Delete ------------------------------------------------
 $I->amOnModulePage('Data Updater', 'data_personal_manage_delete.php', array('gibbonPersonUpdateID' => $gibbonPersonUpdateID));
 
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->seeSuccessMessage();
 
