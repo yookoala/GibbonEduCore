@@ -44,6 +44,17 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
+     * Do the necessary actions to logout.
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        $this->hoverProfilePic();
+        $this->click(['link' => 'Logout'], '#header');
+    }
+
+    /**
      * Hover over the header profile picture.
      * Will expand the Logout link.
      *
