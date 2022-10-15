@@ -36,6 +36,7 @@ $editFormValues = array(
     'blurb'          => 'Also for testing.',
 );
 
+$I->replaceInputField('input[name=type]'); // FIXME: not sure if should do this
 $I->replaceInputField('textarea[name=blurb]'); // FIXME: should test tinymce
 $I->submitForm('#content form', $editFormValues, 'Submit');
 $I->seeSuccessMessage();
