@@ -36,7 +36,6 @@ $editFormValues = array(
     'html'        => '<p>Testing Also</p>',
     'description' => 'This is also a test.',
 );
-$I->selectOption('select[name=type]', 'HTML');
 $I->replaceInputField('textarea[name=html]'); // FIXME: should test tinymce
 $I->setHiddenField('input[name=tags]', 'TestTag');
 
