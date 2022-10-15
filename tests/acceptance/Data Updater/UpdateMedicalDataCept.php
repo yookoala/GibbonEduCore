@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('submit and approve a medical data update');
 $I->loginAsAdmin();
@@ -18,6 +18,7 @@ $editFormValues = array(
     'longTermMedicationDetails' => 'Test',
 );
 
+$I->selectOption('select[longTermMedication]', $editFormValues['longTermMedication']);
 $I->submitForm('#content form[method="post"]', $editFormValues, 'Submit');
 
 // Confirm ------------------------------------------------
@@ -45,6 +46,7 @@ $gibbonPersonMedicalUpdateID = $I->grabValueFromURL('gibbonPersonMedicalUpdateID
 // Delete ------------------------------------------------
 $I->amOnModulePage('Data Updater', 'data_medical_manage_delete.php', array('gibbonPersonMedicalUpdateID' => $gibbonPersonMedicalUpdateID));
 
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->seeSuccessMessage();
 
