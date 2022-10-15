@@ -16,6 +16,7 @@ $addFormValues = array(
     'blurb'          => 'For testing.',
 );
 
+$I->replaceInputField('textarea[name=blurb]'); // FIXME: should test tinymce
 $I->submitForm('#content form', $addFormValues, 'Submit');
 $I->seeSuccessMessage();
 
@@ -41,5 +42,6 @@ $I->seeSuccessMessage();
 // Delete ------------------------------------------------
 $I->amOnModulePage('School Admin', 'department_manage_delete.php', array('gibbonDepartmentID' => $gibbonDepartmentID));
 
+$I->fillField('input[confirm]', 'DELETE');
 $I->click('Yes');
 $I->seeSuccessMessage();
