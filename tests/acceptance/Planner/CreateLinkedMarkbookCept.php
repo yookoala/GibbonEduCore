@@ -32,7 +32,7 @@ $I->seeInField('name', 'Testing Markbook');
 $I->fillField('description', 'Linked to Planner Lesson');
 $I->selectFromDropdown('type', 2);
 $I->seeInField('date', $date);
-$I->selectOption('attainment', 'Y');
+$I->selectOption('input[name=attainment]', 'Y');
 $I->selectOption('effort', 'N');
 $I->selectOption('viewableStudents', 'N');
 $I->selectOption('viewableParents', 'N');
@@ -49,7 +49,7 @@ $gibbonCourseClassID = $I->grabValueFromURL('gibbonCourseClassID');
 
 $I->seeInField('name', 'Testing Markbook');
 $I->seeInField('description', 'Linked to Planner Lesson');
-$I->seeInField('attainment', 'Y');
+$I->selectOption('input[name=attainment]', 'Y');
 $I->seeInField('effort', 'N');
 $I->seeInField('viewableStudents', 'N');
 $I->seeInField('viewableParents', 'N');
