@@ -6,7 +6,7 @@ $I->amOnModulePage('System Admin', 'alarm.php');
 
 // Fill in Fields --------------------------------------
 
-$I->selectOption('alarm', 'General');
+$I->selectOption('select[name=alarm]', 'General');
 $I->click('Submit');
 
 $I->see('Your request was completed successfully.', '.success');
