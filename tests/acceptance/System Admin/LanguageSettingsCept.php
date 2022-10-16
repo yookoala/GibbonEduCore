@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('update Language Settings');
 $I->loginAsAdmin();
@@ -11,7 +11,7 @@ $I->seeInFormFields('#content form', $originalFormValues);
 
 // Make Changes ------------------------------------------------
 
-$I->selectOption('gibboni18nID', '0001');
+$I->selectOption('input[name=gibboni18nID]', '0001');
 $I->submitForm('#content form', array(), 'Submit');
 
 // Verify Results ----------------------------------------------
