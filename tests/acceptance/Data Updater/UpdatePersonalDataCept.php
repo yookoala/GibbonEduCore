@@ -93,7 +93,7 @@ $editFormValues = array(
     'religion'                  => 'Religion 3',
 );
 
-$I->dismissCookieConsentIfNeeded();
+$I->scrollTo('input[name=showAddresses]');
 $I->checkOption('input[name=showAddresses]');
 $I->submitForm('#content form[method="post"]', $editFormValues, 'Submit');
 
