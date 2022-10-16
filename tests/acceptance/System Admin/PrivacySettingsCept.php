@@ -22,7 +22,7 @@ $newFormValues = array(
     'privacyPolicy'                 => 'Testing',
 );
 
-$I->selectOption('#content form select[cookieConsentEnabled]', $newFormValues['cookieConsentEnabled']);
+$I->selectOption('#content form select[name=cookieConsentEnabled]', $newFormValues['cookieConsentEnabled']);
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
@@ -32,7 +32,7 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 // Restore Original Settings -----------------------------------
 
-$I->selectOption('#content form select[cookieConsentEnabled]', $originalFormValues['cookieConsentEnabled']);
+$I->selectOption('#content form select[name=cookieConsentEnabled]', $originalFormValues['cookieConsentEnabled']);
 $I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
