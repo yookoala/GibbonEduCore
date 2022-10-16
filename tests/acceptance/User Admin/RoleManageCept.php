@@ -47,7 +47,7 @@ $I->see('Your request was completed successfully.', '.success');
 // Delete ------------------------------------------------
 $I->amOnModulePage('User Admin', 'role_manage_delete.php', array('gibbonRoleID' => $gibbonRoleID));
 
-$I->fillField('input[confirm]', 'DELETE');
+$I->fillField('input[name=confirm]', 'DELETE');
 $I->click('Yes');
 $I->see('Your request was completed successfully.', '.success');
 

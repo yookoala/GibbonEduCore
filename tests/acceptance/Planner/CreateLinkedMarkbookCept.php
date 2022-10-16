@@ -68,7 +68,7 @@ $I->see('Your request was completed successfully.', '.success');
 $urlParams = array('gibbonCourseClassID' => $gibbonCourseClassID, 'gibbonPlannerEntryID' => $gibbonPlannerEntryID, 'viewBy' => 'class');
 $I->amOnModulePage('Planner', 'planner_delete.php', $urlParams );
 
-$I->fillField('input[confirm]', 'DELETE');
+$I->fillField('input[name=confirm]', 'DELETE');
 $I->click('Yes');
 $I->see('Your request was completed successfully.', '.success');
 
