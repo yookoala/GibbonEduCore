@@ -75,7 +75,9 @@ $I->seeSuccessMessage();
 $gibbonPersonID = $I->grabValueFromURL('gibbonPersonID');
 
 $I->amOnModulePage('Data Updater', 'data_medical.php', ['gibbonPersonID' => $gibbonPersonID]);
-$I->seeInFormFields('#content form[method="post"]', $editFormValues);
+$I->seeInField('#content form[method="post"] select[longTermMedication]', 'N');
+$I->selectOption('select[name=longTermMedication]', 'Y');
+$I->seeInField('#content form[method="post"] textarea[name=longTermMedicationDetails]', 'Test2');
 
 $gibbonPersonMedicalUpdateID = $I->grabValueFrom("input[type='hidden'][name='existing']");
 
