@@ -62,7 +62,6 @@ $I->see('Update Data');
 
 $editFormValues = array(
     'longTermMedication'        => 'N',
-    'longTermMedicationDetails' => '',
 );
 
 $I->fillField('longTermMedicationDetails', 'Test2'); // Filling in Test2 to the field, should be ignored.
