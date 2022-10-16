@@ -14,6 +14,7 @@ $I->selectFromDropdown('gibbonCourseClassID', 2);
 $I->fillField('name', 'Testing Markbook');
 $I->fillField('timeStart', '09:00');
 $I->fillField('timeEnd', '10:00');
+$I->scrollTo('input[name=markbook]');
 $I->selectOption('input[name=markbook]', 'Y');
 $I->click('Submit');
 
