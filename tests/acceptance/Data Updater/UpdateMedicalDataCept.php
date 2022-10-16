@@ -62,9 +62,10 @@ $I->see('Update Data');
 
 $editFormValues = array(
     'longTermMedication'        => 'N',
-    'longTermMedicationDetails' => 'Test2',
+    'longTermMedicationDetails' => '',
 );
 
+$I->fillField('longTermMedicationDetails', 'Test2'); // Filling in Test2 to the field, should be ignored.
 $I->selectOption('select[name=longTermMedication]', $editFormValues['longTermMedication']);
 $I->submitForm('#content form[method="post"]', $editFormValues, 'Submit');
 
