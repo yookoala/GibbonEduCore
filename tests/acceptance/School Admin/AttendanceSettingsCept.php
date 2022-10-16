@@ -33,7 +33,7 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 // Restore Original Settings -----------------------------------
 
-$I->replaceInputField('select[name=attendanceCLIAdditionalUsers[]]', $originalFormValues['attendanceCLIAdditionalUsers[]']);
+$I->replaceInputField('select#attendanceCLIAdditionalUsers');
 $I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
