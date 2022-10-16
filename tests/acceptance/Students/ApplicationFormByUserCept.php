@@ -41,7 +41,7 @@ $newUserSettings = array(
     'privacyOptions'     => 'Privacy 1, Privacy 2, Privacy 3',
 );
 
-$I->selectOption('#content form select[privacy]', $newUserSettings['privacy']);
+$I->selectOption('#content form select[name=privacy]', $newUserSettings['privacy']);
 $I->submitForm('#content form', $newUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $newUserSettings);
