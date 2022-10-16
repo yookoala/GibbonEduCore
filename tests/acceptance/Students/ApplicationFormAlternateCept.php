@@ -18,7 +18,7 @@ $newApplicationSettings = [
     'agreement'                  => '',
 ];
 
-$I->selectOption('#content form select[senOptionsActive]', $newApplicationSettings['senOptionsActive']);
+$I->selectOption('#content form select[name=senOptionsActive]', $newApplicationSettings['senOptionsActive']);
 $I->submitForm('#content form', $newApplicationSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $newApplicationSettings);
@@ -150,7 +150,7 @@ $I->see('Your request was completed successfully.', '.success');
 // Restore Original Settings -----------------------------------
 
 $I->amOnModulePage('User Admin', 'applicationFormSettings.php');
-$I->selectOption('#content form select[senOptionsActive]', $originalApplicationSettings['senOptionsActive']);
+$I->selectOption('#content form select[name=senOptionsActive]', $originalApplicationSettings['senOptionsActive']);
 $I->submitFormRestore('#content form', $newApplicationSettings, $originalApplicationSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalApplicationSettings);

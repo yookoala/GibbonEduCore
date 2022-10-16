@@ -21,10 +21,10 @@ $newApplicationSettings = array(
     'agreement'                   => 'Agreement Test',
 );
 
-$I->selectOption('#content form select[senOptionsActive]', $newApplicationSettings['senOptionsActive']);
-$I->selectOption('#content form select[scholarshipOptionsActive]', $newApplicationSettings['scholarshipOptionsActive']);
-$I->selectOption('#content form select[paymentOptionsActive]', $newApplicationSettings['paymentOptionsActive']);
-$I->selectOption('#content form select[languageOptionsActive]', $newApplicationSettings['languageOptionsActive']);
+$I->selectOption('#content form select[name=senOptionsActive]', $newApplicationSettings['senOptionsActive']);
+$I->selectOption('#content form select[name=scholarshipOptionsActive]', $newApplicationSettings['scholarshipOptionsActive']);
+$I->selectOption('#content form select[name=paymentOptionsActive]', $newApplicationSettings['paymentOptionsActive']);
+$I->selectOption('#content form select[name=languageOptionsActive]', $newApplicationSettings['languageOptionsActive']);
 $I->submitForm('#content form', $newApplicationSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $newApplicationSettings);

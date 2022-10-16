@@ -42,9 +42,9 @@ $newFormValues = array(
     'autoHouseAssign'             => 'Y',
 );
 
-$I->selectOption('#content form select[senOptionsActive]', $newFormValues['senOptionsActive']);
-$I->selectOption('#content form select[scholarshipOptionsActive]', $newFormValues['scholarshipOptionsActive']);
-$I->selectOption('#content form select[languageOptionsActive]', $newFormValues['languageOptionsActive']);
+$I->selectOption('#content form select[name=senOptionsActive]', $newFormValues['senOptionsActive']);
+$I->selectOption('#content form select[name=scholarshipOptionsActive]', $newFormValues['scholarshipOptionsActive']);
+$I->selectOption('#content form select[name=languageOptionsActive]', $newFormValues['languageOptionsActive']);
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
@@ -54,9 +54,9 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 // Restore Original Settings -----------------------------------
 
-$I->selectOption('#content form select[senOptionsActive]', $originalFormValues['senOptionsActive']);
-$I->selectOption('#content form select[scholarshipOptionsActive]', $originalFormValues['scholarshipOptionsActive']);
-$I->selectOption('#content form select[languageOptionsActive]', $originalFormValues['languageOptionsActive']);
+$I->selectOption('#content form select[name=senOptionsActive]', $originalFormValues['senOptionsActive']);
+$I->selectOption('#content form select[name=scholarshipOptionsActive]', $originalFormValues['scholarshipOptionsActive']);
+$I->selectOption('#content form select[name=languageOptionsActive]', $originalFormValues['languageOptionsActive']);
 $I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
