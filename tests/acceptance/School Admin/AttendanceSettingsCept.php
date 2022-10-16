@@ -7,7 +7,7 @@ $I->amOnModulePage('School Admin', 'attendanceSettings.php');
 // Grab Original Settings --------------------------------------
 
 $originalFormValues = $I->grabAllFormValues();
-$I->replaceInputField('select[name=attendanceCLIAdditionalUsers[]]', $originalFormValues['attendanceCLIAdditionalUsers[]']);
+$I->replaceInputField('#attendanceCLIAdditionalUsers');
 $I->seeInFormFields('#content form', $originalFormValues);
 
 // Make Changes ------------------------------------------------
