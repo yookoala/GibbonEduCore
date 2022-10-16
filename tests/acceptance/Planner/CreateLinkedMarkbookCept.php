@@ -51,7 +51,7 @@ $gibbonCourseClassID = $I->grabValueFromURL('gibbonCourseClassID');
 $I->seeInField('name', 'Testing Markbook');
 $I->seeInField('description', 'Linked to Planner Lesson');
 $I->seeInField('input[name=attainment]', 'Y');
-$I->seeInField('effort', 'N');
+$I->seeInField('input[name=effort]', 'N');
 $I->seeInField('viewableStudents', 'N');
 $I->seeInField('viewableParents', 'N');
 
