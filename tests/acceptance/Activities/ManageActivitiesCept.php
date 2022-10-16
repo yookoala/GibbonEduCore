@@ -48,7 +48,7 @@ $I->click(['link' => 'Logout'], '#header');
 $I->loginAsAdmin();
 $I->amOnModulePage('Activities', 'activities_manage.php');
 $I->click("Delete", "//td[contains(text(),'T2 Test Activity')]//..");
-$I->click('Yes');
+$I->click(['link' => 'Yes']);
 $I->seeSuccessMessage();
 
 
