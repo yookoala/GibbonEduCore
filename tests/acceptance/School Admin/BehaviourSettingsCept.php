@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('update Behaviour Settings');
 $I->loginAsAdmin();
@@ -24,6 +24,7 @@ $newFormValues = array(
     'policyLink'                    => 'http://test.test',
 );
 
+$I->selectOption('select[name=enableNegativeBehaviourLetters]', $newFormValues['enableNegativeBehaviourLetters']);
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
@@ -41,6 +42,7 @@ $I->submitForm('#content form', $resetFormValues, 'Submit');
 
 // Restore Original Settings -----------------------------------
 
+$I->selectOption('select[name=enableNegativeBehaviourLetters]', $originalFormValues['enableNegativeBehaviourLetters']);
 $I->submitForm('#content form', $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
