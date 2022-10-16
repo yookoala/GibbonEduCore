@@ -107,8 +107,7 @@ $I->seeInFormFields('#content form[method="post"]', $editFormValues);
 
 $gibbonPersonUpdateID = $I->grabValueFrom("input[type='hidden'][name='existing']");
 
-$I->hoverProfilePic();
-$I->click('Logout', 'a');
+$I->logout();
 $I->loginAsAdmin();
 
 // Accept ------------------------------------------------
