@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('reset my password');
 $I->loginAsAdmin();
@@ -14,7 +14,7 @@ $I->click('Submit');
 $I->seeSuccessMessage();
 
 // Logout
-$I->click('Logout', 'a');
+$I->logout();
 $I->see('Login');
 
 // Try new password
@@ -28,7 +28,7 @@ $I->see('System Admin', 'a');
 
 // Restore original password
 $I->updateFromDatabase('gibbonPerson', array(
-    'passwordStrong' => '015261d879c7fc2789d19b9193d189364baac34a98561fa205cd5f37b313cdb0', 
+    'passwordStrong' => '015261d879c7fc2789d19b9193d189364baac34a98561fa205cd5f37b313cdb0',
     'passwordStrongSalt' => '/aBcEHKLnNpPrsStTUyz47',
     'failCount' => '0',
 ), array('username' => 'testingadmin'));
