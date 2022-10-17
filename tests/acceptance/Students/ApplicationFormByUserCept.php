@@ -167,6 +167,7 @@ $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
 $I->scrollTo('input[name=agreement]');
 $I->checkOption('agreement');
 
+$I->scrollTo('input[name=skipEmailNotification]');
 $I->submitForm('#content form', $formValues, 'Submit');
 
 $I->see('Your application was successfully submitted', '.success');
