@@ -23,6 +23,7 @@ $newFormValues = array(
 );
 
 $I->selectOption('#content form select[name=cookieConsentEnabled]', $newFormValues['cookieConsentEnabled']);
+$I->replaceInputField('textarea[name=privacyPolicy]');
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
