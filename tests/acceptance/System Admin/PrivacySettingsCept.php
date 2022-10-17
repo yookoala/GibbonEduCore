@@ -34,6 +34,7 @@ $I->seeInFormFields('#content form', $newFormValues);
 // Restore Original Settings -----------------------------------
 
 $I->selectOption('#content form select[name=cookieConsentEnabled]', $originalFormValues['cookieConsentEnabled']);
+$I->replaceInputField('textarea[name=privacyPolicy]');
 $I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
