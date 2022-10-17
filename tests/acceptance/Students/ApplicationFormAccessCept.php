@@ -7,11 +7,12 @@ $I->loginAsAdmin();
 
 $I->amOnModulePage('User Admin', 'applicationFormSettings.php');
 $originalApplicationSettings = $I->grabAllFormValues();
+$newApplicationSettings = ['publicApplications' => 'N'];
 
 $I->selectOption('publicApplications', 'N');
 $I->submitForm('#content form', [], 'Submit');
 $I->see('Your request was completed successfully.', '.success');
-$I->seeInFormFields('#content form', ['publicApplications' => 'N']);
+$I->seeInFormFields('#content form', $newApplicationSettings);
 
 // Go To Application  ------------------------------------------
 
