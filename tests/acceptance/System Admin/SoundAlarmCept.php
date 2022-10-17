@@ -12,6 +12,11 @@ $I->click('Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeOptionIsSelected('select[name=alarm]', 'General');
 
+// See the alarm overlay and close it ------------------
+
+$I->seeElement('div#TB_overlay');
+$I->click(['link' => 'close'], 'div#TB_overlay');
+
 // Turn off alarm --------------------------------------
 
 $I->selectOption('select[name=alarm]', 'None');
