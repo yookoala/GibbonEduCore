@@ -39,8 +39,7 @@ $I->seeInFormFields('#content form', $newUserSettings);
 
 // Go To Application  ------------------------------------------
 
-$I->hoverProfilePic();
-$I->click('Logout', 'a');
+$I->logout();
 $I->amOnModulePage('Students', 'applicationForm.php');
 $I->seeBreadcrumb('Application Form');
 
