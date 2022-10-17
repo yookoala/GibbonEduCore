@@ -14,8 +14,8 @@ $I->seeOptionIsSelected('select[name=alarm]', 'General');
 
 // See the alarm overlay and close it ------------------
 
-$I->seeElement('div#TB_overlay');
-$I->click(['link' => 'close'], 'div#TB_overlay');
+$I->seeElement('div#TB_window');
+$I->click(['link' => 'close'], 'div#TB_window');
 
 // Turn off alarm --------------------------------------
 
