@@ -12,11 +12,11 @@ $I->seeInFormFields('#content form', $originalFormValues);
 // Make Changes ------------------------------------------------
 
 $newFormValues = array(
-    'introduction'                => 'Intro Test',
+    //'introduction'                => 'Intro Test',
     'senOptionsActive'            => 'Y',
     'applicationFormSENText'      => 'SEN Test',
     'applicationFormRefereeLink'  => 'http://referee.test',
-    'postscript'                  => 'Postscript Test',
+    //'postscript'                  => 'Postscript Test',
     'scholarshipOptionsActive'    => 'Y',
     'scholarships'                => 'Scholarship Test',
     'paymentOptionsActive'        => 'Y',
