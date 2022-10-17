@@ -15,8 +15,7 @@ $I->seeInFormFields('#content form', ['publicApplications' => 'N']);
 
 // Go To Application  ------------------------------------------
 
-$I->hoverProfilePic();
-$I->click('Logout', 'a');
+$I->logout();
 $I->amOnModulePage('Students', 'applicationForm.php');
 $I->see('access', '.error');
 
@@ -32,8 +31,7 @@ $I->seeInFormFields('#content form', $newApplicationSettings);
 
 // Go To Application  ------------------------------------------
 
-$I->hoverProfilePic();
-$I->click('Logout', 'a');
+$I->logout();
 $I->amOnModulePage('Students', 'applicationForm.php');
 $I->seeBreadcrumb('Application Form');
 
