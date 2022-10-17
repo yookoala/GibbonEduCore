@@ -61,8 +61,7 @@ $I->seeInFormFields('#content form', $newStudentsSettings);
 
 // Go To Application  ------------------------------------------
 
-$I->hoverProfilePic();
-$I->click('Logout', 'a');
+$I->logout();
 $I->loginAsParent();
 
 $I->amOnModulePage('Students', 'applicationForm.php');
@@ -142,7 +141,7 @@ $applicationFormHash = $I->grabValueFromURL('id');
 $gibbonApplicationFormID = $I->grabTextFrom('.success b u');
 $gibbonSchoolYearID = $I->grabFromDatabase('gibbonApplicationForm', 'gibbonSchoolYearIDEntry', array('gibbonApplicationFormID' => $gibbonApplicationFormID));
 
-$I->click('Logout', 'a');
+$I->logout();
 
 // Verify ------------------------------------------------
 $I->loginAsAdmin();
