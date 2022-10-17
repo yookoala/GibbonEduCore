@@ -32,7 +32,7 @@ $I->click('Submit');
 
 $I->seeInField('name', '1920-1921');
 $I->seeOptionIsSelected('status', 'Past');
-$I->seeInField('sequenceNumber', 90);
+$I->seeInField('sequenceNumber', '90');
 $I->seeInField('firstDay', '01/01/1920');
 $I->seeInField('lastDay', '31/12/1920');
 
