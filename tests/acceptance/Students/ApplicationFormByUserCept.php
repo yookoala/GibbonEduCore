@@ -156,7 +156,7 @@ $formValues = array(
     'companyPhone'                => '54329876',
     'howDidYouHear'               => 'Others',
     'howDidYouHearMore'           => 'Testing',
-    'gibbonFamily'                => 'FALSE',
+    //'gibbonFamily'                => 'FALSE',
 );
 
 // Maually select some items (relative values)
