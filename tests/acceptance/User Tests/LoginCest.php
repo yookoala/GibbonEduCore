@@ -63,7 +63,7 @@ class LoginCest
 
         // Logged back out
         $I->hoverProfilePic();
-        $I->click('Logout', 'a');
+        $I->click(['link' => 'Logout'], '#header');
         $I->seeElement('#username');
         $I->seeElement('#password');
         $I->dontSee('Logout', 'a');
