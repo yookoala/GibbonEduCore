@@ -10,11 +10,11 @@ $I->selectOption('select[name=alarm]', 'General');
 $I->click('Submit');
 
 $I->see('Your request was completed successfully.', '.success');
-$I->seeOptionIsSelected('alarm', 'General');
+$I->seeOptionIsSelected('select[name=alarm]', 'General');
 
 // Turn off alarm --------------------------------------
 
-$I->selectOption('alarm', 'None');
+$I->selectOption('select[name=alarm]', 'None');
 $I->click('Submit');
 
 $I->see('Your request was completed successfully.', '.success');
