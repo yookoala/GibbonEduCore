@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $I = new AcceptanceTester($scenario);
 $I->wantTo('login to Gibbon and logout');
@@ -10,10 +10,12 @@ $I->fillField('password', '84BNQAQfNyKa');
 $I->click('Login');
 
 // Logged In
+$I->hoverProfilePic();
 $I->see('Logout', 'a');
 $I->see('Preferences', 'a');
 
 // Logged back out
+$I->hoverProfilePic();
 $I->click('Logout', 'a');
 $I->see('Login');
 $I->dontSee('Logout', 'a');
