@@ -131,6 +131,8 @@ class LoginCest
 
         // Logged In
         $I->see('Staff Dashboard', 'h2');
+        $I->see('ADMIN', 'a');
+        $I->moveMouseOver(['link' => 'ADMIN']);
         $I->see('System Admin', 'a');
 
     }
