@@ -178,6 +178,8 @@ $formValues = array(
     'vehicleRegistration'       => '4321',
 );
 
+$I->fillField('input[name=dateStart]', $formValues['dateStart']);
+$I->fillField('input[name=dateEnd]', $formValues['dateEnd']);
 $I->checkOption('input[name=showAddresses]');
 $I->submitForm('#content form', $formValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
