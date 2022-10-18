@@ -23,9 +23,12 @@ $addFormValues = array(
 $I->selectOption('select[name=context]', 'User');
 $I->selectOption('select[name=active]', 'Y');
 $I->selectOption('select[name=required]', 'Y');
+
+$I->scrollTo('input[type=checkbox][value=activePersonStudent]');
 $I->checkOption('input[type=checkbox][value=activePersonStudent]');
 $I->checkOption('input[type=checkbox][value=activePersonOther]');
 
+$I->scrollTo('select[name=activeApplicationForm]');
 $I->submitForm('#content form', $addFormValues, 'Submit');
 $I->seeSuccessMessage();
 
