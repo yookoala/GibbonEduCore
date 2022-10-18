@@ -42,7 +42,7 @@ $I->click('Submit');
 // Verify Column ------------------------------------------------
 
 $I->see('Your request was completed successfully.', '.success');
-$I->click('here', 'a');
+$I->click(['link' => 'here']);
 $I->seeBreadcrumb('Edit Column');
 
 $gibbonMarkbookColumnID = $I->grabValueFromURL('gibbonMarkbookColumnID');
