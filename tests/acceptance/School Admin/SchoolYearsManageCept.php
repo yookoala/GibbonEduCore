@@ -39,5 +39,6 @@ $I->seeInField('lastDay', '31/12/1920');
 // Delete ------------------------------------------------
 $I->amOnModulePage('School Admin', 'schoolYear_manage_delete.php', array('gibbonSchoolYearID' => $gibbonSchoolYearID));
 
+$I->fillField('input[name=confirm]', 'DELETE');
 $I->click('Yes');
 $I->see('Your request was completed successfully.', '.success');
