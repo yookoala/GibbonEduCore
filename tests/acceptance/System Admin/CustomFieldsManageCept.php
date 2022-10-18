@@ -20,6 +20,7 @@ $addFormValues = array(
     'activeApplicationForm' => '1',
 );
 
+$I->selectOption('select[name=context]', 'User');
 $I->selectOption('select[name=active]', 'Y');
 $I->selectOption('select[name=required]', 'Y');
 $I->checkOption('input[type=checkbox][value=activePersonStudent]');
