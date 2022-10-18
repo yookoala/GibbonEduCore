@@ -69,26 +69,31 @@ class AcceptanceTester extends \Codeception\Actor
     public function loginAsAdmin()
     {
         $this->login('testingadmin', '7SSbB9FZN24Q');
+        $this->dismissCookieConsentIfNeeded();
     }
 
     public function loginAsTeacher()
     {
         $this->login('testingteacher', 'm86GVNLH7DbV');
+        $this->dismissCookieConsentIfNeeded();
     }
 
     public function loginAsStudent()
     {
         $this->login('testingstudent', 'WKLm9ELHLJL5');
+        $this->dismissCookieConsentIfNeeded();
     }
 
     public function loginAsParent()
     {
         $this->login('testingparent', 'UVSf5t7epNa7');
+        $this->dismissCookieConsentIfNeeded();
     }
 
     public function loginAsSupport()
     {
         $this->login('testingsupport', '84BNQAQfNyKa');
+        $this->dismissCookieConsentIfNeeded();
     }
 
     public function clickNavigation($text)
