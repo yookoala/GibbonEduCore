@@ -5,7 +5,7 @@ $I->loginAsAdmin();
 $I->amOnModulePage('Timetable Admin', 'course_manage.php');
 
 // Add ------------------------------------------------
-$I->clickNavigation('Add');
+$I->clickNavigation('Add', true);
 $I->seeBreadcrumb('Add Course');
 
 $addFormValues = array(
