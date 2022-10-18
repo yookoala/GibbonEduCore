@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('update Third Party Settings');
 $I->loginAsAdmin();
@@ -30,6 +30,7 @@ $newFormValues = array(
     'mailerSMTPPassword' => 'smtpPasswordTest',
 );
 
+$I->selectOption('select[name=enablePayments]', 'Y');
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
