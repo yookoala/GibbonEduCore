@@ -8,6 +8,6 @@ $I->loginAsAdmin();
 
 // Logged In
 $I->see('Staff Dashboard', 'h2');
-$I->see('#header-menu');
-$I->moveMouseOver('#header-menu li:nth-child(2) a');
+$I->see('ADMIN', 'a');
+$I->moveMouseOver(['link' => 'ADMIN']);
 $I->see('System Admin', 'a');
