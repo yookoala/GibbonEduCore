@@ -17,7 +17,7 @@ $I->submitForm('#content form', array(), 'Submit');
 // Verify Results ----------------------------------------------
 
 $I->see('Your request was completed successfully.', '.success');
-$I->seeOptionIsSelected('gibboni18nID', '0001');
+$I->seeOptionIsSelected('input[name=gibboni18nID]', '0001');
 
 // Restore Original Settings -----------------------------------
 
