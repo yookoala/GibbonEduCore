@@ -28,4 +28,6 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 $I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
-$I->seeInFormFields('#content form', $originalFormValues);
+$I->seeInFormFields('#content form', array_filter($originalFormValues, function ($key) use ($newFormValues) {
+    return isset($newFormValues[$key]);
+}, ARRAY_FILTER_USE_KEY));
