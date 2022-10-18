@@ -5,6 +5,8 @@ $I->loginAsAdmin();
 $I->amOnModulePage('Timetable Admin', 'course_manage.php');
 
 // Add ------------------------------------------------
+$I->seeElement('.linkTop');
+$I->see('Add', '.linkTop');
 $I->clickNavigation('Add', true);
 $I->seeBreadcrumb('Add Course');
 
