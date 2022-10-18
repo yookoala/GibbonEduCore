@@ -103,6 +103,9 @@ $I->selectOption('gibbonRoleIDPrimary', 'Student');
 $I->selectFromDropdown('gibbonSchoolYearIDClassOf', 2);
 $I->selectFromDropdown('gibbonHouseID', 2);
 
+// Toggle to enter personal addresses
+$I->checkOption('input[name=showAddresses]');
+
 // Handle privacy and student agreements?
 
 // File Uploads
