@@ -131,6 +131,7 @@ $I->selectFromDropdown('gibbonSchoolYearIDEntry', 2);
 $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
 
 // Check the agreement
+$I->scrollTo('input[name=agreement]');
 $I->checkOption('agreement');
 
 $I->submitForm('#content form', $formValues, 'Submit');
