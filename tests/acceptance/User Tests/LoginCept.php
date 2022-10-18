@@ -15,7 +15,6 @@ $I->see('Logout', 'a');
 $I->see('Preferences', 'a');
 
 // Logged back out
-$I->hoverProfilePic();
-$I->click('Logout', 'a');
+$I->logout();
 $I->see('Login');
 $I->dontSee('Logout', 'a');
