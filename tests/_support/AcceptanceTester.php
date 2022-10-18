@@ -1,5 +1,6 @@
 <?php
 
+use Facebook\WebDriver\WebDriverBy;
 
 /**
  * Inherited Methods
@@ -96,9 +97,19 @@ class AcceptanceTester extends \Codeception\Actor
         $this->dismissCookieConsentIfNeeded();
     }
 
-    public function clickNavigation($text)
+    /**
+     * Click navigation link with a match text / partial text.
+     *
+     * @param string  $text         Text to examine.
+     * @param boolean $partialText  To only match partial text. Default: false.
+     *
+     * @return mixed
+     */
+    public function clickNavigation(string $text, bool $partialText = false)
     {
-        return $this->click(['link' => $text], '.linkTop');
+        return ($partialText)
+            ? $this->click(WebDriverBy::partialLinkText($text), '.linkTop')
+            : $this->click(WebDriverBy::linkText($text), '.linkTop');
     }
 
     public function seeBreadcrumb($text)
