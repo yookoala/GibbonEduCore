@@ -72,6 +72,7 @@ $formValues = array(
     'dayType'                   => 'Day Type 1',
     'lastSchool'                => 'Testing',
     'dateStart'                 => '30/01/2001',
+    'dateEnd'                   => '31/12/2001',
     'languageFirst'             => 'Albanian',
     'languageSecond'            => 'Bulgarian',
     'languageThird'             => 'Cambodian',
