@@ -68,8 +68,9 @@ $I->see('Your request was completed successfully.', '.success');
 $urlParams = array('gibbonCourseClassID' => $gibbonCourseClassID, 'gibbonPlannerEntryID' => $gibbonPlannerEntryID, 'viewBy' => 'class');
 $I->amOnModulePage('Planner', 'planner_delete.php', $urlParams );
 
-$I->fillField('input[name=confirm]', 'DELETE');
+//$I->fillField('input[name=confirm]', 'DELETE'); // FIXME: sometimes the confirm box show up and sometimes it doesn't
 $I->click('Yes');
+$I->fillField('input[name=confirm]', 'DELETE'); // here???
 $I->see('Your request was completed successfully.', '.success');
 
 // Force Cleanup (for failed tests) ------------------------------
