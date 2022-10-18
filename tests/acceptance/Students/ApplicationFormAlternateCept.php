@@ -120,7 +120,7 @@ $I->selectFromDropdown('gibbonSchoolYearIDEntry', 2);
 $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
 
 // No second parent
-$I->selectOption('secondParent', 'No');
+$I->checkOption('input[name=secondParent][value=No]');
 
 $I->submitForm('#content form', $formValues, 'Submit');
 
