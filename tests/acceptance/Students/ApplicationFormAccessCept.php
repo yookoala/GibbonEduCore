@@ -25,6 +25,7 @@ $I->see('access', '.error');
 $I->loginAsAdmin();
 $I->amOnModulePage('User Admin', 'applicationFormSettings.php');
 
+$newApplicationSettings = ['publicApplications' => 'Y'];
 $I->selectOption('publicApplications', 'Y');
 $I->submitForm('#content form', [], 'Submit');
 $I->see('Your request was completed successfully.', '.success');
