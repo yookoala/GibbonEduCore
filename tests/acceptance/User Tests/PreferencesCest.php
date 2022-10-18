@@ -75,7 +75,7 @@ class PreferencesCest
         $I->seeSuccessMessage();
 
         // Logout
-        $I->click('Logout', 'a');
+        $I->logout();
         $I->see('Login');
 
         // Try new password
