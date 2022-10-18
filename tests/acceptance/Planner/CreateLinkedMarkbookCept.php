@@ -34,9 +34,9 @@ $I->selectFromDropdown('type', 2);
 $I->seeInField('date', $date);
 $I->scrollTo('input[name=attainment]');
 $I->selectOption('input[name=attainment]', 'Y');
-$I->selectOption('effort', 'N');
-$I->selectOption('viewableStudents', 'N');
-$I->selectOption('viewableParents', 'N');
+$I->selectOption('input[name=effort]', 'N');
+$I->selectOption('select[name=viewableStudents]', 'N');
+$I->selectOption('select[name=viewableParents]', 'N');
 $I->click('Submit');
 
 // Verify Column ------------------------------------------------
@@ -52,8 +52,8 @@ $I->seeInField('name', 'Testing Markbook');
 $I->seeInField('description', 'Linked to Planner Lesson');
 $I->seeInField('input[name=attainment]', 'Y');
 $I->seeInField('input[name=effort]', 'N');
-$I->seeInField('viewableStudents', 'N');
-$I->seeInField('viewableParents', 'N');
+$I->seeInField('select[name=viewableStudents]', 'N');
+$I->seeInField('select[name=viewableParents]', 'N');
 
 // Delete Markbook -----------------------------------------------
 
