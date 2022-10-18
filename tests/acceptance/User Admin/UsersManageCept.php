@@ -174,6 +174,7 @@ $formValues = array(
     'vehicleRegistration'       => '4321',
 );
 
+$I->checkOption('input[name=showAddresses]');
 $I->submitForm('#content form', $formValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 
