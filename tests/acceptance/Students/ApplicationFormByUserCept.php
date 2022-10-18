@@ -166,6 +166,8 @@ $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
 // Check the agreement
 $I->scrollTo('input[name=agreement]');
 $I->checkOption('agreement');
+$I->scrollTo('input[name=payment]');
+$I->selectOption('input[name=payment]', 'Family');
 
 $I->scrollTo('input[name=skipEmailNotification]');
 $I->submitForm('#content form', $formValues, 'Submit');
