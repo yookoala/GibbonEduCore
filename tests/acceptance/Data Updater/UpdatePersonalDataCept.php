@@ -131,6 +131,7 @@ $I->seeSuccessMessage();
 // Restore Original Settings -----------------------------------
 
 $I->amOnModulePage('User Admin', 'userSettings.php');
+$I->selectOption('select[name=privacy]', 'Y');
 $I->submitForm('#content form', $originalUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalUserSettings);
