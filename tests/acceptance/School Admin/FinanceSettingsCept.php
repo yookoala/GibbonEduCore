@@ -45,6 +45,6 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 // Restore Original Settings -----------------------------------
 
-$I->submitForm('#content form', $originalFormValues, 'Submit');
+$I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
