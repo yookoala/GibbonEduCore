@@ -132,12 +132,12 @@ $I->seeSuccessMessage();
 
 $I->amOnModulePage('User Admin', 'userSettings.php');
 $I->selectOption('select[name=privacy]', 'Y');
-$I->submitForm('#content form', $originalUserSettings, 'Submit');
+$I->submitFormRestore('#content form', $newUserSettings, $originalUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalUserSettings);
 
 $I->amOnModulePage('User Admin', 'studentsSettings.php');
-$I->submitForm('#content form', $originalStudentsSettings, 'Submit');
+$I->submitFormRestore('#content form', $newStudentsSettings, $originalStudentsSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalStudentsSettings);
 
