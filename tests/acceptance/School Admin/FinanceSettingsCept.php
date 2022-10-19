@@ -45,6 +45,7 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 // Restore Original Settings -----------------------------------
 
+$I->replaceInputField('input[name=financeOnlinePaymentThreshold]');
 $I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
