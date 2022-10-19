@@ -32,7 +32,7 @@ $newFormValues = array(
     'allowExpenseAdd'               => 'Y',
 );
 
-$I->selectFromDropdown('financeOnlinePaymentEnabled', 'Y');
+$I->select('select[name=financeOnlinePaymentEnabled]', 'Y');
 $I->selectFromDropdown('purchasingOfficer', 2);
 $I->selectFromDropdown('reimbursementOfficer', 2);
 
