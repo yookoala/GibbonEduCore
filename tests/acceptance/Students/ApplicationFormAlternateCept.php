@@ -119,6 +119,10 @@ $formValues = array(
 $I->selectFromDropdown('gibbonSchoolYearIDEntry', 2);
 $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
 
+// Enable medical information field
+$I->scrollTo('select[name=medical]');
+$I->selectOption('select[name=medical]', 'Y');
+
 // No second parent
 $I->scrollTo('input[name=secondParent][value=No]');
 $I->checkOption('input[name=secondParent][value=No]');
