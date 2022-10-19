@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('update Finance Settings');
 $I->loginAsAdmin();
@@ -32,6 +32,7 @@ $newFormValues = array(
     'allowExpenseAdd'               => 'Y',
 );
 
+$I->selectFromDropdown('financeOnlinePaymentEnabled', 'Y');
 $I->selectFromDropdown('purchasingOfficer', 2);
 $I->selectFromDropdown('reimbursementOfficer', 2);
 
