@@ -138,6 +138,9 @@ $I->selectOption('select[name=sen]', 'Y');
 $I->scrollTo('select[name=medical]');
 $I->selectOption('select[name=medical]', 'Y');
 
+// Enable payment related company fields
+$I->selectOption('input[name=payment]', 'Company');
+
 // Enable "Tell Us More" field for "How Did You Hear About Us?"
 $I->scrollTo('select[name=howDidYouHear]');
 $I->selectOption('select[name=howDidYouHear]', 'Others');
