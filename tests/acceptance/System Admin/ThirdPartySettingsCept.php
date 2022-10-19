@@ -31,7 +31,7 @@ $newFormValues = array(
 );
 
 $I->selectOption('select[name=enablePayments]', 'Y');
-$I->selectOption('select[name=paymentGateway]', 'Paypal');
+$I->selectOption('select[name=paymentGateway]', 'PayPal');
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
