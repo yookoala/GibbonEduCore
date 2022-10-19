@@ -139,8 +139,8 @@ $I->scrollTo('select[name=medical]');
 $I->selectOption('select[name=medical]', 'Y');
 
 // Enable "Tell Us More" field for "How Did You Hear About Us?"
-$I->scrollTo('select[howDidYouHear]');
-$I->selectOption('select[howDidYouHear]', 'Others');
+$I->scrollTo('select[name=howDidYouHear]');
+$I->selectOption('select[name=howDidYouHear]', 'Others');
 
 // Check the agreement
 $I->scrollTo('input[name=agreement]');
