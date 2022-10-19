@@ -130,6 +130,18 @@ $formValues = array(
 $I->selectFromDropdown('gibbonSchoolYearIDEntry', 2);
 $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
 
+// Enable SEN details field
+$I->scrollTo('select[name=sen]');
+$I->selectOption('select[name=sen]', 'Y');
+
+// Enable medical information field
+$I->scrollTo('select[name=medical]');
+$I->selectOption('select[name=medical]', 'Y');
+
+// Enable "Tell Us More" field for "How Did You Hear About Us?"
+$I->scrollTo('select[howDidYouHear]');
+$I->selectOption('select[howDidYouHear]', 'Others');
+
 // Check the agreement
 $I->scrollTo('input[name=agreement]');
 $I->checkOption('agreement');
