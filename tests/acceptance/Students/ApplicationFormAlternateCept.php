@@ -115,6 +115,9 @@ $formValues = array(
     'gibbonFamily'                => 'FALSE',
 );
 
+// Convert hidden field to normal text field
+$I->replaceInputField('input[name=gibbonFamily]');
+
 // Maually select some items (relative values)
 $I->selectFromDropdown('gibbonSchoolYearIDEntry', 2);
 $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
