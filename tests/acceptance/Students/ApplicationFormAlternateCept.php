@@ -118,6 +118,9 @@ $formValues = array(
 // Convert hidden field to normal text field
 $I->replaceInputField('input[name=gibbonFamily]');
 
+// Check this to avoid filling in second parent information.
+$I->checkOption('input[name=secondParent]');
+
 // Maually select some items (relative values)
 $I->selectFromDropdown('gibbonSchoolYearIDEntry', 2);
 $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
