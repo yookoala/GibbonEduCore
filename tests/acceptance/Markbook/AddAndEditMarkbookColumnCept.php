@@ -31,7 +31,9 @@ $I->click('Go', '#searchForm');
 
 // Add Column ------------------------------------------------
 
-$I->clickNavigation('Add');
+$I->seeLink('Add');
+$I->click('Add');
+//$I->clickNavigation('Add');
 $I->seeBreadcrumb('Add Column');
 
 $formValues = array(

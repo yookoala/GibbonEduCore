@@ -5,7 +5,9 @@ $I->loginAsAdmin();
 $I->amOnModulePage('Finance', 'billingSchedule_manage.php');
 
 // Add ------------------------------------------------
-$I->clickNavigation('Add');
+$I->seeLink('Add');
+$I->click('Add');
+//$I->clickNavigation('Add');
 $I->seeBreadcrumb('Add Entry');
 
 $addFormValues = array(
