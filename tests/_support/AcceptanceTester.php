@@ -254,6 +254,27 @@ JAVASCRIPT,
     }
 
     /**
+     * Filter only the values of $originalFormValues that are also
+     * in $newFormValues.
+     *
+     * Compares the keys of $newFormValues with $originalFormValues.
+     * Return an array of values from $originalFormValues where the key
+     * exists in $newFormValues.
+     *
+     * @param array $newFormValues
+     * @param array $originalFormValues
+     *
+     * @return array
+     */
+    public function getChangedValues(array $newFormValues, array $originalFormValues)
+    {
+        $changedFields = array_keys($newFormValues);
+        return array_filter($originalFormValues, function ($key) use ($changedFields) {
+            return in_array($key, $changedFields);
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
      * Submit a form to restore the value changed by previous submission.
      *
      * @param string|array      $selector            Selector of the form.
@@ -264,12 +285,13 @@ JAVASCRIPT,
      *
      * @return mixed
      */
-    public function submitFormRestore($selector, $newFormValues, $originalFormValues, $button = null)
+    public function submitFormRestore(
+        $selector,
+        array $newFormValues,
+        array $originalFormValues,
+        $button = null
+    )
     {
-        $changedFields = array_keys($newFormValues);
-        $changedOriginalValues = array_filter($originalFormValues, function ($key) use ($changedFields) {
-            return in_array($key, $changedFields);
-        }, ARRAY_FILTER_USE_KEY);
-        return $this->submitForm($selector, $changedOriginalValues, $button);
+        return $this->submitForm($selector, $this->getChangedValues($newFormValues, $originalFormValues), $button);
     }
 }
