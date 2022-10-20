@@ -21,6 +21,7 @@ $addFormValues = array(
     'map'                => 'Y',
 );
 
+$I->replaceInputField('textarea[name=description]');
 $I->selectFromDropdown('gibbonDepartmentID', 2);
 
 $I->submitForm('#content form', $addFormValues, 'Submit');
