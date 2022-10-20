@@ -7,7 +7,9 @@ $I->amOnModulePage('Timetable Admin', 'course_manage.php');
 // Add ------------------------------------------------
 $I->seeElement('.linkTop');
 $I->seeElement(['css' => '.linkTop a img'], ['title' => 'Add']);
-$I->click('a img[title=Add]', '.linkTop');
+$I->seeLink('Add');
+$I->click('Add');
+//$I->click('a img[title=Add]', '.linkTop');
 //$I->clickNavigation('Add', true);
 $I->seeBreadcrumb('Add Course');
 
