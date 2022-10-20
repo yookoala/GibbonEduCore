@@ -178,12 +178,14 @@ $formValues = array(
 $I->selectFromDropdown('gibbonSchoolYearIDEntry', 2);
 $I->selectFromDropdown('gibbonYearGroupIDEntry', 2);
 
-// Check the agreement
-$I->checkOption('agreement');
-
 // Attach required documents
+$I->scrollTo('input[name=file1]');
 $I->attachFile('file0', 'attachment.jpg');
 $I->attachFile('file1', 'attachment.txt');
+
+// Check the agreement
+$I->scrollTo('input[name=agreement]');
+$I->checkOption('agreement');
 
 $I->submitForm('#content form', $formValues, 'Submit');
 
