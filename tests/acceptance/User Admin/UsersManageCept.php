@@ -180,6 +180,7 @@ $formValues = array(
 
 $I->fillField('input[name=dateStart]', $formValues['dateStart']);
 $I->fillField('input[name=dateEnd]', $formValues['dateEnd']);
+$I->getModule('WebDriver')->_saveScreenshot(codecept_output_dir().'/UsersManageCept-debug.png');
 $I->checkOption('input[name=showAddresses]');
 $I->submitForm('#content form', $formValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
