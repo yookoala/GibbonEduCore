@@ -9,7 +9,6 @@ $I->seeElement('.linkTop');
 $I->seeElement(['css' => '.linkTop a img'], ['title' => 'Add']);
 $I->seeLink('Add');
 $I->click('Add');
-//$I->click('a img[title=Add]', '.linkTop');
 //$I->clickNavigation('Add', true);
 $I->seeBreadcrumb('Add Course');
 
@@ -44,12 +43,15 @@ $editFormValues = array(
     'map'                => 'N',
 );
 
+$I->replaceInputField('textarea[name=description]');
 $I->selectFromDropdown('gibbonDepartmentID', 3);
 
 $I->submitForm('#content form', $editFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 
 // Add Class ---------------------------------------------
+$I->seeLink('Add');
+$I->click('Add');
 $I->clickNavigation('Add');
 $I->seeBreadcrumb('Add Class');
 
