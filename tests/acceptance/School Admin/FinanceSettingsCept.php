@@ -47,7 +47,8 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 $I->selectOption('select[name=financeOnlinePaymentEnabled]', 'Y');
 $I->replaceInputField('input[name=financeOnlinePaymentThreshold]');
-codecept_debug($I->getChangedValues($newFormValues, $originalFormValues));
+//codecept_debug($I->getChangedValues($newFormValues, $originalFormValues));
+unset($newFormValues['financeOnlinePaymentThreshold']);
 $I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);

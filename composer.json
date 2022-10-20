@@ -16,7 +16,7 @@
         ],
         "test:codeception": [
             "cd tests && codecept run install",
-            "cd tests && codecept run acceptance --debug"
+            "cd tests && codecept run acceptance"
         ],
         "test:codeceptiondebug": [
             "cd tests && codecept run install --debug",
