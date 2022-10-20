@@ -52,7 +52,7 @@ $I->see('Your request was completed successfully.', '.success');
 // Add Class ---------------------------------------------
 $I->seeLink('Add');
 $I->click('Add');
-$I->clickNavigation('Add');
+//$I->clickNavigation('Add');
 $I->seeBreadcrumb('Add Class');
 
 $addFormValues = array(
