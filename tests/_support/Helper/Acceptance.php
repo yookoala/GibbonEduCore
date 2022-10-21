@@ -82,4 +82,17 @@ class Acceptance extends \Codeception\Module
         $value = $module->grabValueFrom($selector);
         $this->assertFalse(empty($value));
     }
+
+    /**
+     * Save a screenshot of the current browser state.
+     *
+     * @param string $filename
+     * @return void
+     */
+    public function saveScreenshot(string $filename)
+    {
+        /** @var \Codeception\Module\WebDriver */
+        $module = $this->getModule('WebDriver');
+        $module->_saveScreenshot(codecept_output_dir().'/'.$filename);
+    }
 }
