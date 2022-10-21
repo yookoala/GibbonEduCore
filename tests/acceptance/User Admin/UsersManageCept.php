@@ -182,6 +182,7 @@ $I->fillField('input[name=dateStart]', $formValues['dateStart']);
 $I->fillField('input[name=dateEnd]', $formValues['dateEnd']);
 $I->saveScreenshot('UsersManageCept-debug.png');
 $I->checkOption('input[name=showAddresses]');
+unset($formValues['dateEnd']);
 $I->submitForm('#content form', $formValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 
