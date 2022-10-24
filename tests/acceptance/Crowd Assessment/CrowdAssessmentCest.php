@@ -54,6 +54,11 @@ class CrowdAssessmentCest
 
         // Submit the form.
         $I->submitForm('#action', [], 'Submit');
+
+        // Check result.
         $I->expectTo('See a lesson plan with the information I just filled in.');
+        $I->see('Your request was completed successfully. You can edit your newly created record here.', '.success');
+        $I->seeLink('here');
+        $I->click(['link' => 'here'], '.success');
     }
 }
