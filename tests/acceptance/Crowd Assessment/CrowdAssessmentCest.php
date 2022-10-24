@@ -40,19 +40,20 @@ class CrowdAssessmentCest
 
         // Enable homework with due date in the future.
         // Set homework deadline to 2 weeks from now.
-        $I->selectOption('input[name=homework]', 'Yes');
+        $I->selectOption('input[name=homework]', 'Y');
         $I->fillField('input[name=homeworkDueDate]', (new \DateTime('2 weeks'))->format('d/m/Y'));
         $I->fillField('input[name=homeworkDueDateTime]', '08:00');
 
         // Enable online submission.
         // Set submission open date in the past.
-        $I->selectOption('input[name=homeworkSubmission]', 'Yes');
+        $I->selectOption('input[name=homeworkSubmission]', 'Y');
         $I->fillField('input[name=homeworkSubmissionDateOpen]', (new \DateTime('yesterday'))->format('d/m/Y'));
 
         // Enable crowd assessment.
-        $I->selectOption('input[name=homeworkCrowdAssess]', 'Yes');
+        $I->selectOption('input[name=homeworkCrowdAssess]', 'Y');
 
         // Submit the form.
         $I->submitForm('#action', [], 'Submit');
+        $I->expectTo('See a lesson plan with the information I just filled in.');
     }
 }
