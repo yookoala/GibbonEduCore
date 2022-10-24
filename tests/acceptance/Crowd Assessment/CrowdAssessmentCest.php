@@ -31,7 +31,7 @@ class CrowdAssessmentCest
         $I->click('Add');
 
         // Create a lesson plan for a past lesson.
-        $I->selectOption('input[name=gibbonCourseClassID]', 'AR07.1');
+        $I->selectOption('select[name=gibbonCourseClassID]', 'AR07.1');
         $I->fillField('input[name=name]', 'Testing Lesson Last Week'); // Lesson Name
         $I->fillField('textarea[name=homeworkDetails]', 'This is a homework created for testing');
         $I->fillField('input[name=date]', (new \DateTime('last monday'))->format('d/m/Y'));
