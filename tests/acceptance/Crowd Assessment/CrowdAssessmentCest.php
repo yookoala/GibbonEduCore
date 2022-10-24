@@ -6,8 +6,14 @@ class CrowdAssessmentCest
     {
     }
 
-    // tests
-    public function tryToTest(AcceptanceTester $I)
+    /**
+     * Try to create homework for assessment.
+     *
+     * @param AcceptanceTester $I
+     *
+     * @return void
+     */
+    public function tryToCreateHomeworkForAssessment(AcceptanceTester $I)
     {
         /**
          * If you go into the Planner,
@@ -60,5 +66,20 @@ class CrowdAssessmentCest
         $I->see('Your request was completed successfully. You can edit your newly created record here.', '.success');
         $I->seeLink('here');
         $I->click(['link' => 'here'], '.success');
+        // TODO: add field value tests.
+        // TODO: start crowd assessment.
+    }
+
+    /**
+     * Do crowd assessment as a student.
+     *
+     * @depends tryToCreateHomeworkForAssessment
+     * @param AcceptanceTester $I
+     *
+     * @return void
+     */
+    public function tryToDoCrowdAssessment(AcceptanceTester $I)
+    {
+
     }
 }
