@@ -536,6 +536,28 @@ function getEditor($guid, $tinymceInit = true, $id = '', $value = '', $rows = 10
     return $editor->getOutput();
 }
 
+/**
+ * Get year groups information in an array.
+ *
+ * The array values are sequence of alternated IDs and group names:
+ *  - gibbonYearGroupID-1
+ *  - name-1
+ *  - gibbonYearGroupID-2
+ *  - name-2
+ *  - ...
+ *  - gibbonYearGroupID-n
+ *  - name-n
+ *
+ * *Deprecated*. Use \Gibbon\Domain\School\YearGroupGateway::getYearGroups() instead.
+ *
+ * @deprecated v25
+ * @version v12
+ * @since   v12
+ *
+ * @param \PDO $connection2
+ *
+ * @return array
+ */
 function getYearGroups($connection2)
 {
     $output = false;

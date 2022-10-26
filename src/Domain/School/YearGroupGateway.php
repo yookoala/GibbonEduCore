@@ -62,6 +62,28 @@ class YearGroupGateway extends QueryableGateway
     }
 
     /**
+     * Get all year groups from database into a key-value array.
+     *
+     * Keys are the gibbonYearGroupID. Values are the name of year groups.
+     * The values are ordered by the sequenceNumber.
+     *
+     * @version v25
+     * @since   v25
+     *
+     * @return array
+     */
+    public function getYearGroups(): array
+    {
+        $sql = 'SELECT `gibbonYearGroupID`, `name` FROM gibbonYearGroup ORDER BY sequenceNumber';
+        $result = $this->db()->select($sql);
+        $yearGroups = [];
+        while ($row = $result->fetch()) {
+            $yearGroups[$row['gibbonYearGroupID']] = $row['name'];
+        }
+        return $yearGroups;
+    }
+
+    /**
      * Get student count by year group.
      *
      * @version v16
