@@ -23,6 +23,11 @@ class AcceptanceTester extends \Codeception\Actor
 
     protected $breadcrumbEnd = '.trailEnd';
 
+    protected $defaultWindowSize = [
+        'width' => 1920,
+        'height' => 1080,
+    ];
+
    /**
     * Define custom actions here
     */
@@ -223,6 +228,98 @@ JAVASCRIPT,
         return $this->executeJS(<<<JAVASCRIPT
 return document.querySelector('.box-cookie-consent') !== null;
 JAVASCRIPT);
+    }
+
+    /**
+     * Get the current document size.
+     *
+     * @return object
+     */
+    public function getDocumentSize()
+    {
+        return $this->executeJS(<<<JAVASCRIPT
+const body = document.body;
+const html = document.documentElement;
+
+const height = Math.max(
+    body.scrollHeight,
+    body.offsetHeight,
+    html.clientHeight,
+    html.scrollHeight,
+    html.offsetHeight
+);
+const width = Math.max(
+    body.scrollWidth,
+    body.offsetWidth,
+    html.clientWidth,
+    html.scrollWidth,
+    html.offsetWidth
+);
+
+return { width, height };
+JAVASCRIPT);
+    }
+
+    /**
+     * Get the current window size.
+     *
+     * @return object
+     */
+    public function getWindowSize()
+    {
+        return $this->executeJS(<<<JAVASCRIPT
+return {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    viewportWidth: document.documentElement.clientWidth,
+    viewportHeight: document.documentElement.clientHeight,
+};
+JAVASCRIPT);
+    }
+
+    /**
+     * Resize the window to the document size.
+     *
+     * @return void
+     */
+    public function resizeWindowToDocument()
+    {
+        $docSize = $this->getDocumentSize();
+        $originalWindowSize = $this->getWindowSize();
+        $heightDiff = $docSize['height'] - $originalWindowSize['viewportHeight'];
+        if ($heightDiff > 0) {
+            // resize window to fit the whole document height.
+            $this->resizeWindow(
+                $originalWindowSize['width'],
+                $originalWindowSize['height'] + $heightDiff
+            );
+        }
+    }
+
+    /**
+     * Restore the window size to default.
+     *
+     * @return void
+     */
+    public function restoreWindowSize()
+    {
+        $this->resizeWindow(
+            $this->defaultWindowSize['width'],
+            $this->defaultWindowSize['height']
+        );
+    }
+
+    /**
+     * Take a screenshot of the whole document.
+     *
+     * @param string $filename
+     * @return void
+     */
+    public function saveFullsizeScreenshot(string $filename)
+    {
+        $this->resizeWindowToDocument();
+        $this->saveScreenshot($filename);
+        $this->restoreWindowSize();
     }
 
     /**
