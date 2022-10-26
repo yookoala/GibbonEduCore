@@ -42,10 +42,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Rubrics/rubrics.php') == f
 
         $search = isset($_REQUEST['search'])? $_REQUEST['search'] : '';
         $department = isset($_POST['filter2'])? $_POST['filter2'] : '';
-        $yearGroups = getYearGroups($connection2);
 
+        /** @var YearGroupGateway */
+        $yearGroupGateway = $container->get(YearGroupGateway::class);
         $rubricGateway = $container->get(RubricGateway::class);
         $departmentGateway = $container->get(DepartmentGateway::class);
+
+        $yearGroups = $yearGroupGateway->getYearGroups();
 
         // QUERY
         $criteria = $rubricGateway->newQueryCriteria(true)
@@ -112,7 +115,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Rubrics/rubrics.php') == f
             ->width('35%');
         $table->addColumn('yearGroups', __('Year Groups'))
             ->format(function($activity) use ($yearGroups) {
-                return ($activity['yearGroupCount'] >= count($yearGroups)/2)? '<i>'.__('All').'</i>' : $activity['yearGroups'];
+                return ($activity['yearGroupCount'] >= count($yearGroups))? '<i>'.__('All').'</i>' : $activity['yearGroups'];
             });
         $table->addColumn('active', __('Active'))->format(Format::using('yesNo', 'active'));
 

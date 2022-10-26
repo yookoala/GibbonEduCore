@@ -21,6 +21,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
 use Gibbon\Domain\Rubrics\RubricGateway;
+use Gibbon\Domain\School\YearGroupGateway;
 use Gibbon\Domain\Students\StudentGateway;
 
 if (isActionAccessible($guid, $connection2, '/modules/Rubrics/rubrics_view.php') == false) {
@@ -35,9 +36,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Rubrics/rubrics_view.php')
 
     $search = isset($_REQUEST['search'])? $_REQUEST['search'] : '';
     $department = isset($_POST['filter2'])? $_POST['filter2'] : '';
-    $yearGroups = getYearGroups($connection2);
 
+    /** @var YearGroupGateway */
+    $yearGroupGateway = $container->get(YearGroupGateway::class);
     $rubricGateway = $container->get(RubricGateway::class);
+
+    $yearGroups = $yearGroupGateway->getYearGroups();
 
     // QUERY
     $criteria = $rubricGateway->newQueryCriteria(true)
@@ -104,7 +108,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Rubrics/rubrics_view.php')
         ->width('35%');
     $table->addColumn('yearGroups', __('Year Groups'))
         ->format(function($activity) use ($yearGroups) {
-            return ($activity['yearGroupCount'] >= count($yearGroups)/2)? '<i>'.__('All').'</i>' : $activity['yearGroups'];
+            return ($activity['yearGroupCount'] >= count($yearGroups))? '<i>'.__('All').'</i>' : $activity['yearGroups'];
         });
 
     // ACTIONS

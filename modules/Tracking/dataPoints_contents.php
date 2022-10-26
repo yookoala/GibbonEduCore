@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Domain\School\YearGroupGateway;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Services\Format;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -66,9 +67,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Tracking/dataPoints.php') 
     if (empty($externalAssessmentDataPoints) and empty($internalAssessmentDataPoints)) { //Seems like things are not configured, so show error
         $excel->setActiveSheetIndex(0)->setCellValue('A1', __('An error has occurred.'));
     } else { //Seems like things are configured, so proceed
+
+        /** @var YearGroupGateway */
+        $yearGroupGateway = $container->get(YearGroupGateway::class);
+
         //Get year groups and create sheets
-        $yearGroups = getYearGroups($connection2);
-        if ($yearGroups == '') {
+        $yearGroups = $yearGroupGateway->getYearGroups();
+        if (empty($yearGroups)) {
             $excel->setActiveSheetIndex(0)->setCellValue('A1', __('An error has occurred.'));
         } else {
             //GET ALL INTERNAL ASSESSMENT RESULTS FOR ALL STUDENTS, AND CACHE THEM FOR USE LATER
@@ -100,14 +105,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Tracking/dataPoints.php') 
                 }
             }
 
-            for ($i = 0; $i < count($yearGroups); $i = $i + 2) {
+            foreach (array_keys($yearGroups) as $i => $yearGroupID) {
+                $yearGroupName = $yearGroups[$yearGroupID];
+
                 //SET UP SHEET WITH HEADERS, STUDENT INFORMATION ETC
                 $activeRow = 4;
                 if ($i > 0) {
                     $excel->createSheet(); //Create sheet
                 }
                 $excel->setActiveSheetIndex($i / 2);
-                $excel->getActiveSheet()->setTitle(__($yearGroups[($i + 1)])); //Rename sheet
+                $excel->getActiveSheet()->setTitle(__($yearGroupName)); //Rename sheet
                 $excel->getActiveSheet()
                     ->setCellValue('A3', __('Username'))
                     ->setCellValue('B3', __('Surname'))
@@ -137,7 +144,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Tracking/dataPoints.php') 
                         if (empty($point['gibbonYearGroupIDList'])) continue;
 
                         if ($point['gibbonExternalAssessmentID'] == $row['gibbonExternalAssessmentID'] and $point['category'] == $row['category']) {
-                            if (!(strpos($point['gibbonYearGroupIDList'], $yearGroups[$i]) === false)) {
+                            if (!(strpos($point['gibbonYearGroupIDList'], $yearGroupID) === false)) {
                                 //Output data
                                 $excel->getActiveSheet()->setCellValue(num2alpha($activeColumn).'1', $row['assessment']);
                                 $excel->getActiveSheet()->setCellValue(num2alpha($activeColumn).'2', substr($row['category'], (strpos($row['category'], '_') + 1)));
@@ -182,10 +189,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Tracking/dataPoints.php') 
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 while ($row = $result->fetch()) {
-                    $yearGroupIndex = (count($yearGroups)-($countYear*2)) - (count($yearGroups)-2-$i);
-                    if ($yearGroupIndex >= 0 && $yearGroups[$yearGroupIndex] != '') {
+                    $yearGroupIndex = $countYear - $i - 1;
+                    $yearGroupIndexYearID = ($yearGroupIndex >= 0)
+                        ? (array_keys($yearGroups)[$yearGroupIndex] ?? false)
+                        : false;
+                    if ($yearGroupIndexYearID) {
 
-                        $data2['gibbonYearGroupID'.$countYear] = $yearGroups[$yearGroupIndex];
+                        $data2['gibbonYearGroupID'.$countYear] = $yearGroupIndexYearID;
                         $data2['gibbonSchoolYearID'.$countYear] = $row['gibbonSchoolYearID'];
                         $sql2 .= "(SELECT DISTINCT CONCAT(gibbonYearGroup.gibbonYearGroupID) AS gibbonYearGroupID, gibbonYearGroup.name AS yearGroup, sequenceNumber, gibbonCourse.name AS course, gibbonInternalAssessmentColumn.name AS assessment, gibbonInternalAssessmentColumn.type
                             FROM gibbonYearGroup
@@ -249,7 +259,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Tracking/dataPoints.php') 
 
                 //GET STUDENTS AND LIST THEIR DETAILS
                 try {
-                    $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'gibbonYearGroupID' => $yearGroups[$i]);
+                    $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'), 'gibbonYearGroupID' => $yearGroupID);
                     $sql = "SELECT gibbonPerson.gibbonPersonID, surname, preferredName, username, dob, nameShort AS formGroup, status FROM gibbonPerson JOIN gibbonStudentEnrolment ON (gibbonStudentEnrolment.gibbonPersonID = gibbonPerson.gibbonPersonID) JOIN gibbonFormGroup ON (gibbonStudentEnrolment.gibbonFormGroupID = gibbonFormGroup.gibbonFormGroupID) WHERE (status='Full' OR status='Left') AND gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND gibbonYearGroupID=:gibbonYearGroupID ORDER BY status, surname, preferredName";
                     $result = $connection2->prepare($sql);
                     $result->execute($data);

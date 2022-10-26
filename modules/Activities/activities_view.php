@@ -23,6 +23,7 @@ use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
 use Gibbon\Domain\Activities\ActivityGateway;
 use Gibbon\Domain\School\SchoolYearTermGateway;
+use Gibbon\Domain\School\YearGroupGateway;
 
 //Module includes
 require_once __DIR__ . '/moduleFunctions.php';
@@ -216,7 +217,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Activities/activities_view
                  */
                 $schoolYearTermGateway = $container->get(SchoolYearTermGateway::class);
                 $schoolTerms = $schoolYearTermGateway->selectTermsBySchoolYear((int) $session->get('gibbonSchoolYearID'))->fetchKeyPair();
-                $yearGroups = getYearGroups($connection2);
+                /** @var YearGroupGateway */
+                $yearGroupGateway = $container->get(YearGroupGateway::class);
+                $yearGroups = $yearGroupGateway->getYearGroups();
 
                 // Toggle Features
                 $canAccessRegistration = !empty($gibbonPersonID) && (($roleCategory == 'Student' && $highestAction == 'View Activities_studentRegister') || ($roleCategory == 'Parent' && $highestAction == 'View Activities_studentRegisterByParent' && $countChild > 0));
@@ -348,7 +351,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Activities/activities_view
                 $table->addColumn('yearGroups', __('Years'))
                     ->width('15%')
                     ->format(function ($activity) use ($yearGroups) {
-                        return ($activity['yearGroupCount'] >= count($yearGroups)/2)? '<i>'.__('All').'</i>' : $activity['yearGroups'];
+                        return ($activity['yearGroupCount'] >= count($yearGroups))? '<i>'.__('All').'</i>' : $activity['yearGroups'];
                     });
 
                 if ($paymentOn) {

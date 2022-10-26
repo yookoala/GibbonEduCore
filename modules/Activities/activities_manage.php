@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Domain\Activities\ActivityGateway;
 use Gibbon\Domain\School\SchoolYearTermGateway;
+use Gibbon\Domain\School\YearGroupGateway;
 use Gibbon\Domain\System\SettingGateway;
 use Gibbon\Forms\Prefab\BulkActionForm;
 use Gibbon\Forms\Form;
@@ -40,6 +41,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Activities/activities_mana
     $settingGateway = $container->get(SettingGateway::class);
     /** @var SchoolYearTermGateway $schoolYearTermGateway */
     $schoolYearTermGateway = $container->get(SchoolYearTermGateway::class);
+    /** @var YearGroupGateway */
+    $yearGroupGateway = $container->get(YearGroupGateway::class);
 
     $search = $_GET['search'] ?? '';
     $gibbonSchoolYearTermID = $_GET['gibbonSchoolYearTermID'] ?? '';
@@ -47,7 +50,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Activities/activities_mana
     $dateType = $settingGateway->getSettingByScope('Activities', 'dateType');
     $enrolmentType = $settingGateway->getSettingByScope('Activities', 'enrolmentType');
     $schoolTerms = $schoolYearTermGateway->selectTermsBySchoolYear((int) $session->get('gibbonSchoolYearID'))->fetchKeyPair();
-    $yearGroups = getYearGroups($connection2);
+    $yearGroups = $yearGroupGateway->getYearGroups();
 
     $activityGateway = $container->get(ActivityGateway::class);
 
@@ -165,7 +168,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Activities/activities_mana
 
     $table->addColumn('yearGroups', __('Years'))
         ->format(function($activity) use ($yearGroups) {
-            return ($activity['yearGroupCount'] >= count($yearGroups)/2)? '<i>'.__('All').'</i>' : $activity['yearGroups'];
+            return ($activity['yearGroupCount'] >= count($yearGroups))? '<i>'.__('All').'</i>' : $activity['yearGroups'];
         });
 
     $table->addColumn('date', $dateType != 'Date'? __('Term') : __('Dates'))

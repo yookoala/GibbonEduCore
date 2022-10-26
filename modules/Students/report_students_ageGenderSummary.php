@@ -18,6 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 //Module includes
+
+use Gibbon\Domain\School\YearGroupGateway;
+
 require_once __DIR__ . '/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_ageGenderSummary.php') == false) {
@@ -28,7 +31,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
     $page->breadcrumbs->add(__('Age & Gender Summary'));
 
     //Work out ages in school
-    
+
         $dataList = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
         $sqlList = "SELECT gibbonStudentEnrolment.gibbonYearGroupID, dob, gender FROM gibbonPerson, gibbonStudentEnrolment, gibbonYearGroup WHERE gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID AND gibbonStudentEnrolment.gibbonYearGroupID=gibbonYearGroup.gibbonYearGroupID AND status='FULL' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') AND gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY dob DESC";
         $resultList = $connection2->prepare($sqlList);
@@ -51,9 +54,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
         ++$count;
     }
 
-    $years = getYearGroups($connection2);
+    /** @var YearGroupGateway */
+    $yearGroupGateway = $container->get(YearGroupGateway::class);
+    $yearGroups = $yearGroupGateway->getYearGroups();
 
-    if (count($ages) < 1 or count($years) < 1) {
+    if (count($ages) < 1 or empty($yearGroups)) {
         echo "<div class='error'>";
         echo __('There are no records to display.');
         echo '</div>';
@@ -65,9 +70,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
         echo __('Age').'<br/>';
         echo "<span style='font-size: 75%; font-style: italic'>".__('As of today').'</span>';
         echo '</th>';
-        for ($i = 1; $i < count($years); $i = $i + 2) {
+        foreach ($yearGroups as $yearGroupName) {
             echo "<th colspan=2 style='text-align: center'>";
-            echo __($years[$i]);
+            echo __($yearGroupName);
             echo '</th>';
         }
         echo "<th colspan=2 style='text-align: center'>";
@@ -76,7 +81,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
         echo '</tr>';
 
         echo "<tr class='head'>";
-        for ($i = 1; $i < count($years); $i = $i + 2) {
+        for ($i = 1; $i < count($yearGroups); $i++) {
             echo "<th style='text-align: center; height: 70px; max-width:30px!important'>";
             echo "<div style='-webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg); transform: rotate(-90deg);'>";
             echo __('Male');
@@ -115,11 +120,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
             echo '<td>';
             echo "<b>$age</b>";
             echo '</td>';
-            for ($i = 1; $i < count($years); $i = $i + 2) {
+            foreach (array_keys($yearGroups) as $yearGroupID) {
                 echo "<td style='text-align: center'>";
                 $cellCount = 0;
                 foreach ($everything as $thing) {
-                    if ($thing[2] == $years[$i - 1] and $thing[1] == 'M' and floor(($today - strtotime($thing[0])) / 31556926) == $age) {
+                    if ($thing[2] == $yearGroupID and $thing[1] == 'M' and floor(($today - strtotime($thing[0])) / 31556926) == $age) {
                         ++$cellCount;
                     }
                 }
@@ -130,7 +135,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
                 echo "<td style='text-align: center'>";
                 $cellCount = 0;
                 foreach ($everything as $thing) {
-                    if ($thing[2] == $years[$i - 1] and $thing[1] == 'F' and floor(($today - strtotime($thing[0])) / 31556926) == $age) {
+                    if ($thing[2] == $yearGroupID and $thing[1] == 'F' and floor(($today - strtotime($thing[0])) / 31556926) == $age) {
                         ++$cellCount;
                     }
                 }
@@ -167,11 +172,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
         echo '<td rowspan=2>';
         echo '<b>'.__('All Ages').'</b>';
         echo '</td>';
-        for ($i = 1; $i < count($years); $i = $i + 2) {
+        foreach (array_keys($yearGroups) as $yearGroupID) {
             echo "<td style='text-align: center; font-weight: bold'>";
             $cellCount = 0;
             foreach ($everything as $thing) {
-                if ($thing[2] == $years[$i - 1] and $thing[1] == 'M') {
+                if ($thing[2] == $yearGroupID and $thing[1] == 'M') {
                     ++$cellCount;
                 }
             }
@@ -182,7 +187,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
             echo "<td style='text-align: center; font-weight: bold'>";
             $cellCount = 0;
             foreach ($everything as $thing) {
-                if ($thing[2] == $years[$i - 1] and $thing[1] == 'F') {
+                if ($thing[2] == $yearGroupID and $thing[1] == 'F') {
                     ++$cellCount;
                 }
             }
@@ -215,11 +220,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Students/report_students_a
         echo '</td>';
         echo '</tr>';
         echo "<tr style='background-color: #FFD2A9'>";
-        for ($i = 1; $i < count($years); $i = $i + 2) {
+        foreach (array_keys($yearGroups) as $yearGroupID) {
             echo "<td colspan=2 style='text-align: center; font-weight: bold'>";
             $cellCount = 0;
             foreach ($everything as $thing) {
-                if ($thing[2] == $years[$i - 1]) {
+                if ($thing[2] == $yearGroupID) {
                     ++$cellCount;
                 }
             }
