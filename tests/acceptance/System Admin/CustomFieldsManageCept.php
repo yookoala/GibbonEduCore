@@ -55,6 +55,7 @@ $editFormValues = array(
     'activeApplicationForm' => '0',
 );
 
+$I->replaceInputField('input[name=context]');
 $I->submitForm('#content form', $editFormValues, 'Submit');
 $I->seeSuccessMessage();
 
