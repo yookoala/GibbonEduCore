@@ -44,7 +44,7 @@ $I->seeCheckboxIsChecked('input[type=checkbox][value=activePersonStudent]');
 $I->seeCheckboxIsChecked('input[type=checkbox][value=activePersonOther]');
 
 $editFormValues = array(
-    'context'               => 'User',
+    //'context'               => 'User', # The default context already.
     'name'                  => 'Test Field!',
     'active'                => 'N',
     'description'           => 'For Testing?',
@@ -55,7 +55,7 @@ $editFormValues = array(
     'activeApplicationForm' => '0',
 );
 
-$I->replaceInputField('input[name=context]');
+//$I->replaceInputField('input[name=context]');
 $I->submitForm('#content form', $editFormValues, 'Submit');
 $I->seeSuccessMessage();
 
