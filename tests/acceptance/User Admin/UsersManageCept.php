@@ -179,12 +179,11 @@ $formValues = array(
 );
 
 // Select status as 'Left' will automatically trigger pop up that need to be dealt with.
-$I->fillField('select[name=status]', 'Left');
+$I->selectOption('select[name=status]', 'Left');
 $I->seeInPopup('As you have marked this person as left, please consider setting the End Date field');
 $I->acceptPopup();
 
-$I->fillField('input[name=dateStart]', $formValues['dateStart']);
-$I->fillField('input[name=dateEnd]', $formValues['dateEnd']);
+// Make sure the address fields are shown.
 $I->checkOption('input[name=showAddresses]');
 
 $I->saveFullsizeScreenshot('UsersManageCept-debug.png');
