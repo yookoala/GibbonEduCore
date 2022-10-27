@@ -131,7 +131,7 @@ $I->seeSuccessMessage();
 // Restore Original Settings -----------------------------------
 
 $I->amOnModulePage('User Admin', 'userSettings.php');
-$I->selectOption('select[name=privacy]', 'Y');
+$I->replaceInputField('select[name=privacy]');
 $I->replaceInputField('textarea[name=privacyBlurb]');
 $I->replaceInputField('textarea[name=privacyOptions]');
 $I->submitFormRestore('#content form', $newUserSettings, $originalUserSettings, 'Submit');
