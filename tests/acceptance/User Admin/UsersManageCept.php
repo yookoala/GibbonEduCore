@@ -187,8 +187,9 @@ $I->acceptPopup();
 $I->checkOption('input[name=showAddresses]');
 
 $I->saveFullsizeScreenshot('UsersManageCept-debug.png');
-
+$I->resizeWindowToDocument();
 $I->submitForm('#content form', $formValues, 'Submit');
+$I->restoreWindowSize();
 $I->see('Your request was completed successfully.', '.success');
 
 // Cleanup Files ------------------------------------------------
