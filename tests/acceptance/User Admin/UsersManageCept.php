@@ -179,7 +179,7 @@ $formValues = array(
 );
 
 // Select status as 'Left' will automatically trigger pop up that need to be dealt with.
-$I->fillField('status', 'Left');
+$I->fillField('select[name=status]', 'Left');
 $I->seeInPopup('As you have marked this person as left, please consider setting the End Date field');
 $I->acceptPopup();
 
