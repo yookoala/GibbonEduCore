@@ -132,6 +132,8 @@ $I->seeSuccessMessage();
 
 $I->amOnModulePage('User Admin', 'userSettings.php');
 $I->selectOption('select[name=privacy]', 'Y');
+$I->replaceInputField('textarea[name=privacyBlurb]');
+$I->replaceInputField('textarea[name=privacyOptions]');
 $I->submitFormRestore('#content form', $newUserSettings, $originalUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalUserSettings);
