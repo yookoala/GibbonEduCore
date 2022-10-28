@@ -32,6 +32,9 @@ $newFormValues = array(
 
 $I->selectOption('select[name=enablePayments]', 'Y');
 $I->selectOption('select[name=paymentGateway]', 'PayPal');
+$I->fillField('input[name=paymentAPIUsername]', $newFormValues['paymentAPIUsername']);
+$I->fillField('input[name=paymentAPIPassword]', $newFormValues['paymentAPIPassword']);
+$I->fillField('input[name=signatureTest]', $newFormValues['signatureTest']);
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
