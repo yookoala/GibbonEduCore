@@ -131,10 +131,12 @@ $I->seeSuccessMessage();
 // Restore Original Settings -----------------------------------
 
 $I->amOnModulePage('User Admin', 'userSettings.php');
-//$I->replaceInputField('select[name=privacy]');
-//$I->replaceInputField('textarea[name=privacyBlurb]');
-//$I->replaceInputField('textarea[name=privacyOptions]');
-var_dump($originalUserSettings);
+$I->replaceInputField('select[name=privacy]', 'N');
+$I->replaceInputField('textarea[name=privacyBlurb]', '');
+$I->replaceInputField('textarea[name=privacyOptions]', '');
+unset($originalUserSettings['privacy']);
+unset($originalUserSettings['privacyBlurb']);
+unset($originalUserSettings['privacyOptions']);
 $I->submitFormRestore('#content form', $newUserSettings, $originalUserSettings, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalUserSettings);
