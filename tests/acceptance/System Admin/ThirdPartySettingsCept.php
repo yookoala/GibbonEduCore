@@ -30,11 +30,29 @@ $newFormValues = array(
     'mailerSMTPPassword' => 'smtpPasswordTest',
 );
 
+// Change payment method.
 $I->selectOption('select[name=enablePayments]', 'Y');
-$I->selectOption('select[name=paymentGateway]', 'PayPal');
+$I->selectOption('select[name=paymentGateway]', $newFormValues['paymentGateway']);
 $I->fillField('input[name=paymentAPIUsername]', $newFormValues['paymentAPIUsername']);
 $I->fillField('input[name=paymentAPIPassword]', $newFormValues['paymentAPIPassword']);
-$I->fillField('input[name=signatureTest]', $newFormValues['signatureTest']);
+$I->fillField('input[name=paymentAPISignature]', $newFormValues['paymentAPISignature']);
+
+// Change SMS gateway.
+$I->selectOption('select[name=smsGateway]', $newFormValues['smsGateway']);
+$I->fillField('input[name=smsSenderID]', $newFormValues['smsSenderID']);
+$I->fillField('input[name=smsUsername]', $newFormValues['smsUsername']);
+$I->fillField('input[name=smsPassword]', $newFormValues['smsPassword']);
+$I->fillField('input[name=smsURL]', $newFormValues['smsURL']);
+$I->fillField('input[name=smsURLCredit]', $newFormValues['smsURLCredit']);
+
+// Change SMTP settings.
+$I->selectOption('select[name=enableMailerSMTP]', $newFormValues['enableMailerSMTP']);
+$I->fillField('input[name=mailerSMTPHost]', $newFormValues['mailerSMTPHost']);
+$I->fillField('input[name=mailerSMTPPort]', $newFormValues['mailerSMTPPort']);
+$I->fillField('input[name=mailerSMTPUsername]', $newFormValues['mailerSMTPUsername']);
+$I->fillField('input[name=mailerSMTPPassword]', $newFormValues['mailerSMTPPassword']);
+
+// Submit form.
 $I->submitForm('#content form', $newFormValues, 'Submit');
 
 // Verify Results ----------------------------------------------
