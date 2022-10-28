@@ -30,6 +30,8 @@ $newFormValues = array(
     'mailerSMTPPassword' => 'smtpPasswordTest',
 );
 
+$I->saveFullsizeScreenshot('ThirdPartySettingsCept-before');
+
 // Change payment method.
 $I->selectOption('select[name=enablePayments]', 'Y');
 $I->selectOption('select[name=paymentGateway]', 'Please select...'); // flip back-and-forth to show the fields.
