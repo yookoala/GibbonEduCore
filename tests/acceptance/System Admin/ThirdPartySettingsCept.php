@@ -35,11 +35,11 @@ $I->selectOption('select[name=enablePayments]', 'Y');
 $I->selectOption('select[name=paymentGateway]', 'Please select...'); // flip back-and-forth to show the fields.
 $I->selectOption('select[name=paymentGateway]', $newFormValues['paymentGateway']);
 $I->removeAttribute('input[name=paymentAPIUsername]', 'disabled');
-$I->fillField('input[name=paymentAPIUsername]', $newFormValues['paymentAPIUsername']);
+//$I->fillField('input[name=paymentAPIUsername]', $newFormValues['paymentAPIUsername']);
 $I->removeAttribute('input[name=paymentAPIPassword]', 'disabled');
-$I->fillField('input[name=paymentAPIPassword]', $newFormValues['paymentAPIPassword']);
+//$I->fillField('input[name=paymentAPIPassword]', $newFormValues['paymentAPIPassword']);
 $I->removeAttribute('input[name=paymentAPISignature]', 'disabled');
-$I->fillField('input[name=paymentAPISignature]', $newFormValues['paymentAPISignature']);
+//$I->fillField('input[name=paymentAPISignature]', $newFormValues['paymentAPISignature']);
 
 // Change SMS gateway.
 $I->selectOption('select[name=smsGateway]', $newFormValues['smsGateway']);
