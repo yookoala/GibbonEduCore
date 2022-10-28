@@ -33,8 +33,11 @@ $newFormValues = array(
 // Change payment method.
 $I->selectOption('select[name=enablePayments]', 'Y');
 $I->selectOption('select[name=paymentGateway]', $newFormValues['paymentGateway']);
+$I->removeAttribute('input[name=paymentAPIUsername]', 'disabled');
 $I->fillField('input[name=paymentAPIUsername]', $newFormValues['paymentAPIUsername']);
+$I->removeAttribute('input[name=paymentAPIPassword]', 'disabled');
 $I->fillField('input[name=paymentAPIPassword]', $newFormValues['paymentAPIPassword']);
+$I->removeAttribute('input[name=paymentAPISignature]', 'disabled');
 $I->fillField('input[name=paymentAPISignature]', $newFormValues['paymentAPISignature']);
 
 // Change SMS gateway.
