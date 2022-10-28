@@ -137,7 +137,7 @@ $I->amOnModulePage('User Admin', 'userSettings.php');
 //unset($originalUserSettings['privacy']);
 //unset($originalUserSettings['privacyBlurb']);
 //unset($originalUserSettings['privacyOptions']);
-unset($originalUserSettings['nationality']);
+//unset($originalUserSettings['nationality']);
 unset($originalUserSettings['ethnicity']);
 //unset($originalUserSettings['religions']);
 //unset($originalUserSettings['departureReasons']);
