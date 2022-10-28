@@ -68,9 +68,10 @@ $I->seeInFormFields('#content form', $newFormValues);
 
 // Reset ----------------------------------------------
 
+$I->saveFullsizeScreenshot('ThirdPartySettingsCept-before.png');
 $resetFormValues = $originalFormValues;
 $resetFormValues['googleOAuth'] = 'Y';
-$resetFormValues['enablePayments'] = 'Y';
+//$resetFormValues['enablePayments'] = 'Y';
 $resetFormValues['enableMailerSMTP'] = 'Y';
 $resetFormValues['smsGateway'] = 'OneWaySMS';
 $I->resizeWindowToDocument();
