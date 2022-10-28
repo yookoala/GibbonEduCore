@@ -351,6 +351,26 @@ JAVASCRIPT,
     }
 
     /**
+     * Remove an attribute from a DOM element.
+     *
+     * @param string $selector
+     * @param string $attribute
+     *
+     * @return void
+     */
+    public function removeAttribute(string $selector, string $attribute)
+    {
+        $this->executeJS(<<<JAVASCRIPT
+const field = document.querySelector(arguments[0]);
+if (field !== null) {
+    field.removeAttribute(arguments[1]);
+}
+JAVASCRIPT,
+            [$selector, $attribute]
+        );
+    }
+
+    /**
      * Filter only the values of $originalFormValues that are also
      * in $newFormValues.
      *
