@@ -73,9 +73,8 @@ $resetFormValues['googleOAuth'] = 'Y';
 //$resetFormValues['enablePayments'] = 'Y';
 $resetFormValues['enableMailerSMTP'] = 'Y';
 $resetFormValues['smsGateway'] = 'OneWaySMS';
-var_dump($resetFormValues);
 $I->resizeWindowToDocument();
-$I->submitForm('#content form', $resetFormValues, 'Submit');
+$I->submitFormRestore('#content form', $newFormValues, $resetFormValues, 'Submit');
 
 // Restore Original Settings -----------------------------------
 
