@@ -101,6 +101,6 @@ $I->submitFormRestore('#content form', $newFormValues, $resetFormValues, 'Submit
 
 // Restore Original Settings -----------------------------------
 
-$I->submitForm('#content form', $originalFormValues, 'Submit');
+$I->submitFormRestore('#content form', $newFormValues, $originalFormValues, 'Submit');
 $I->see('Your request was completed successfully.', '.success');
 $I->seeInFormFields('#content form', $originalFormValues);
