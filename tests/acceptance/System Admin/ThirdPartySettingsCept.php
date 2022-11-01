@@ -74,25 +74,25 @@ $resetFormValues['googleOAuth'] = 'Y';
 $resetFormValues['enableMailerSMTP'] = 'Y';
 $resetFormValues['smsGateway'] = 'OneWaySMS';
 
-unset($resetFormValues['enablePayments']);
-unset($resetFormValues['paymentGateway']);
-unset($resetFormValues['paymentAPIUsername']);
-unset($resetFormValues['paymentAPIPassword']);
-unset($resetFormValues['paymentAPISignature']);
-unset($resetFormValues['paymentAPIKey']);
-unset($resetFormValues['smsGateway']);
-unset($resetFormValues['smsSenderID']);
-unset($resetFormValues['smsUsername']);
-unset($resetFormValues['smsPassword']);
-unset($resetFormValues['smsURL']);
-unset($resetFormValues['smsURLCredit']);
-//unset($resetFormValues['enableMailerSMTP']);
-//unset($resetFormValues['mailerSMTPHost']);
-//unset($resetFormValues['mailerSMTPPort']);
-//unset($resetFormValues['mailerSMTPSecure']);
-//unset($resetFormValues['mailerSMTPUsername']);
-//unset($resetFormValues['mailerSMTPPassword']);
-//unset($resetFormValues['googleOAuth']);
+//unset($resetFormValues['enablePayments']);
+//unset($resetFormValues['paymentGateway']);
+//unset($resetFormValues['paymentAPIUsername']);
+//unset($resetFormValues['paymentAPIPassword']);
+//unset($resetFormValues['paymentAPISignature']);
+//unset($resetFormValues['paymentAPIKey']);
+//unset($resetFormValues['smsGateway']);
+//unset($resetFormValues['smsSenderID']);
+//unset($resetFormValues['smsUsername']);
+//unset($resetFormValues['smsPassword']);
+//unset($resetFormValues['smsURL']);
+//unset($resetFormValues['smsURLCredit']);
+unset($resetFormValues['enableMailerSMTP']);
+unset($resetFormValues['mailerSMTPHost']);
+unset($resetFormValues['mailerSMTPPort']);
+unset($resetFormValues['mailerSMTPSecure']);
+unset($resetFormValues['mailerSMTPUsername']);
+unset($resetFormValues['mailerSMTPPassword']);
+unset($resetFormValues['googleOAuth']);
 
 
 
