@@ -26,7 +26,6 @@ use Gibbon\View\Page;
 use Gibbon\View\View;
 use Gibbon\Comms\Mailer;
 use Gibbon\Data\Validator;
-use Gibbon\Session\Session;
 use Gibbon\Domain\System\Theme;
 use Gibbon\Domain\System\Module;
 use Gibbon\Session\SessionFactory;
@@ -75,6 +74,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         PaymentInterface::class,
         MailerInterface::class,
         SMSInterface::class,
+        SessionInterface::class,
         'gibbon_logger',
         'mysql_logger',
         Validator::class,
@@ -143,6 +143,9 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         // $pdo->setLogger($container->get('mysql_logger'));
 
         $container->share('session', function () {
+            return $this->getContainer()->get(SessionInterface::class);
+        });
+        $container->share(SessionInterface::class, function () {
             return SessionFactory::create($this->getContainer());
         });
 
