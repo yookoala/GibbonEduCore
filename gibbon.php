@@ -65,7 +65,6 @@ $version = $gibbon->getConfig('version');
 
 // Handle Gibbon installation redirect
 if (!$gibbon->isInstalled() && !$gibbon->isInstalling()) {
-    define('SESSION_TABLE_AVAILABLE', false);
     header("Location: ./installer/install.php");
     exit;
 }
@@ -80,13 +79,6 @@ if ($gibbon->isInstalled()) {
         // For legacy modules / functions compatibility.
         // TODO: remove this.
         $connection2 = $pdo->getConnection();
-
-        // Add a feature flag here to prevent errors before updating
-        // TODO: this can likely be removed in v24+
-        if (!defined('SESSION_TABLE_AVAILABLE')) {
-            $hasSessionTable = $pdo->selectOne("SHOW TABLES LIKE 'gibbonSession'");
-            define('SESSION_TABLE_AVAILABLE', !empty($hasSessionTable));
-        }
 
         // Initialize core
         try {
@@ -104,10 +96,6 @@ if ($gibbon->isInstalled()) {
             exit;
         }
     }
-}
-
-if (!defined('SESSION_TABLE_AVAILABLE')) {
-    define('SESSION_TABLE_AVAILABLE', false);
 }
 
 // Globals for backwards compatibility
