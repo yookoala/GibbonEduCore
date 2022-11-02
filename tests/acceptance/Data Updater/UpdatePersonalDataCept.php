@@ -199,4 +199,5 @@ $editFormValues = array(
     'ethnicity'                 => 'Ethnicity 2',
     'religion'                  => 'Religion 3',
 );
+$I->resizeWindowToDocument();
 $I->submitForm('#content form', $editFormValues, 'Submit');
