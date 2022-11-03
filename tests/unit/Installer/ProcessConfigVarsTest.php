@@ -4,7 +4,6 @@ namespace Gibbon\Tests\UnitTest\Installer;
 
 use PHPUnit\Framework\TestCase;
 use Gibbon\Install\Installer;
-use Gibbon\Services\CoreServiceProvider;
 
 /**
  * @covers Installer::processConfigVars function and config file template
@@ -74,10 +73,14 @@ class ProcessConfigVarsTest extends TestCase {
     {
         $inputConfig = [
             'databaseServer' => 'myDatabaseServer',
+            'databasePort' => 1234,
             'databaseUsername' => 'myDatabaseUsername',
             'databasePassword' => 'myDatabasePassword',
             'databaseName' => 'myDatabaseName',
             'guid' => 'myGuid',
+            'caching' => 10,
+            'sessionHandler' => 'mySessionHandler',
+            'sessionEncryptionKey' => 'myEncryptionKey',
         ];
 
         // check the syntax with mock config rendering function
@@ -100,8 +103,17 @@ class ProcessConfigVarsTest extends TestCase {
             preg_match($this->PatternNoSyntaxError, $result) !== false,
             'The generated config contains syntax error(s)'
         );
-        $resultConfig = $this->extractVariablesFrom($filename,
-            ['databaseServer', 'databaseUsername', 'databasePassword', 'databaseName', 'guid']);
+        $resultConfig = $this->extractVariablesFrom($filename, [
+            'databaseServer',
+            'databasePort',
+            'databaseUsername',
+            'databasePassword',
+            'databaseName',
+            'guid',
+            'caching',
+            'sessionHandler',
+            'sessionEncryptionKey',
+        ]);
         $this->assertEquals($inputConfig, $resultConfig, 'Unexpected set of result config variables');
         unlink($filename);
     }
@@ -133,15 +145,28 @@ class ProcessConfigVarsTest extends TestCase {
             preg_match($this->PatternNoSyntaxError, $result) !== false,
             'The generated config contains syntax error(s)'
         );
-        $resultConfig = $this->extractVariablesFrom($filename,
-            ['databaseServer', 'databaseUsername', 'databasePassword', 'databaseName', 'guid']);
+        $resultConfig = $this->extractVariablesFrom($filename, [
+            'databaseServer',
+            'databasePort',
+            'databaseUsername',
+            'databasePassword',
+            'databaseName',
+            'guid',
+            'caching',
+            'sessionHandler',
+            'sessionEncryptionKey',
+        ]);
         $this->assertEquals(
             [
                 'databaseServer' => '',
+                'databasePort' => 3306,
                 'databaseUsername' => '',
                 'databasePassword' => '',
                 'databaseName' => '',
                 'guid' => '',
+                'caching' => 10,
+                'sessionHandler' => '',
+                'sessionEncryptionKey' => '',
             ],
             $resultConfig,
             'Unexpected set of result config variables'
@@ -157,11 +182,15 @@ class ProcessConfigVarsTest extends TestCase {
         $dangerousStr = 'everything dangerous: \\/"\'';
         $inputConfig = [
             'databasePassword' => $dangerousStr,
+            'databasePort' => $dangerousStr,
             'databaseServer' => $dangerousStr,
             'databaseUsername' => $dangerousStr,
             'databasePassword' => $dangerousStr,
             'databaseName' => $dangerousStr,
             'guid' => $dangerousStr,
+            'caching' => 10,
+            'sessionHandler' => $dangerousStr,
+            'sessionEncryptionKey' => $dangerousStr,
         ];
 
         // check the syntax with mock config rendering function
@@ -184,8 +213,17 @@ class ProcessConfigVarsTest extends TestCase {
             preg_match($this->PatternNoSyntaxError, $result) !== false,
             'The generated config contains syntax error(s)'
         );
-        $resultConfig = $this->extractVariablesFrom($filename,
-            ['databaseServer', 'databaseUsername', 'databasePassword', 'databaseName', 'guid']);
+        $resultConfig = $this->extractVariablesFrom($filename, [
+            'databaseServer',
+            'databasePort',
+            'databaseUsername',
+            'databasePassword',
+            'databaseName',
+            'guid',
+            'caching',
+            'sessionHandler',
+            'sessionEncryptionKey',
+        ]);
         $this->assertEquals($inputConfig, $resultConfig, 'Unexpected set of result config variables');
         unlink($filename);
     }

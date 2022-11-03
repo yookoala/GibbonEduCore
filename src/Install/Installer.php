@@ -350,10 +350,14 @@ class Installer
     {
         $variables += [
             'databaseServer' => '',
+            'databasePort' => 3306,
             'databaseUsername' => '',
             'databasePassword' => '',
             'databaseName' => '',
             'guid' => '',
+            'caching' => 10,
+            'sessionHandler' => '',
+            'sessionEncryptionKey' => '',
         ];
         return array_map(function ($value) {
             return var_export((string) $value, true); // force render into string literals

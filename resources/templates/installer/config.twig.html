@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * You can supply an optional $databasePort if your server requires one.
  */
 $databaseServer = {{ databaseServer|raw }};
+$databasePort = {{ databasePort|raw }};
 $databaseUsername = {{ databaseUsername|raw }};
 $databasePassword = {{ databasePassword|raw }};
 $databaseName = {{ databaseName|raw }};
@@ -44,3 +45,16 @@ $guid = {{ guid|raw }};
  * Must be positive integer. 1 means no caching.
  */
 $caching = 10;
+
+/**
+ * Session handling type.
+ * Should be either 'native' or 'database'.
+ */
+$sessionHandler = {{ sessionHandler | raw }};
+
+/**
+ * Session encryption key.
+ *
+ * Will not encrypt session if this is empty or null.
+ */
+$sessionEncryptionKey = {{ sessionEncryptionKey | raw }};
