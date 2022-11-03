@@ -36,6 +36,7 @@ use Gibbon\Contracts\Comms\Mailer as MailerInterface;
 use Gibbon\Contracts\Database\Connection;
 use Gibbon\Contracts\Services\Payment as PaymentInterface;
 use Gibbon\Contracts\Services\Session as SessionInterface;
+use Gibbon\Core\Config;
 use Gibbon\Database\MySqlConnector;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Container\ServiceProvider\BootableServiceProviderInterface;
@@ -96,6 +97,17 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
     {
         $container = $this->getLeagueContainer();
 
+        // Attempt to read configuration from file.
+        // If fail,
+        try {
+            $config = Config::fromFile($this->absolutePath . '/config.php');
+            $container->share(Config::class, $config);
+            array_push($this->provides, Config::class);
+        } catch (\InvalidArgumentException $e) {
+            // Ignore the exception.
+            // TODO: differentiate "file not exists" from "file not readable".
+        }
+
         $core = new Core($this->absolutePath);
 
         // TODO: decouple config file reading logics from Core to prevent cyclic
@@ -105,8 +117,8 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         $container->share('config', $core);
 
         // If configuration exists, create and share the database connection.
-        $config = $core->getConfig();
-        if (!empty($config['databaseUsername']) && isset($config['databasePassword'])) {
+        $dbConfig = !empty($config) ? $config->getDatabaseInfo() : false;
+        if (!empty($dbConfig) && !empty($dbConfig['databaseUsername']) && isset($dbConfig['databasePassword'])) {
 
             // Tell others that we provide db.
             array_push($this->provides, 'db', Connection::class);
@@ -115,9 +127,9 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
             $container->share('db', function () {
                 return $this->getContainer()->get(Connection::class);
             });
-            $container->share(Connection::class, function () use ($config) {
+            $container->share(Connection::class, function () use ($dbConfig) {
                 // Create connector to connect database.
-                return (new MySqlConnector())->connect($config);
+                return (new MySqlConnector())->connect($dbConfig);
             });
         }
 

@@ -26,6 +26,7 @@ use Gibbon\Session\NativeSessionHandler;
 use Gibbon\Session\DatabaseSessionHandler;
 use Gibbon\Contracts\Database\Connection;
 use Gibbon\Contracts\Services\Session as SessionInterface;
+use Gibbon\Core\Config;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -50,10 +51,13 @@ class SessionFactory
     ): SessionInterface {
         global $guid;
 
-        $config = $container->get('config')->getConfig();
+        /** @var Config|false */
+        $config = $container->has(Config::class)
+            ? $container->get(Config::class)
+            : false;
 
         // If session guid is not set, fallback to global $guid.
-        $_guid = $config['guid'] ?? $guid ?? '';
+        $_guid = !empty($config) ? $config->getGuid() : '';
 
         // Start the session (this should be the first time called)
         if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -62,10 +66,10 @@ class SessionFactory
             if ($container->has(Connection::class) && $sessionTableHasSetup) {
                 $sessionGateway = $container->get(SessionGateway::class);
 
-                if (!empty($config['sessionHandler']) && $config['sessionHandler'] == 'database') {
-                    $handler = new DatabaseSessionHandler($sessionGateway, $config['sessionEncryptionKey'] ?? null);
+                if ($config->getSessionHandler() == 'database') {
+                    $handler = new DatabaseSessionHandler($sessionGateway, $config ? $config->getSessionEncryptionKey() : null);
                 } else {
-                    $handler = new NativeSessionHandler($sessionGateway, $config['sessionEncryptionKey'] ?? null);
+                    $handler = new NativeSessionHandler($sessionGateway, $config ? $config->getSessionEncryptionKey() : null);
                 }
             } else {
                 $handler = new SessionHandler();
