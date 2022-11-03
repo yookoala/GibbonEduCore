@@ -39,6 +39,7 @@ use Gibbon\Contracts\Services\Session as SessionInterface;
 use Gibbon\Core\Config;
 use Gibbon\Core\Version;
 use Gibbon\Database\MySqlConnector;
+use League\Container\Container;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Container\ServiceProvider\BootableServiceProviderInterface;
 
@@ -94,9 +95,10 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
      * from this one, it must be from a bootable service provider like
      * this one, otherwise they will be ignored.
      */
-    public function boot()
+    public function boot(): void
     {
-        $container = $this->getLeagueContainer();
+        /** @var Container */
+        $container = $this->getContainer();
 
         // Attempt to read configuration from file.
         // If fail,
@@ -210,9 +212,10 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
      * that you need to, but remember, every alias registered
      * within this method must be declared in the `$provides` array.
      */
-    public function register()
+    public function register(): void
     {
-        $container = $this->getLeagueContainer();
+        /** @var Container */
+        $container = $this->getContainer();
         $absolutePath = $this->absolutePath;
 
         // Logging removed until properly setup & tested
@@ -230,7 +233,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         // $pdo->setLogger($container->get('mysql_logger'));
 
         $container->share('twig', function () use ($absolutePath) {
-            $session = $this->getLeagueContainer()->get('session');
+            $session = $this->getContainer()->get('session');
             $loader = new \Twig\Loader\FilesystemLoader($absolutePath.'/resources/templates');
 
             // Add the theme templates folder so it can override core templates
@@ -285,7 +288,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         });
 
         $container->share('action', function () {
-            $session = $this->getLeagueContainer()->get('session');
+            $session = $this->getContainer()->get('session');
             $data = [
                 'actionName'   => '%'.$session->get('action').'%',
                 'moduleName'   => $session->get('module'),
@@ -305,7 +308,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         });
 
         $container->share('module', function () {
-            $session = $this->getLeagueContainer()->get('session');
+            $session = $this->getContainer()->get('session');
             $data = ['moduleName' => $session->get('module')];
             $sql = "SELECT * FROM gibbonModule WHERE name=:moduleName AND active='Y'";
             $moduleData = $this->getContainer()->get('db')->selectOne($sql, $data);
@@ -314,7 +317,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         });
 
         $container->share('theme', function () {
-            $session = $this->getLeagueContainer()->get('session');
+            $session = $this->getContainer()->get('session');
             if ($session->has('gibbonThemeIDPersonal')) {
                 $data = ['gibbonThemeID' => $session->get('gibbonThemeIDPersonal')];
                 $sql = "SELECT * FROM gibbonTheme WHERE gibbonThemeID=:gibbonThemeID";
@@ -332,7 +335,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         });
 
         $container->share('page', function () use ($container) {
-            $session = $this->getLeagueContainer()->get('session');
+            $session = $this->getContainer()->get('session');
 
             $pageTitle = $session->get('organisationNameShort').' - '.$session->get('systemName');
             if ($session->has('module')) {
@@ -377,7 +380,7 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         });
 
         $container->add(Validator::class, function () {
-            return new Validator($this->getLeagueContainer()->get('session')->get('allowableHTML', ''));
+            return new Validator($this->getContainer()->get('session')->get('allowableHTML', ''));
         });
     }
 }

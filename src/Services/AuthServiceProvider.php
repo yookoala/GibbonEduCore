@@ -28,6 +28,7 @@ use Gibbon\Auth\AuthSession;
 use Gibbon\Contracts\Services\Session;
 use Gibbon\Domain\System\SettingGateway;
 use League\OAuth2\Client\Provider\GenericProvider;
+use League\Container\Container;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\OAuth2\Client\Token\AccessToken;
 use Gibbon\Domain\User\UserGateway;
@@ -64,9 +65,10 @@ class AuthServiceProvider extends AbstractServiceProvider
      * that you need to, but remember, every alias registered
      * within this method must be declared in the `$provides` array.
      */
-    public function register()
+    public function register(): void
     {
-        $container = $this->getLeagueContainer();
+        /** @var Container */
+        $container = $this->getContainer();
 
         $container->share(AuthFactory::class, function () {
             $authSession = new AuthSession($this->container->get(Session::class));
@@ -101,7 +103,7 @@ class AuthServiceProvider extends AbstractServiceProvider
                 }
 
                 $client->setAccessToken($session->get('googleAPIAccessToken'));
-                
+
                 if ($client->isAccessTokenExpired()) {
                     // Re-establish the Client and get a new token
                     if ($session->exists('googleAPIRefreshToken')) {

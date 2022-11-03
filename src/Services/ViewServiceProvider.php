@@ -27,6 +27,7 @@ use Gibbon\Forms\View\FormRendererInterface;
 use Gibbon\Tables\DataTable;
 use Gibbon\Tables\View\DataTableView;
 use Gibbon\Tables\View\PaginatedView;
+use League\Container\Container;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Gibbon\Tables\View\DetailsView;
 use Twig\Environment;
@@ -64,10 +65,11 @@ class ViewServiceProvider extends AbstractServiceProvider
      * that you need to, but remember, every alias registered
      * within this method must be declared in the `$provides` array.
      */
-    public function register()
+    public function register(): void
     {
+        /** @var Container */
         $container = $this->getContainer();
-        
+
         $container->add(Form::class, function () {
             $factory = new FormFactory();
             $renderer = new FormView($this->getContainer()->get('twig'));
@@ -82,7 +84,7 @@ class ViewServiceProvider extends AbstractServiceProvider
         $container->add(FormFactoryInterface::class, function () {
             return new FormFactory();
         });
-        
+
         $container->add(DataTable::class, function () use ($container) {
             $renderer = new DataTableView($container->get('twig'));
 
