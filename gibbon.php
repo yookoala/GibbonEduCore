@@ -23,6 +23,8 @@ use Gibbon\Http\Url;
 register_shutdown_function(function () {
     $lastError = error_get_last();
     if ($lastError && ($lastError['type'] === E_ERROR || $lastError['type'] === E_CORE_ERROR || $lastError['type'] === E_COMPILE_ERROR) ) {
+        $lastErrorType = ($lastError['type'] === E_ERROR) ? 'Error' : (($lastError['type'] === E_CORE_ERROR) ? 'Core Error' : 'Compile Error');
+        error_log($lastErrorType . ': ' . $lastError['message'] . ' in ' . $lastError['file'] . ' (line ' . $lastError['line'] . ')');
         include __DIR__.'/error.php';
     }
     exit;
@@ -31,6 +33,7 @@ register_shutdown_function(function () {
 // Check for the autoloader file
 if (!file_exists(__DIR__.'/vendor/autoload.php')) {
     $message = 'Fatal Error: Missing composer autoloader. Your vendor folder is likely not installed. If you are running cutting edge code, navigate to your base dir in a terminal window and run the "composer install" command. See the Cutting Edge Code documentation for more information: https://docs.gibbonedu.org/administrators/getting-started/installing-gibbon/cutting-edge-code/';
+    error_log($message);
     include __DIR__.'/error.php';
     exit;
 }
@@ -90,6 +93,7 @@ if ($gibbon->isInstalled()) {
             $gibbon->initializeCore($container);
         } catch (\Exception $e) {
             $message = __('Configuration Error: there is a problem accessing the current Academic Year from the database.');
+            error_log($message . ' ' . $e->getMessage());
             include __DIR__.'/error.php';
             exit;
         }
@@ -97,6 +101,7 @@ if ($gibbon->isInstalled()) {
     } else {
         if (!$gibbon->isInstalling()) {
             $message = sprintf(__('A database connection could not be established. Please %1$stry again%2$s.'), '', '');
+            error_log('A database connection could not be established. ' . $e->getMessage());
             include __DIR__.'/error.php';
             exit;
         }
