@@ -23,7 +23,7 @@ Main Menu: Displays the top-level categories and active modules.
                 {% for item in items %}
                 <li class="hover:bg-{{ themeColour }}-700">
                     <a class="block text-sm text-white focus:text-{{ themeColour }}-200 no-underline px-1 py-2 md:py-1 leading-normal {{ rightToLeft ? 'text-right' : 'text-left' }}" href="{{ item.url }}">
-                        {{ __(item.name, item.textDomain) }}
+                        {{ __(item.name, {}, {domain: item.textDomain}) }}
                     </a>
                 </li>
                 {% endfor %}

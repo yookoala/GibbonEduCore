@@ -266,15 +266,15 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
             $twig->addGlobal('themeColour', $session->has('themeColour') ? $session->get('themeColour') : 'purple');
 
 
-            $twig->addFunction(new \Twig\TwigFunction('__', function ($string, $domain = null) {
-                return __($string, $domain);
+            $twig->addFunction(new \Twig\TwigFunction('__', function ($string, array $params = [], array $options = []) {
+                return __($string, $params, $options);
             }));
 
-            $twig->addFunction(new \Twig\TwigFunction('__m', function ($string, $params = []) {
-                return __m($string, $params);
+            $twig->addFunction(new \Twig\TwigFunction('__m', function ($string, array $params = [], array $options = []) {
+                return __m($string, $params, $options);
             }));
 
-            $twig->addFunction(new \Twig\TwigFunction('__n', function ($singular, $plural, $n, $params = [], $options = []) {
+            $twig->addFunction(new \Twig\TwigFunction('__n', function ($singular, $plural, int $n, array $params = [], array $options = []) {
                 return __n($singular, $plural, $n, $params, $options);
             }));
 

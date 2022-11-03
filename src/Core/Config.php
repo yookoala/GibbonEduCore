@@ -97,18 +97,18 @@ class Config
             include($path);
             return [
                 // Basic database variables.
-                'databaseServer' => $databaseServer ?? null,
-                'databasePort' => $databasePort ?? 3306,
-                'databaseUsername' => $databaseUsername ?? null,
-                'databasePassword' => $databasePassword ?? null,
-                'databaseName' => $databaseName ?? null,
+                'databaseServer' => (string) ($databaseServer ?? null),
+                'databasePort' => (int) ($databasePort ?? 3306),
+                'databaseUsername' => (string) ($databaseUsername ?? null),
+                'databasePassword' => (string) ($databasePassword ?? null),
+                'databaseName' => (string) ($databaseName ?? null),
 
                 // Gibbon environment GUID.
-                'guid' => $guid ?? null,
+                'guid' => (string) ($guid ?? null),
 
                 // Other configurations.
-                'caching' => $caching ?? 10,
-                'sessionHandler' => $sessionHandler ?? 'native',
+                'caching' => (int) ($caching ?? 10),
+                'sessionHandler' => (string) ($sessionHandler ?? 'native'),
                 'sessionEncryptionKey' => $sessionEncryptionKey ?? null,
             ];
         })();
