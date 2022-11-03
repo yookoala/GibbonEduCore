@@ -3,8 +3,8 @@
 namespace Gibbon\Install;
 
 use Gibbon\Contracts\Database\Connection;
+use Gibbon\Core\Config;
 use Gibbon\Database\MySqlConnector;
-use Gibbon\Install\Config;
 use Gibbon\Services\Format;
 use Twig\Environment;
 
@@ -364,7 +364,7 @@ class Installer
      * Installer will initialize internal database
      * connection with the provided config data.
      *
-     * @param \Gibbon\Install\Config $config
+     * @param \Gibbon\Core\Config $config
      *
      * @throws \Exception
      *
@@ -373,7 +373,7 @@ class Installer
     public function useConfigConnection(Config $config): Installer
     {
         // Check config values for ' " \ / chars which will cause errors in config.php
-        if (!$config->validateDatbaseInfo()) {
+        if (!$config->validateDatabaseInfo()) {
             throw new \Exception(__('Your request failed because your inputs were invalid.'));
         }
 
@@ -524,7 +524,7 @@ class Installer
     /**
      * Create database connection from config.
      *
-     * @param \Gibbon\Install\Config $config
+     * @param \Gibbon\Core\Config $config
      *
      * @return \Gibbon\Contracts\Database\Connection
      */

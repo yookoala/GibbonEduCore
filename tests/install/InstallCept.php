@@ -1,6 +1,6 @@
 <?php
 
-use Gibbon\Install\Config;
+use Gibbon\Core\Config;
 use Gibbon\Install\Installer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;

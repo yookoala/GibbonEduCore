@@ -4,10 +4,9 @@ namespace Gibbon\Install\Http;
 
 use Gibbon\Contracts\Services\Session;
 use Gibbon\Core;
+use Gibbon\Core\Config;
 use Gibbon\Database\Updater;
 use Gibbon\Forms\DatabaseFormFactory;
-use Gibbon\Forms\Form;
-use Gibbon\Install\Config;
 use Gibbon\Install\Context;
 use Gibbon\Install\Http\Exception\ForbiddenException;
 use Gibbon\Install\Http\Exception\RecoverableException;
@@ -904,7 +903,7 @@ class InstallController
      * @param string $guid
      * @param array $data
      *
-     * @return \Gibbon\Install\Config
+     * @return \Gibbon\Core\Config
      *
      * @throws \Exception
      */
@@ -915,6 +914,7 @@ class InstallController
             ->setGuid($guid)
             ->setDatabaseInfo(
                 $data['databaseServer'] ?? '',
+                (int) ($data['databasePort'] ?? 3306),
                 $data['databaseName'] ?? '',
                 $data['databaseUsername'] ?? '',
                 $data['databasePassword'] ?? ''
@@ -925,7 +925,7 @@ class InstallController
         }
 
         // Check config values for ' " \ / chars which will cause errors in config.php
-        if (!$config->validateDatbaseInfo()) {
+        if (!$config->validateDatabaseInfo()) {
             throw new \Exception(__('Your request failed because your inputs were invalid.'));
         }
 
