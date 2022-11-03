@@ -37,6 +37,7 @@ use Gibbon\Contracts\Database\Connection;
 use Gibbon\Contracts\Services\Payment as PaymentInterface;
 use Gibbon\Contracts\Services\Session as SessionInterface;
 use Gibbon\Core\Config;
+use Gibbon\Core\Version;
 use Gibbon\Database\MySqlConnector;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Container\ServiceProvider\BootableServiceProviderInterface;
@@ -107,6 +108,11 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
             // Ignore the exception.
             // TODO: differentiate "file not exists" from "file not readable".
         }
+
+        // Expects version.php to always be there.
+        $container->share(Version::class, function () {
+            return Version::fromFile($this->absolutePath . '/version.php');
+        });
 
         $core = new Core($this->absolutePath);
 
