@@ -107,6 +107,10 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         } catch (\InvalidArgumentException $e) {
             // Ignore the exception.
             // TODO: differentiate "file not exists" from "file not readable".
+        } finally {
+            if (!isset($config)) {
+                $config = null;
+            }
         }
 
         // Expects version.php to always be there.
@@ -114,13 +118,12 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
             return Version::fromFile($this->absolutePath . '/version.php');
         });
 
-        $core = new Core($this->absolutePath);
-
-        // TODO: decouple config file reading logics from Core to prevent cyclic
-        //       reference in building 'config' (Core) object.
         // TODO: migrate Core object setup to this provider
         //       (i.e. $gibbon->locale and $gibbon->session).
-        $container->share('config', $core);
+        $container->share('config', function () use ($config) {
+            $version = $this->getContainer()->get(Version::class);
+            return new Core($this->absolutePath, $version, $config);
+        });
 
         // If configuration exists, create and share the database connection.
         $dbConfig = !empty($config) ? $config->getDatabaseInfo() : false;
@@ -181,7 +184,9 @@ class CoreServiceProvider extends AbstractServiceProvider implements BootableSer
         });
 
         // Setup global absoluteURL of all URLs.
-        $container->share('absoluteURL', function () use ($core) {
+        $container->share('absoluteURL', function () {
+            /** @var Core */
+            $core = $this->getContainer()->get('config');
             $session = $this->getContainer()->get(SessionInterface::class);
             if ($core->isInstalled() && $session->has('absoluteURL')) {
                 return $session->get('absoluteURL');

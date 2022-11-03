@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 namespace Gibbon;
 
 use Gibbon\Core\Config;
+use Gibbon\Core\Version;
 use Gibbon\Services\Format;
 use Gibbon\Session\SessionFactory;
 use Gibbon\Domain\School\SchoolYearGateway;
@@ -63,6 +64,13 @@ class Core
     public $fileConfig = null;
 
     /**
+     * The version information of the GibbonEdu release.
+     *
+     * @var Version
+     */
+    public $version;
+
+    /**
      * Has gibbon been initialized using a DB connection?
      * @var  bool
      */
@@ -71,15 +79,15 @@ class Core
     /**
      * Construct
      */
-    public function __construct($directory, ?Config $fileConfig = null)
+    public function __construct(string $directory, Version $version, ?Config $fileConfig = null)
     {
         $this->basePath = realpath($directory);
 
+        // Set the version information.
+        $this->version = $version;
+
         // Set the configuration file
         $this->fileConfig = $fileConfig;
-
-        // Set the current version
-        $this->loadVersionFromFile($this->basePath . '/version.php');
     }
 
     /**
@@ -163,12 +171,14 @@ class Core
      */
     public function getConfig($name = null)
     {
-        $vars = [];
+        $vars = [
+            'version' => $this->version->version,
+            'systemRequirements' => $this->version->systemRequirements,
+        ];
         if ($this->fileConfig !== null) {
             // For backward compatibility.
             $vars += $this->fileConfig->getVars();
         }
-        $vars += $this->config;
         return !is_null($name)
             ? ($vars[$name] ?? '')
             : $vars;
@@ -181,27 +191,8 @@ class Core
      */
     public function getSystemRequirement($key)
     {
-        return isset($this->config['systemRequirements'][$key])
-            ? $this->config['systemRequirements'][$key]
+        return isset($this->version->systemRequirements[$key])
+            ? $this->version->systemRequirements[$key]
             : null;
-    }
-
-    /**
-     * Load the current Gibbon version number
-     *
-     * @param    string  $versionFilePath
-     *
-     * @throws   \Exception If the version file is not found
-     */
-    protected function loadVersionFromFile($versionFilePath)
-    {
-        if (file_exists($versionFilePath) == false) {
-            throw new \Exception('Gibbon version.php file missing: ' . $versionFilePath);
-        }
-
-        include $versionFilePath;
-
-        $this->config['version'] = $version ?? 'version-not-found';
-        $this->config['systemRequirements'] = $systemRequirements ?? [];
     }
 }
