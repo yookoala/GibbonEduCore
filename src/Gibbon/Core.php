@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Gibbon;
 
+use Gibbon\Core\Config;
 use Gibbon\Services\Format;
 use Gibbon\Session\SessionFactory;
 use Gibbon\Domain\School\SchoolYearGateway;
@@ -54,6 +55,14 @@ class Core
     protected $config = array();
 
     /**
+     * The object instance of the file configuration,
+     * or null if the configuration file does not exists.
+     *
+     * @var Config|null
+     */
+    public $fileConfig = null;
+
+    /**
      * Has gibbon been initialized using a DB connection?
      * @var  bool
      */
@@ -62,12 +71,12 @@ class Core
     /**
      * Construct
      */
-    public function __construct($directory)
+    public function __construct($directory, ?Config $fileConfig = null)
     {
         $this->basePath = realpath($directory);
 
-        // Load the configuration, if installed
-        $this->loadConfigFromFile($this->basePath . '/config.php');
+        // Set the configuration file
+        $this->fileConfig = $fileConfig;
 
         // Set the current version
         $this->loadVersionFromFile($this->basePath . '/version.php');
@@ -128,11 +137,12 @@ class Core
     /**
      * Gets the globally unique id, to allow multiple installs on the server
      *
-     * @return   string|null
+     * @return   string
      */
     public function guid()
     {
-        return isset($this->config['guid'])? $this->config['guid'] : 'undefined';
+        $guid = !empty($this->fileConfig) ? $this->fileConfig->getGuid() : null;
+        return !empty($guid) ? $guid : 'undefined';
     }
 
     /**
@@ -153,9 +163,15 @@ class Core
      */
     public function getConfig($name = null)
     {
+        $vars = [];
+        if ($this->fileConfig !== null) {
+            // For backward compatibility.
+            $vars += $this->fileConfig->getVars();
+        }
+        $vars += $this->config;
         return !is_null($name)
-            ? ($this->config[$name] ?? '')
-            : $this->config;
+            ? ($vars[$name] ?? '')
+            : $vars;
     }
 
     /**
@@ -187,33 +203,5 @@ class Core
 
         $this->config['version'] = $version ?? 'version-not-found';
         $this->config['systemRequirements'] = $systemRequirements ?? [];
-    }
-
-    /**
-     * Load the Gibbon configuration file, contained in this scope to prevent unintended global access
-     *
-     * @param   string  $configFilePath
-     */
-    protected function loadConfigFromFile($configFilePath)
-    {
-        // Load the config values (from an array if possible)
-        if (!$this->isInstalled()) return;
-
-        $this->config = include $configFilePath;
-
-        // Otherwise load the config values from global scope
-        if (empty($this->config) || !is_array($this->config)) {
-            $this->config = [
-                'databaseServer' => $databaseServer ?? '',
-                'databaseUsername' => $databaseUsername ?? 'gibbon',
-                'databasePassword' => $databasePassword ?? '',
-                'databaseName' => $databaseName ?? 'gibbon',
-                'databasePort' => $databasePort ?? 3306,
-                'guid' => $guid ?? null,
-                'caching' => $caching ?? 10,
-                'sessionHandler' => $sessionHandler ?? null,
-                'sessionEncryptionKey' => $sessionEncryptionKey ?? null,
-            ];
-        }
     }
 }
