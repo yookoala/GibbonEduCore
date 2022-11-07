@@ -19,7 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Gibbon\Tables\Prefab;
 
-use Gibbon\Auth\Access\AccessManager;
 use Gibbon\Auth\Access\Resource;
 use Gibbon\Contracts\Database\Connection;
 use Gibbon\Contracts\Services\Session;
@@ -39,29 +38,20 @@ use Gibbon\Tables\View\GridView;
 class ClassGroupTable extends DataTable
 {
     protected $db;
-    protected $accessManager;
     protected $session;
     protected $enrolmentGateway;
 
-    public function __construct(
-        GridView $renderer,
-        AccessManager $accessManager,
-        CourseEnrolmentGateway $enrolmentGateway,
-        Connection $db,
-        Session $session
-    )
+    public function __construct(GridView $renderer, CourseEnrolmentGateway $enrolmentGateway, Connection $db, Session $session)
     {
         parent::__construct($renderer);
 
         $this->db = $db;
-        $this->accessManager = $accessManager;
         $this->session = $session;
         $this->enrolmentGateway = $enrolmentGateway;
     }
 
     public function build($gibbonSchoolYearID, $gibbonCourseClassID)
     {
-        throw new \Exception('Tested!');
         $guid = $this->session->get('guid');
         $connection2 = $this->db->getConnection();
 
