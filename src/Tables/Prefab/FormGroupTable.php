@@ -61,9 +61,6 @@ class FormGroupTable extends DataTable
 
     public function build($gibbonFormGroupID, $canViewConfidential, $canPrint, $sortBy = 'rollOrder, surname, preferredName')
     {
-
-        throw new \Exception('hello FromGroupTable build');
-
         $guid = $this->session->get('guid');
         $connection2 = $this->db->getConnection();
 

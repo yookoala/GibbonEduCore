@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Gibbon\UI\Components;
 
+use Gibbon\Auth\Access\AccessManager;
 use Gibbon\Auth\Access\Resource;
 use Gibbon\Http\Url;
 use Gibbon\View\View;
@@ -49,6 +50,13 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
     protected $category;
 
     /**
+     * Access Manager
+     *
+     * @var AccessManager
+     */
+    protected $accessManager;
+
+    /**
      * Setting gateway
      *
      * @var SettingGateway
@@ -65,11 +73,13 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
     public function __construct(
         Connection $db,
         Session $session,
+        AccessManager $accessManager,
         SettingGateway $settingGateway,
         SchoolYearGateway $schoolYearGateway
     ) {
         $this->db = $db;
         $this->session = $session;
+        $this->accessManager = $accessManager;
         $this->category = $this->session->get('gibbonRoleIDCurrentCategory');
         $this->settingGateway = $settingGateway;
         $this->schoolYearGateway = $schoolYearGateway;
@@ -315,7 +325,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
         //Show homescreen widget for message wall
         if ($this->session->get('address') == '') {
             if ($this->session->exists('messageWallArray')) {
-                if (isActionAccessible($guid, $connection2, Resource::fromRoute('Messenger', 'messageWall_view'))) {
+                if ($this->accessManager->allow(Resource::fromRoute('Messenger', 'messageWall_view'))) {
                     $enableHomeScreenWidget = $this->settingGateway->getSettingByScope('Messenger', 'enableHomeScreenWidget');
                     if ($enableHomeScreenWidget == 'Y') {
                         $unpinnedMessages = array_reduce($this->session->get('messageWallArray'), function ($group, $item) {
@@ -457,7 +467,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
         }
 
         //Show upcoming deadlines
-        if ($this->session->get('address') == '' and isActionAccessible($guid, $connection2, Resource::fromRoute('Planner', 'planner'))) {
+        if ($this->session->get('address') == '' and $this->accessManager->allow(Resource::fromRoute('Planner', 'planner'))) {
             $highestAction = getHighestGroupedAction($guid, '/modules/Planner/planner.php', $connection2);
             if ($highestAction == 'Lesson Planner_viewMyClasses' or $highestAction == 'Lesson Planner_viewAllEditMyClasses' or $highestAction == 'Lesson Planner_viewEditAllClasses') {
 
@@ -488,7 +498,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
         }
 
         //Show recent results
-        if ($this->session->get('address') == '' and isActionAccessible($guid, $connection2, Resource::fromRoute('Markbook', 'markbook_view'))) {
+        if ($this->session->get('address') == '' and $this->accessManager->allow(Resource::fromRoute('Markbook', 'markbook_view'))) {
             $highestAction = getHighestGroupedAction($guid, '/modules/Markbook/markbook_view.php', $connection2);
             if ($highestAction == 'View Markbook_myMarks') {
                 try {
@@ -540,7 +550,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
                 echo "<th style='width: 36%; font-size: 85%; text-transform: uppercase'>";
                 echo __('Class');
                 echo '</th>';
-                if (isActionAccessible($guid, $connection2, Resource::fromRoute('Planner', 'planner'))) {
+                if ($this->accessManager->allow(Resource::fromRoute('Planner', 'planner'))) {
                     echo "<th style='width: 16%; font-size: 60%; text-align: center; text-transform: uppercase'>";
                     echo __('Plan');
                     echo '</th>';
@@ -553,7 +563,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
                 echo "<th style='width: 16%; font-size: 60%; text-align: center; text-transform: uppercase'>";
                 echo __('People');
                 echo '</th>';
-                if (isActionAccessible($guid, $connection2, Resource::fromRoute('Planner', 'planner'))) {
+                if ($this->accessManager->allow(Resource::fromRoute('Planner', 'planner'))) {
                     echo "<th style='width: 16%; font-size: 60%; text-align: center; text-transform: uppercase'>";
                     echo __('Tasks');
                     echo '</th>';
@@ -575,24 +585,24 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
                     echo "<td style='word-wrap: break-word'>";
                     echo "<a href='".Url::fromModuleRoute('Departments', 'department_course_class')->withQueryParam('gibbonCourseClassID', $row['gibbonCourseClassID'])."'>".$row['course'].'.'.$row['class'].'</a>';
                     echo '</td>';
-                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Planner', 'planner'))) {
+                    if ($this->accessManager->allow(Resource::fromRoute('Planner', 'planner'))) {
                         echo "<td style='text-align: center'>";
                         echo "<a href='".Url::fromModuleRoute('Planner', 'planner')->withQueryParams(['gibbonCourseClassID' => $row['gibbonCourseClassID'], 'viewBy' => 'class'])."' title='".__('View Planner')."'><img style='margin-top: 3px' alt='".__('View Planner')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/planner.png'/></a> ";
                         echo '</td>';
                     }
-                    if (getHighestGroupedAction($guid, '/modules/Markbook/markbook_view.php', $connection2) == 'View Markbook_allClassesAllData') {
+                    if ($this->accessManager->getAccessOf(Resource::fromRoute('Markbook', 'markbook_view'))->allow('View Markbook_allClassesAllData')) {
                         echo "<td style='text-align: center'>";
                         echo "<a href='".Url::fromModuleRoute('Markbook', 'markbook_view')->withQueryParam('gibbonCourseClassID', $row['gibbonCourseClassID'])."' title='".__('View Markbook')."'><img style='margin-top: 3px' alt='".__('View Markbook')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/markbook.png'/></a> ";
                         echo '</td>';
                     }
                     echo "<td style='text-align: center'>";
-                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Attendance', 'attendance_take_byCourseClass')) && $row['attendance'] == 'Y') {
+                    if ($this->accessManager->allow(Resource::fromRoute('Attendance', 'attendance_take_byCourseClass')) && $row['attendance'] == 'Y') {
                         echo "<a href='".Url::fromModuleRoute('Attendance', 'attendance_take_byCourseClass')->withQueryParam('gibbonCourseClassID', $row['gibbonCourseClassID'])."'title='".__('Take Attendance')."' ><img alt='".__('Take Attendance')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/attendance.png'/></a>";
                     } else {
                         echo "<a href='".Url::fromModuleRoute('Departments', 'department_course_class')->withQueryParam('gibbonCourseClassID', $row['gibbonCourseClassID'])->withFragment('participants')."' title='".__('Participants')."' ><img alt='".__('Participants')."' src='./themes/".$this->session->get('gibbonThemeName')."/img/attendance.png'/></a>";
                     }
                     echo '</td>';
-                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Planner', 'planner'))) {
+                    if ($this->accessManager->allow(Resource::fromRoute('Planner', 'planner'))) {
                         $homeworkNamePlural = $this->settingGateway->getSettingByScope('Planner', 'homeworkNamePlural');
 
                         echo "<td style='text-align: center'>";
@@ -607,7 +617,7 @@ class Sidebar implements OutputableInterface, ContainerAwareInterface
         }
 
         //Show tag cloud
-        if ($this->session->get('address') == '' and isActionAccessible($guid, $connection2, Resource::fromRoute('Planner', 'resources_view')) && !function_exists('makeBlock')) {
+        if ($this->session->get('address') == '' and $this->accessManager->allow(Resource::fromRoute('Planner', 'resources_view')) && !function_exists('makeBlock')) {
             include_once './modules/Planner/moduleFunctions.php';
             echo '<div class="column-no-break">';
             echo "<h2 class='sidebar'>";
