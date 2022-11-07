@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Gibbon\Services\Module\Action;
+use Gibbon\Services\Module\Resource;
 use Gibbon\Http\Url;
 use Gibbon\Forms\Form;
 use Gibbon\Domain\DataSet;
@@ -47,7 +47,7 @@ use Gibbon\Module\Reports\Domain\ReportArchiveEntryGateway;
 //Module includes for User Admin (for custom fields)
 include './modules/User Admin/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'student_view_details')) == false) {
+if (isActionAccessible($guid, $connection2, Resource::fromRoute('Students', 'student_view_details')) == false) {
     // Access denied
     $page->addError(__('You do not have access to this action.'));
 } else {
@@ -298,7 +298,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
 
                         $table->setTitle(__('General Information'));
 
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('User Admin', 'user_manage')) == true) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('User Admin', 'user_manage')) == true) {
                             $table->addHeaderAction('view', __('View Status Log'))
                                     ->displayLabel()
                                     ->addParam('gibbonPersonID', $gibbonPersonID)
@@ -343,7 +343,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                                         $formGroup = $formGroupGateway->getByID($row['gibbonFormGroupID']);
                                         $output = '';
                                         if (!empty($formGroup)) {
-                                            if (isActionAccessible($guid, $connection2, Action::fromRoute('Form Groups', 'formGroups_details'))) {
+                                            if (isActionAccessible($guid, $connection2, Resource::fromRoute('Form Groups', 'formGroups_details'))) {
                                                 $output .= Format::link('./index.php?q=/modules/Form Groups/formGroups_details.php&gibbonFormGroupID='.$formGroup['gibbonFormGroupID'], $formGroup['name']);
                                             } else {
                                                 $output .= $formGroup['name'];
@@ -367,7 +367,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                                         $resultDetail->execute($dataDetail);
 
                                         while ($rowDetail = $resultDetail->fetch()) {
-                                            if (isActionAccessible($guid, $connection2, Action::fromRoute('Staff', 'staff_view_details'))) {
+                                            if (isActionAccessible($guid, $connection2, Resource::fromRoute('Staff', 'staff_view_details'))) {
                                                 $output .= Format::nameLinked($rowDetail['gibbonPersonID'], '', $rowDetail['preferredName'], $rowDetail['surname'], 'Staff', false, true);
                                             } else {
                                                 $output .= Format::name($rowDetail['title'], $rowDetail['preferredName'], $rowDetail['surname'], 'Staff');
@@ -399,7 +399,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                                         $userGateway = $container->get(UserGateway::class);
                                         $hoy = $userGateway->getByID($yearGroup['gibbonPersonIDHOY']);
                                         if (!empty($hoy) && $hoy['status'] == 'Full') {
-                                            if (isActionAccessible($guid, $connection2, Action::fromRoute('Staff', 'staff_view_details'))) {
+                                            if (isActionAccessible($guid, $connection2, Resource::fromRoute('Staff', 'staff_view_details'))) {
                                                 return Format::nameLinked($hoy['gibbonPersonID'], $hoy['title'], $hoy['preferredName'], $hoy['surname'], 'Staff');
                                             } else {
                                                 return Format::name($hoy['title'], $hoy['preferredName'], $hoy['surname'], 'Staff');
@@ -489,7 +489,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         //Get and display a list of student's teachers
                         $studentGateway = $container->get(StudentGateway::class);
                         $staff = $studentGateway->selectAllRelatedUsersByStudent($gibbon->session->get('gibbonSchoolYearID'), $row['gibbonYearGroupID'], $row['gibbonFormGroupID'], $gibbonPersonID)->fetchAll();
-                        $canViewStaff = isActionAccessible($guid, $connection2, Action::fromRoute('Staff', 'staff_view_details'));
+                        $canViewStaff = isActionAccessible($guid, $connection2, Resource::fromRoute('Staff', 'staff_view_details'));
                         $criteria = $studentGateway->newQueryCriteria();
 
                         if ($staff) {
@@ -567,12 +567,12 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         //Show timetable
                         echo "<a name='timetable'></a>";
                         //Display timetable if available, otherwise just list classes
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Timetable', 'tt_view')) == true) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Timetable', 'tt_view')) == true) {
                             echo '<h4>';
                             echo __('Timetable');
                             echo '</h4>';
 
-                            if (isActionAccessible($guid, $connection2, Action::fromRoute('Timetable Admin', 'courseEnrolment_manage_byPerson_edit')) == true) {
+                            if (isActionAccessible($guid, $connection2, Resource::fromRoute('Timetable Admin', 'courseEnrolment_manage_byPerson_edit')) == true) {
                                 $role = $roleGateway->getRoleCategory($row['gibbonRoleIDPrimary']);
                                 if ($role == 'Student' or $role == 'Staff') {
                                     echo "<div class='linkTop'>";
@@ -636,7 +636,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
 
                         $table = DataTable::createDetails('overview');
 
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('User Admin', 'user_manage'))) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('User Admin', 'user_manage'))) {
                             $table->addHeaderAction('edit', __('Edit User'))
                                 ->setURL('/modules/User Admin/user_manage_edit.php')
                                 ->addParam('gibbonPersonID', $gibbonPersonID)
@@ -751,7 +751,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         echo $table->render([$row]);
 
                         // PERSONAL DOCUMENTS
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'report_student_personalDocumentSummary'))) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Students', 'report_student_personalDocumentSummary'))) {
                             $params = ['student' => true, 'notEmpty' => true];
                             $documents = $container->get(PersonalDocumentGateway::class)->selectPersonalDocuments('gibbonPerson', $gibbonPersonID, $params)->fetchAll();
 
@@ -774,7 +774,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             while ($rowFamily = $resultFamily->fetch()) {
                                 $count = 1;
 
-                                if (isActionAccessible($guid, $connection2, Action::fromRoute('User Admin', 'family_manage')) == true) {
+                                if (isActionAccessible($guid, $connection2, Resource::fromRoute('User Admin', 'family_manage')) == true) {
                                     echo "<div class='linkTop'>";
                                     echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/User Admin/family_manage_edit.php&gibbonFamilyID='.$rowFamily['gibbonFamilyID']."'>".__('Edit')."<img style='margin: 0 0 -4px 5px' title='".__('Edit')."' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
                                     echo '</div>';
@@ -1034,7 +1034,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             }
                         }
                     } elseif ($subpage == 'Emergency Contacts') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('User Admin', 'user_manage')) == true) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('User Admin', 'user_manage')) == true) {
                             echo "<div class='linkTop'>";
                             echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/User Admin/user_manage_edit.php&gibbonPersonID=$gibbonPersonID'>".__('Edit')."<img style='margin: 0 0 -4px 5px' title='".__('Edit')."' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
                             echo '</div>';
@@ -1172,7 +1172,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         // MEDICAL DETAILS
                         $table = DataTable::createDetails('medical');
 
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'medicalForm_manage'))) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Students', 'medicalForm_manage'))) {
                             if (empty($medical)) {
                                 $table->addHeaderAction('add', __('Add Medical Form'))
                                     ->setURL('/modules/Students/medicalForm_manage_add.php')
@@ -1225,7 +1225,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         echo $table->render([$medical]);
 
                         // MEDICAL CONDITIONS
-                        $canManageMedical = isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'medicalForm_manage'));
+                        $canManageMedical = isActionAccessible($guid, $connection2, Resource::fromRoute('Students', 'medicalForm_manage'));
 
                         foreach ($conditions as $condition) {
                             $table = DataTable::createDetails('medicalConditions');
@@ -1260,7 +1260,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             echo __('You do not have access to this action.');
                             echo '</div>';
                         } else {
-                            if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'student_view_details_notes_add')) == false) {
+                            if (isActionAccessible($guid, $connection2, Resource::fromRoute('Students', 'student_view_details_notes_add')) == false) {
                                 echo "<div class='error'>";
                                 echo __('Your request failed because you do not have access to this action.');
                                 echo '</div>';
@@ -1380,7 +1380,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             }
                         }
                     } elseif ($subpage == 'Attendance') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Attendance', 'report_studentHistory')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Attendance', 'report_studentHistory')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
@@ -1395,13 +1395,13 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
 
                             // DATA TABLE
                             $renderer = $container->get(StudentHistoryView::class);
-                            $renderer->addData('canTakeAttendanceByPerson', isActionAccessible($guid, $connection2, Action::fromRoute('Attendance', 'attendance_take_byPerson')));
+                            $renderer->addData('canTakeAttendanceByPerson', isActionAccessible($guid, $connection2, Resource::fromRoute('Attendance', 'attendance_take_byPerson')));
 
                             $table = DataTable::create('studentHistory', $renderer);
                             echo $table->render($attendanceData);
                         }
                     } elseif ($subpage == 'Markbook') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Markbook', 'markbook_view')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Markbook', 'markbook_view')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
@@ -1882,7 +1882,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             }
                         }
                     } elseif ($subpage == 'Internal Assessment') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Formal Assessment', 'internalAssessment_view')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Formal Assessment', 'internalAssessment_view')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
@@ -1906,7 +1906,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             }
                         }
                     } elseif ($subpage == 'External Assessment') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Formal Assessment/externalAssessment_details.php') == false and isActionAccessible($guid, $connection2, '/modules/Formal Assessment', 'externalAssessment_view')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Formal Assessment/externalAssessment_details.php') == false and isActionAccessible($guid, $connection2, '/modules/Formal Assessment', 'externalAssessment_view')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
@@ -1922,7 +1922,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             externalAssessmentDetails($guid, $gibbonPersonID, $connection2, $gibbonYearGroupID);
                         }
                     } elseif ($subpage == 'Reports') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Reports', 'archive_byStudent_view')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Reports', 'archive_byStudent_view')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
@@ -2030,13 +2030,13 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             }
                         }
                     } elseif ($subpage == 'Individual Needs') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Individual Needs', 'in_view')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Individual Needs', 'in_view')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
                         } else {
                             //Edit link
-                            if (isActionAccessible($guid, $connection2, Action::fromRoute('Individual Needs', 'in_edit')) == true) {
+                            if (isActionAccessible($guid, $connection2, Resource::fromRoute('Individual Needs', 'in_edit')) == true) {
                                 echo "<div class='linkTop'>";
                                 echo "<a href='".$session->get('absoluteURL')."/index.php?q=/modules/Individual Needs/in_edit.php&gibbonPersonID=$gibbonPersonID'>".__('Edit')."<img style='margin: 0 0 -4px 5px' title='".__('Edit')."' src='./themes/".$session->get('gibbonThemeName')."/img/config.png'/></a> ";
                                 echo '</div>';
@@ -2121,7 +2121,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             }
                         }
                     } elseif ($subpage == 'Library Borrowing') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Library', 'report_studentBorrowingRecord')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Library', 'report_studentBorrowingRecord')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
@@ -2187,12 +2187,12 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             echo $lendingTable->render($items);
                         }
                     } elseif ($subpage == 'Timetable') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Timetable', 'tt_view')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Timetable', 'tt_view')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
                         } else {
-                            if (isActionAccessible($guid, $connection2, Action::fromRoute('Timetable Admin', 'courseEnrolment_manage_byPerson_edit')) == true) {
+                            if (isActionAccessible($guid, $connection2, Resource::fromRoute('Timetable Admin', 'courseEnrolment_manage_byPerson_edit')) == true) {
                                 $role = $roleGateway->getRoleCategory($row['gibbonRoleIDPrimary']);
                                 if ($role == 'Student' or $role == 'Staff') {
                                     echo "<div class='linkTop'>";
@@ -2285,7 +2285,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             }
                         }
                     } elseif ($subpage == 'Homework') {
-                        if (!(isActionAccessible($guid, $connection2, Action::fromRoute('Planner/planner_edit.php') or isActionAccessible($guid, $connection2, '/modules/Planner', 'planner_view_full')))) {
+                        if (!(isActionAccessible($guid, $connection2, Resource::fromRoute('Planner/planner_edit.php') or isActionAccessible($guid, $connection2, '/modules/Planner', 'planner_view_full')))) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
@@ -2311,7 +2311,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                             echo $table->getOutput();
                         }
                     } elseif ($subpage == 'Behaviour') {
-                        if (isActionAccessible($guid, $connection2, Action::fromRoute('Behaviour', 'behaviour_view')) == false) {
+                        if (isActionAccessible($guid, $connection2, Resource::fromRoute('Behaviour', 'behaviour_view')) == false) {
                             echo "<div class='error'>";
                             echo __('Your request failed because you do not have access to this action.');
                             echo '</div>';
@@ -2395,7 +2395,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $style = "style='font-weight: bold'";
                     }
                      $sidebarExtra .= "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Medical'>".__('Medical').'</a></li>';
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'student_view_details_notes_add'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Students', 'student_view_details_notes_add'))) {
                         if ($enableStudentNotes == 'Y') {
                             $style = '';
                             if ($subpage == 'Notes') {
@@ -2423,7 +2423,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                     $studentMenuCount = 0;
 
                     //Store items in an array
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Markbook', 'markbook_view'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Markbook', 'markbook_view'))) {
                         $style = '';
                         if ($subpage == 'Markbook') {
                             $style = "style='font-weight: bold'";
@@ -2433,7 +2433,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Markbook'>".__('Markbook').'</a></li>';
                         ++$studentMenuCount;
                     }
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Formal Assessment', 'internalAssessment_view'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Formal Assessment', 'internalAssessment_view'))) {
                         $style = '';
                         if ($subpage == 'Internal Assessment') {
                             $style = "style='font-weight: bold'";
@@ -2443,7 +2443,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Internal%20Assessment'>".__('Internal Assessment').'</a></li>';
                         ++$studentMenuCount;
                     }
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Formal Assessment/externalAssessment_details.php') or isActionAccessible($guid, $connection2, '/modules/Formal Assessment', 'externalAssessment_view'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Formal Assessment/externalAssessment_details.php') or isActionAccessible($guid, $connection2, '/modules/Formal Assessment', 'externalAssessment_view'))) {
                         $style = '';
                         if ($subpage == 'External Assessment') {
                             $style = "style='font-weight: bold'";
@@ -2453,7 +2453,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=External Assessment'>".__('External Assessment').'</a></li>';
                         ++$studentMenuCount;
                     }
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Reports', 'archive_byStudent_view'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Reports', 'archive_byStudent_view'))) {
                         $style = '';
                         if ($subpage == 'Reports') {
                             $style = "style='font-weight: bold'";
@@ -2464,7 +2464,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         ++$studentMenuCount;
                     }
 
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Activities', 'report_activityChoices_byStudent'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Activities', 'report_activityChoices_byStudent'))) {
                         $style = '';
                         if ($subpage == 'Activities') {
                             $style = "style='font-weight: bold'";
@@ -2474,7 +2474,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Activities'>".__('Activities').'</a></li>';
                         ++$studentMenuCount;
                     }
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Planner/planner_edit.php') or isActionAccessible($guid, $connection2, '/modules/Planner', 'planner_view_full'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Planner/planner_edit.php') or isActionAccessible($guid, $connection2, '/modules/Planner', 'planner_view_full'))) {
                         $style = '';
                         if ($subpage == 'Homework') {
                             $style = "style='font-weight: bold'";
@@ -2485,7 +2485,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Homework'>".__($homeworkNamePlural).'</a></li>';
                         ++$studentMenuCount;
                     }
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Individual Needs', 'in_view'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Individual Needs', 'in_view'))) {
                         $style = '';
                         if ($subpage == 'Individual Needs') {
                             $style = "style='font-weight: bold'";
@@ -2495,7 +2495,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Individual Needs'>".__('Individual Needs').'</a></li>';
                         ++$studentMenuCount;
                     }
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Library', 'report_studentBorrowingRecord'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Library', 'report_studentBorrowingRecord'))) {
                         $style = '';
                         if ($subpage == 'Library Borrowing') {
                             $style = "style='font-weight: bold'";
@@ -2505,7 +2505,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Library Borrowing'>".__('Library Borrowing').'</a></li>';
                         ++$studentMenuCount;
                     }
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Timetable', 'tt_view'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Timetable', 'tt_view'))) {
                         $style = '';
                         if ($subpage == 'Timetable') {
                             $style = "style='font-weight: bold'";
@@ -2514,7 +2514,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuName[$studentMenuCount] = __('Timetable');
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Timetable'>".__('Timetable').'</a></li>';
                         ++$studentMenuCount;
-                    }if (isActionAccessible($guid, $connection2, Action::fromRoute('Attendance', 'report_studentHistory'))) {
+                    }if (isActionAccessible($guid, $connection2, Resource::fromRoute('Attendance', 'report_studentHistory'))) {
                         $style = '';
                         if ($subpage == 'Attendance') {
                             $style = "style='font-weight: bold'";
@@ -2524,7 +2524,7 @@ if (isActionAccessible($guid, $connection2, Action::fromRoute('Students', 'stude
                         $studentMenuLink[$studentMenuCount] = "<li><a $style href='".$session->get('absoluteURL').'/index.php?q='.$_GET['q']."&gibbonPersonID=$gibbonPersonID&search=".$search."&search=$search&allStudents=$allStudents&subpage=Attendance'>".__('Attendance').'</a></li>';
                         ++$studentMenuCount;
                     }
-                    if (isActionAccessible($guid, $connection2, Action::fromRoute('Behaviour', 'behaviour_view'))) {
+                    if (isActionAccessible($guid, $connection2, Resource::fromRoute('Behaviour', 'behaviour_view'))) {
                         $style = '';
                         if ($subpage == 'Behaviour') {
                             $style = "style='font-weight: bold'";
