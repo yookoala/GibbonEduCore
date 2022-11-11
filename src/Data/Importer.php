@@ -365,11 +365,13 @@ class Importer
                     $value = $this->cachedData[$rowIndex][$fieldName];
                 } elseif ($importType->isFieldRelational($fieldName)) {
                     // Otherwise build a query to grab the relational data.
-                    $join = $on = '';
-                    extract($importType->getField($fieldName, 'relationship'));
+                    $relationship = (array) $importType->getField($fieldName, 'relationship');
 
-                    $table = $this->escapeIdentifier($table);
-                    $join = $this->escapeIdentifier($join);
+                    $table = $this->escapeIdentifier($relationship['table'] ?? '');
+                    $field = $relationship['field'] ?? '';
+                    $key = $relationship['key'] ?? '';
+                    $join = $this->escapeIdentifier($relationship['join'] ?? '');
+                    $on = $relationship['on'] ?? '';
 
                     // Handle table joins
                     $tableJoin = '';
