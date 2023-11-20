@@ -131,7 +131,7 @@ class Format
      *
      *                                     See: https://unicode-org.github.io/icu/userguide/format_parse/datetime/
      *                                     Default: 'MMM d, Y'
-     * @param string          $fallbackPattern (Optional) A fallback pattern string to use for the date using 
+     * @param string          $fallbackPattern (Optional) A fallback pattern string to use for the date using
      *                                     PHP's DateTime library if intl is not available.
      *                                     Default: 'M d, Y'
      *
